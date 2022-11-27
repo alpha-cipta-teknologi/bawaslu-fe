@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.page-preloader {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #fff;
+  z-index: 100000;
+  opacity: 0.9;
+  text-align: center;
+}
+
+#loading-wrapper {
+  top: 42%;
+  position: relative;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  width: 124px;
+  height: 64px;
+  margin: 0 auto;
+  transition: transform 1s;
+  transition: -webkit-transform 1s;
+  -webkit-animation: rotateld 2s linear infinite;
+  animation: rotateld 2s linear infinite;
+}
+
+#loading-wrapper .front {
+  -webkit-backface-visibility: initial;
+  backface-visibility: initial;
+  box-shadow: 0 0 1px rgba(255,255,255,0);
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  position: absolute;
+  top: 0px;
+  transform: translatez(1px);
+  width: 124px;
+  height: 64px;
+  z-index: 9999;
+}
+
+#loading-wrapper .center {
+  -webkit-backface-visibility: initial;
+  backface-visibility: initial;
+  box-shadow: 0 0 1px rgba(255,255,255,0);
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  position: absolute;
+  top: 0px;
+  transform: translatez(2px);
+  width: 124px;
+  height: 64px;
+  z-index: 9999;
+}
+
+#loading-wrapper .center2 {
+  -webkit-backface-visibility: initial;
+  backface-visibility: initial;
+  box-shadow: 0 0 1px rgba(255,255,255,0);
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  position: absolute;
+  top: 0px;
+  transform: translatez(3px);
+  width: 124px;
+  height: 64px;
+  z-index: 9999;
+}
+
+#loading-wrapper .center3 {
+  -webkit-backface-visibility: initial;
+  backface-visibility: initial;
+  box-shadow: 0 0 1px rgba(255,255,255,0);
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  position: absolute;
+  top: 0px;
+  transform: translatez(4px);
+  width: 124px;
+  height: 64px;
+  z-index: 9999;
+}
+
+#loading-wrapper .back {
+  -webkit-backface-visibility: initial;
+  backface-visibility: initial;
+  box-shadow: 0 0 1px rgba(255,255,255,0);
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  position: absolute;
+  transform: rotateY( 180deg );
+  top: 0px;
+  width: 124px;
+  height: 64px;
+  z-index: 9999;
+}
+
+@-webkit-keyframes rotateld {
+  from {-webkit-transform-style: preserve-3d;-webkit-transform: rotateY(0deg);}
+  to{-webkit-transform-style: preserve-3d;-webkit-transform: rotateY(180deg);}
+}
+
+@keyframes rotateld {
+  from {-webkit-transform-style: preserve-3d;-webkit-transform: rotateY(0deg);}
+  to{-webkit-transform-style: preserve-3d;-webkit-transform: rotateY(180deg);}
+}

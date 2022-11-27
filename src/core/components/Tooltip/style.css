@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Tooltip Component */
+
+.tooltip[data-popper-placement^=top]>.tooltip-arrow {
+  bottom: -4px;
+}
+
+.tooltip[data-popper-placement^=bottom]>.tooltip-arrow {
+  top: -4px;
+}
+
+.tooltip[data-popper-placement^=left]>.tooltip-arrow {
+  right: -4px;
+}
+
+.tooltip[data-popper-placement^=right]>.tooltip-arrow {
+  left: -4px;
+}
+
+.tooltip-arrow {
+  visibility: hidden;
+}
+
+.tooltip-arrow, .tooltip-arrow::before {
+  background: inherit;
+  height: 8px;
+  position: absolute;
+  width: 8px;
+}
+
+.tooltip-arrow::before {
+  content: '';
+  transform: rotate(45deg);
+  visibility: visible;
+  --tw-content: '';
+  border: 0 solid;
+  box-sizing: border-box;
+}
