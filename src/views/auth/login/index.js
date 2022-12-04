@@ -3,10 +3,11 @@ import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 import { Text, Button, Input } from 'core/components'
-import { localStorageHelper, utils, AbilityContext } from 'utility'
+import { localStorageHelper, utils, AbilityContext, hooks, toastify } from 'utility'
 
 import { CardAuth } from '../components'
 import { images } from 'constant'
+import { actions } from 'store'
 
 const formLoginInputProps = [
   {
@@ -23,6 +24,9 @@ const formLoginInputProps = [
 const LoginPage = () => {
   const history = useHistory()
   const ability = useContext(AbilityContext)
+
+  const handleLogin = hooks.useCustomDispatch(actions.auth.handleLogin)
+  const getDataProfile = hooks.useCustomDispatch(actions.auth.getDataProfile)
 
   const lazyLoad = useSelector(state => state.misc).lazyLoad
   const navigations = useSelector(state => state.navigations).allData
@@ -45,9 +49,21 @@ const LoginPage = () => {
 
       // handle login dispatch
       // u/ dummy, simpan localstorage, save navigations to abilitys
-      await localStorageHelper.setItem('userData', utils.removeProperties(formLogin, 'password'))
+      //await localStorageHelper.setItem('userData', utils.removeProperties(formLogin, 'password'))
 
-      history.push('/')
+      //history.push('/')
+
+      handleLogin(formLogin, async data => {
+        try {
+          history.push('/')
+
+          toastify.success(`You have successfully logged`)
+
+        } catch (error) {
+          toastify.error('Maaf, terjadi kesalahan. Silakan muat ulang halaman beberapa saat lagi')
+        }
+      })
+  
     }
   }
 
@@ -125,10 +141,10 @@ const LoginPage = () => {
   return (
     <CardAuth>
       <div className='grid gap-y-6'>
-        {renderButtonOAuth('google')}
+        {/* {renderButtonOAuth('google')}
         {renderButtonOAuth('facebook')}
 
-        <Text weight='font-semibold' align='text-center'>Atau</Text>
+        <Text weight='font-semibold' align='text-center'>Atau</Text> */}
 
         {renderFormLogin()}
       </div>

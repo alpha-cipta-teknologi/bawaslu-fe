@@ -2,36 +2,37 @@ import React, { useState, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
 import { Text, Button, Input } from 'core/components'
-import { utils } from 'utility'
+import { utils, hooks, toastify } from 'utility'
+import { actions } from 'store'
 
 import { CardAuth } from '../components'
 
 const formRegisterInputProps = [
   {
     label: 'Nama Lengkap',
-    name: 'name',
+    name: 'full_name',
     type: 'text'
   },
   {
     label: 'Tanggal Lahir',
-    name: 'date_birth',
+    name: 'date_of_birth',
     type: 'date'
   },
   {
     label: 'Kota Tempat Lahir',
-    name: 'place_birth',
+    name: 'place_of_birth',
     type: 'text'
   },
-  {
-    label: 'Provinsi',
-    name: 'province_id',
-    type: 'text'
-  },
-  {
-    label: 'Kabupaten/Kota',
-    name: 'district_id',
-    type: 'text'
-  },
+  // {
+  //   label: 'Provinsi',
+  //   name: 'province_id',
+  //   type: 'text'
+  // },
+  // {
+  //   label: 'Kabupaten/Kota',
+  //   name: 'regency_id',
+  //   type: 'text'
+  // },
   {
     label: 'Email',
     name: 'email',
@@ -39,7 +40,7 @@ const formRegisterInputProps = [
   },
   {
     label: 'Nomor Telepon',
-    name: 'phone',
+    name: 'telepon',
     type: 'text'
   },
   {
@@ -56,15 +57,16 @@ const formRegisterInputProps = [
 
 const RegisterPage = () => {
   const lazyLoad = useSelector(state => state.misc).lazyLoad
+  const handleRegister = hooks.useCustomDispatch(actions.auth.handleRegister)
 
   const [formRegister, setFormRegister] = useState({
-    name: '',
-    date_birth: '',
-    place_birth: '',
-    province_id: '',
-    district_id: '',
+    full_name: '',
+    date_of_birth: '',
+    place_of_birth: '',
+    // province_id: '',
+    // regency_id: '',
     email: '',
-    phone: '',
+    telepon: '',
     password: '',
     confirm_password: ''
   })
@@ -80,7 +82,17 @@ const RegisterPage = () => {
     } else {
       setShowErrorInput(false)
 
-      // handle login dispatch
+      // handle register dispatch
+      handleRegister(formRegister, async data => {
+        try {
+          history.push('/')
+
+          toastify.success(`You have successfully register, check your email`)
+
+        } catch (error) {
+          toastify.error('Maaf, terjadi kesalahan. Silakan muat ulang halaman beberapa saat lagi')
+        }
+      })
     }
   }
 

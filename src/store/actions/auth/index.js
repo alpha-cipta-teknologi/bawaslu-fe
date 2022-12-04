@@ -13,7 +13,7 @@ export const handleLogin = (formLogin, callback = null) => {
     (response, dispatch, success) => {
       if (success) {
         const data = response.data
-        const menus = data.roles.map(r => {
+        const menus = data.roles?.map(r => {
           return {
             action: 'read',
             subject: r.menu_name.toLowerCase(),
@@ -43,6 +43,23 @@ export const handleLogin = (formLogin, callback = null) => {
     null,
     dispatch => dispatch(lazyLoadStart('login')),
     dispatch => dispatch(lazyLoadEnd('login'))
+  )
+}
+
+export const handleRegister = (formRegister, callback = null) => {
+  return api.request(
+    endpoints.register,
+    formRegister,
+    (response, dispatch, success) => {
+      if (success) {
+        const data = response.data
+
+        if (callback) callback(data)
+      }
+    },
+    null,
+    dispatch => dispatch(lazyLoadStart('register')),
+    dispatch => dispatch(lazyLoadEnd('register'))
   )
 }
 

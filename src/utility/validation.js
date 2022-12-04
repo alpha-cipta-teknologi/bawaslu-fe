@@ -19,7 +19,7 @@ export default {
   },
 
   passwordLength: (password) => {
-    return !(password.length < 8)
+    return !(password.length < 6)
   },
 
   passwordMatch: (password, confirmPassword) => {

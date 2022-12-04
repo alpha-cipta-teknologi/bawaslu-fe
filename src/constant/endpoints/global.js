@@ -1,5 +1,5 @@
 export default {
-  // ==== Brand Product ====
+  // ==== Global ====
   getDataBrand: {
     path: '/ref_brand',
     method: 'GET'

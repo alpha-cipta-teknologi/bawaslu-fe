@@ -3,6 +3,10 @@ export default {
     path: '/auth/login',
     method: 'POST'
   },
+  register: {
+    path: '/auth/register',
+    method: 'POST'
+  },
   refreshToken: {
     path: '/auth/refresh-token',
     method: 'GET'

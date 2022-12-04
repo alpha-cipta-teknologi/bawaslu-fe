@@ -15,7 +15,7 @@ const ForumSavePage = () => {
       <Text weight='font-bold' size='text-2xl'>Buat Post</Text>
       <div className='flex flex-col w-full md:flex-row'>
         <div className='flex flex-col w-full md:flex-auto md:w-80'>
-          <Card cardClassName='mr-7'>
+          <Card cardClassName='md:mr-7 mb-2 md:mb-0'>
             <Text size='text-sm' className='mb-2'>Tittle</Text>
             <Input
               containerClassName='mb-3 border border-solid border-[#E0E0E0]'
@@ -55,7 +55,7 @@ const ForumSavePage = () => {
           </Card>
         </div>
         <div className='w-full md:flex-1 md:w-90'>
-          <Card cardClassName='ml-7'>
+          <Card cardClassName='md:ml-7'>
             <Text weight='font-bold'>Pilih Kategori</Text>
             <Select placeholder='Pilih Kategori' wrapperClassName='mb-3'/>
             <Button.ButtonPrimary
