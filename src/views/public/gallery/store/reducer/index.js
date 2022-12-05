@@ -1,11 +1,11 @@
 // ** Import action types
 import {
-    GET_DATA_BAWASLU_UPDATE
+    GET_DATA_GALLERY
   } from '../actionTypes'
   
   // ** Initial State
   const initialState = {
-    bawasluList: {
+    galleryList: {
       data: [],
       total: 0
     }
@@ -13,10 +13,10 @@ import {
   
   const reducers = (state = initialState, action) => {
     switch (action.type) {
-      case GET_DATA_BAWASLU_UPDATE:
+      case GET_DATA_GALLERY:
         return {
           ...state,
-          bawasluList: action.data
+          galleryList: action.data
         }
   
       default:

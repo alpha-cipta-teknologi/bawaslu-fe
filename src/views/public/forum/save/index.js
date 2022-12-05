@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import { Text, Card, Button, Input, Select } from 'core/components'
 import { Editor } from "react-draft-wysiwyg"
 import draftToHtml from 'draftjs-to-html'
 import { convertToRaw } from 'draft-js'
-import { hooks, toastify } from 'utility'
+import { hooks, toastify, utils } from 'utility'
 import { actions } from 'store'
 
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
@@ -14,13 +14,35 @@ import { CloudArrowUpIcon } from '@heroicons/react/24/solid'
 const ForumSavePage = () => {
 
   const history = useHistory()
+  const { userdata } = utils.isUserLoggedIn() ? utils.getUserData() : {userdata: null}
 
   // ** Store & Actions
   const createForumArticle = hooks.useCustomDispatch(actions.forums.createForumArticle)
+  const getAllDataCategory = hooks.useCustomDispatch(actions.forums.getAllDataCategory)
 
   const [title, setTitle] = useState('')
   const [desc, setDesc] = useState('')
+  const [category, setCategory] = useState([])
+  const [selectedCategory, setSelectedCategory] = useState(null)
   const [logo, setLogo] = useState({file: null, link: null})
+
+  useEffect(() => {
+    if (!userdata) {
+      history.push('/login')
+      return
+    }
+
+    getAllDataCategory({
+
+    }, async data => {
+      setCategory(data.map(d => {
+        return {
+          label: d.category_name,
+          value: d.id
+        }
+      }))
+    })
+  }, [])
 
   const onSubmit = () => {
   
@@ -30,7 +52,7 @@ const ForumSavePage = () => {
       toastify.error('Deskripsi wajib diisi')
     } else {
       const datas = new FormData
-      datas.category_name = 'Berita'
+      datas.category_name = selectedCategory?.label
       datas.title = title
       datas.description = draftToHtml(convertToRaw(desc.getCurrentContent()))
       datas.status = 1
@@ -127,7 +149,7 @@ const ForumSavePage = () => {
         <div className='w-full md:flex-1 md:w-90'>
           <Card cardClassName='md:ml-7'>
             <Text weight='font-bold'>Pilih Kategori</Text>
-            <Select placeholder='Pilih Kategori' wrapperClassName='mb-3'/>
+            <Select placeholder='Pilih Kategori' wrapperClassName='mb-3' list={category} onChange={(e) => setSelectedCategory(e)} value={selectedCategory}/>
             <Button.ButtonPrimary
               href='/forum/create'
               spacing='py-2.5 px-5'

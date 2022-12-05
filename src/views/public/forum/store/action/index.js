@@ -39,6 +39,31 @@ export const getDataForumArticle = (queryParams, callback = null) => {
     )
 }
 
+export const getDataForumArticleAuth = (queryParams, callback = null) => {
+    return api.request(
+      endpoints.getDataForumArticleAuth,
+      queryParams,
+      (response, dispatch, success) => {
+        if (success) {
+          const { data: {values, total} } = response
+
+          dispatch({
+            type: GET_DATA_FORUM_ARTICLE,
+            data: {
+              data: values && values.length ? values : [],
+              total
+            }
+          })
+
+          callback ? callback(values) : null
+        }
+      },
+      null,
+      dispatch => dispatch(lazyLoadStart('getDataForumArticle')),
+      dispatch => dispatch(lazyLoadEnd('getDataForumArticle'))
+    )
+}
+
 // ** Create Forum Article
 export const createForumArticle = (formForum, callback = null) => {
     return api.request(
@@ -95,18 +120,36 @@ export const commentForumArticle = (formComment, callback = null) => {
 
 // ** Show Comment Forum Article
 export const getDataCommentForumArticle = (queryParams, callback = null) => {
-    return api.request(
-      endpoints.getDataCommentForumArticle,
-      queryParams,
-      (response, dispatch, success) => {
-        if (success) {
-          const { data } = response
+  return api.request(
+    endpoints.getDataCommentForumArticle,
+    queryParams,
+    (response, dispatch, success) => {
+      if (success) {
+        const { data } = response
 
-          callback ? callback(data) : null
-        }
-      },
-      null,
-      dispatch => dispatch(lazyLoadStart('getDataCommentForumArticle')),
-      dispatch => dispatch(lazyLoadEnd('getDataCommentForumArticle'))
-    )
+        callback ? callback(data) : null
+      }
+    },
+    null,
+    dispatch => dispatch(lazyLoadStart('getDataCommentForumArticle')),
+    dispatch => dispatch(lazyLoadEnd('getDataCommentForumArticle'))
+  )
+}
+
+// ** Get Category Forum Article
+export const getAllDataCategory = (queryParams, callback = null) => {
+  return api.request(
+    endpoints.getAllDataCategory,
+    queryParams,
+    (response, dispatch, success) => {
+      if (success) {
+        const { data } = response
+
+        callback ? callback(data) : null
+      }
+    },
+    null,
+    dispatch => dispatch(lazyLoadStart('getAllDataCategory')),
+    dispatch => dispatch(lazyLoadEnd('getAllDataCategory'))
+  )
 }

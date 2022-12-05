@@ -163,7 +163,7 @@ const Select = ({
       <Listbox.Option
         key={index}
         className={({ active }) => styleHelper.classNames(
-          active ? 'text-white bg-drcGreen' : '',
+          active ? 'text-white bg-primary' : '',
           'cursor-pointer select-none relative py-2 pl-3 pr-9'
         )}
         value={option}

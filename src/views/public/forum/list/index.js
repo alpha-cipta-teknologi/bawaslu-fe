@@ -11,16 +11,16 @@ import { images } from 'constant'
 const ForumListPage = () => {
 
   const history = useHistory()
+  const { userdata } = utils.isUserLoggedIn() ? utils.getUserData() : {userdata: null}
 
   // ** Store & Actions
-  const getDataForumArticle = hooks.useCustomDispatch(actions.forums.getDataForumArticle)
+  const getDataForumArticle = hooks.useCustomDispatch(userdata ? actions.forums.getDataForumArticleAuth : actions.forums.getDataForumArticle)
   const likeForumArticle = hooks.useCustomDispatch(actions.forums.likeForumArticle)
   const commentForumArticle = hooks.useCustomDispatch(actions.forums.commentForumArticle)
   const getDataCommentForumArticle = hooks.useCustomDispatch(actions.forums.getDataCommentForumArticle)
 
   const forumList = useSelector(state => state.forums).forumList
   const lazyLoad = useSelector(state => state.misc).lazyLoad
-  const { userdata } = utils.isUserLoggedIn() ? utils.getUserData() : {userdata: null}
 
   // ** States
   const [currentPage, setCurrentPage] = useState(1)
@@ -38,7 +38,13 @@ const ForumListPage = () => {
     }, async data => {
       let oldForumArticles = forumArticles
       oldForumArticles = oldForumArticles.concat(data)
-      setForumArticle(oldForumArticles)
+      setForumArticle(oldForumArticles.map(d => {
+        d.comment = {
+          values: [],
+          total: 0
+        }
+        return d
+      }))
     })
   }, [currentPage])
 
@@ -127,7 +133,7 @@ const ForumListPage = () => {
         d.counter_comment = d.counter_comment + 1
         if (d.comment) {
           d.comment.values.unshift({
-            id,
+            id: 0,
             id_external: id,
             group_comment: 1,
             comment: commentArticle,
@@ -153,6 +159,7 @@ const ForumListPage = () => {
   }
 
   const handleOpenReplyComment = async (articleid, commentid, author = null) => {
+
     let oldForumArticles = forumArticles
     oldForumArticles = oldForumArticles.map(d => {
       
@@ -219,10 +226,10 @@ const ForumListPage = () => {
     setForumArticle(oldForumArticles)
 
     commentForumArticle({
-      group: 3,
+      group: commentid === 0 ? 1 : 3,
       status: 1,
       comment: replyCommentArticle,
-      id: commentid
+      id: commentid === 0 ? articleid : commentid
     })
 
     setReplyCommentArticle('')
@@ -356,17 +363,15 @@ const ForumListPage = () => {
                         <Text size='text-sm' className='mb-1'>
                         {dt.comment}
                         </Text>
-                        {userdata?.username !== dt.author.username &&
-                          <div className='flex flex-row w-full mt-2 mb-1'>
-                            {/* <div className='flex flex-row items-center mr-4'>
-                              <HeartIcon className='w-5 h-5 mr-1 fill-[#EB5757] stroke-[#EB5757]' />
-                            </div> */}
-                            <div onClick={() => handleOpenReplyComment(data.id, dt.id, dt.author)} className='flex flex-row items-center mr-4 cursor-pointer'>
-                              <CustomIcon iconName='comment' className='w-5 h-5 mr-1' /> 
-                              <Text size='text-xs' cursor='cursor-pointer'>Balas</Text>
-                            </div>
+                        <div className='flex flex-row w-full mt-2 mb-1'>
+                          {/* <div className='flex flex-row items-center mr-4'>
+                            <HeartIcon className='w-5 h-5 mr-1 fill-[#EB5757] stroke-[#EB5757]' />
+                          </div> */}
+                          <div onClick={() => handleOpenReplyComment(data.id, dt.id, dt.author)} className='flex flex-row items-center mr-4 cursor-pointer'>
+                            <CustomIcon iconName='comment' className='w-5 h-5 mr-1' /> 
+                            <Text size='text-xs' cursor='cursor-pointer'>Balas</Text>
                           </div>
-                        }
+                        </div>
                         {dt.is_comment &&
                           <Card cardClassName='mb-2 bg-[#F6F9FB] md:ml-2 md:mr-2' contentClassName='flex flex-row justify-around items-center' paddingVertical='p-3' paddingHorizontal='p-3'>
                             <Input
@@ -420,7 +425,7 @@ const ForumListPage = () => {
                                   {/* <div className='flex flex-row items-center mr-4'>
                                     <HeartIcon className='w-5 h-5 mr-1 fill-[#EB5757] stroke-[#EB5757]' />
                                   </div> */}
-                                  <div className='flex flex-row items-center mr-4 cursor-pointer'>
+                                  <div onClick={() => handleOpenReplyComment(data.id, dt.id, rdt.author)} className='flex flex-row items-center mr-4 cursor-pointer'>
                                     <CustomIcon iconName='comment' className='w-5 h-5 mr-1' /> 
                                     <Text size='text-xs' cursor='cursor-pointer'>Balas</Text>
                                   </div>

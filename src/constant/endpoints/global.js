@@ -4,6 +4,10 @@ export default {
     path: '/fe/article',
     method: 'GET'
   },
+  getDataForumArticleAuth: {
+    path: '/forum/article',
+    method: 'GET'
+  },
   createForumArticle: {
     path: '/forum/article',
     method: 'POST',
@@ -23,6 +27,18 @@ export default {
   },
   getDataBawasluUpdate: {
     path: '/fe/bawaslu-update',
+    method: 'GET'
+  },
+  getBawasluUpdateDetail: slug => ({
+    path: `/fe/bawaslu-update/${ slug }`,
+    method: 'GET'
+  }),
+  getDataGallery: {
+    path: '/fe/gallery',
+    method: 'GET'
+  },
+  getAllDataCategory: {
+    path: '/reff/category/all-data',
     method: 'GET'
   }
 }
