@@ -1,14 +1,64 @@
 import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 
 import { Text, Card, Button, Input, Select } from 'core/components'
 import { Editor } from "react-draft-wysiwyg"
+import draftToHtml from 'draftjs-to-html'
+import { convertToRaw } from 'draft-js'
+import { hooks, toastify } from 'utility'
+import { actions } from 'store'
 
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
 import { CloudArrowUpIcon } from '@heroicons/react/24/solid'
 
 const ForumSavePage = () => {
 
+  const history = useHistory()
+
+  // ** Store & Actions
+  const createForumArticle = hooks.useCustomDispatch(actions.forums.createForumArticle)
+
+  const [title, setTitle] = useState('')
   const [desc, setDesc] = useState('')
+  const [logo, setLogo] = useState({file: null, link: null})
+
+  const onSubmit = () => {
+  
+    if (title === '') {
+      toastify.error('Title wajib diisi')
+    } else if (desc === '') {
+      toastify.error('Deskripsi wajib diisi')
+    } else {
+      const datas = new FormData
+      datas.category_name = 'Berita'
+      datas.title = title
+      datas.description = draftToHtml(convertToRaw(desc.getCurrentContent()))
+      datas.status = 1
+      datas.image = logo.file ? logo.file : ''
+
+      createForumArticle(datas, isSuccess => {
+        if (isSuccess) {
+          toastify.success(`Berhasil memposting`)
+
+          history.push('/forum')
+        }
+      })
+    }
+  }
+
+  const onChangeFile = e => {
+
+    const reader = new FileReader(),
+      files = e.target.files
+
+    if (files.length <= 0) return
+
+    reader.onload = function () {
+      const blobURL = URL.createObjectURL(files[0])
+      setLogo({file: files[0], link: blobURL})
+    }
+    reader.readAsDataURL(files[0])
+  }
 
   return (
     <div className='py-3 md:py-6'>
@@ -22,6 +72,7 @@ const ForumSavePage = () => {
               key={'title'}
               id={'title'}
               placeholder='Mulai menulis'
+              onChange={(e) => setTitle(e.target.value)}
             />
             <Text size='text-sm' className='mb-2'>Deskripsi</Text>
             <Editor
@@ -29,7 +80,7 @@ const ForumSavePage = () => {
               toolbarClassName="border border-solid border-[#E0E0E0]"
               wrapperClassName="mb-3"
               editorClassName="h-64 mb-2 border border-solid border-[#E0E0E0]"
-              onEditorStateChange={setDesc}
+              onEditorStateChange={ setDesc }
               toolbar={{
                 options: ['history', 'blockType', 'textAlign', 'colorPicker', 'fontSize', 'fontFamily', 'inline', 'list', 'link', 'emoji', 'image', 'remove'],
                 inline: { 
@@ -48,10 +99,29 @@ const ForumSavePage = () => {
               }}
             />
             <Text size='text-sm' className='mb-2'>Lampiran Gambar/Vidio</Text>
-            <div className='flex flex-col justify-center items-center border border-solid border-[#E0E0E0] w-full h-20 bg-[#E0E0E0]'>
-              <CloudArrowUpIcon className='w-5 h-5 fill-white stroke-black-default'/>
-              <Text size='text-sm'>Drag gambar atau vidio mu kesini</Text>
-            </div>
+              <div className="w-full">
+                <label className="flex justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none">
+                    {logo.link ? (
+                      <img
+                        className='h-full'
+                        src={ logo.link }
+                        alt={''}
+                      />
+                    ) : (
+                    <>
+                      <span className="flex flex-col justify-center items-center space-x-2">
+                        <CloudArrowUpIcon className='w-5 h-5 fill-white stroke-black-default'/>
+                          <span className="font-medium text-gray-600">
+                            Drag gambar, atau
+                            <span className="text-blue-600 underline ml-1">browse</span>
+                          </span>
+                      </span>
+                      <input type="file" name="file_upload" onChange={ onChangeFile } className="hidden" accept='image/*'/>
+                    </>
+                    )}
+                </label>
+              </div>
+            
           </Card>
         </div>
         <div className='w-full md:flex-1 md:w-90'>
@@ -63,6 +133,7 @@ const ForumSavePage = () => {
               spacing='py-2.5 px-5'
               fontSize='text-base'
               sizing='w-full'
+              onClick={ onSubmit }
             >
               Posting
             </Button.ButtonPrimary>

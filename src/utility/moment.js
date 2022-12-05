@@ -70,3 +70,5 @@ export const addTime = (
 export const getPreviousMonth = (counter = 1) => {
   return moment(new Date(Date.now())).subtract(counter, 'month').endOf('month').format('MMM YYYY')
 }
+
+export const now = () => moment()

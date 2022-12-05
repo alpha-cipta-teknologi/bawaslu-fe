@@ -1,19 +1,28 @@
 export default {
   // ==== Global ====
-  getDataBrand: {
-    path: '/ref_brand',
+  getDataForumArticle: {
+    path: '/fe/article',
     method: 'GET'
   },
-  getBrandDetail: brandid => ({
-    path: `/ref_brand/${ brandid }`,
-    method: 'GET'
-  }),
-  actionBrand: {
-    path: '/ref_brand/action',
+  createForumArticle: {
+    path: '/forum/article',
+    method: 'POST',
+    type: 'form-data'
+  },
+  likeForumArticle: {
+    path: '/forum/like',
     method: 'POST'
   },
-  deleteBrand: {
-    path: '/ref_brand/delete',
+  commentForumArticle: {
+    path: '/forum/comment',
     method: 'POST'
+  },
+  getDataCommentForumArticle: {
+    path: '/fe/comment',
+    method: 'GET'
+  },
+  getDataBawasluUpdate: {
+    path: '/fe/bawaslu-update',
+    method: 'GET'
   }
 }

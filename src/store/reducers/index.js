@@ -11,6 +11,11 @@ import auth from './auth'
 // ** Param Global
 import paramsGlobal from './params'
 
+// ** Global FE
+import forums from 'views/public/forum/store/reducer'
+import bawasluupdates from 'views/public/bawaslu_update/store/reducer'
+
+
 import { history } from '../../history'
 
 const reducers = {
@@ -23,7 +28,10 @@ const reducers = {
   // ** Auth
   auth,
   // ** Param Global
-  paramsGlobal
+  paramsGlobal,
+  // ** Global FE
+  forums,
+  bawasluupdates
 }
 
 const rootReducer = combineReducers({
