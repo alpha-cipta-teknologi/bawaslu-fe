@@ -1,0 +1,2 @@
+export const GET_DATA_CONTENT_HOME = 'GET_DATA_CONTENT_HOME'
+export const LOGOUT = 'LOGOUT'

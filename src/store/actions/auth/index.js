@@ -13,17 +13,17 @@ export const handleLogin = (formLogin, callback = null) => {
     (response, dispatch, success) => {
       if (success) {
         const data = response.data
-        const menus = data.roles?.map(r => {
-          return {
-            action: 'read',
-            subject: r.menu_name.toLowerCase(),
-            resource: r.module_name
-          }
-        })
+        // const menus = data.roles?.map(r => {
+        //   return {
+        //     action: 'read',
+        //     subject: r.menu_name.toLowerCase(),
+        //     resource: r.module_name
+        //   }
+        // })
 
-        const abilitys = { ability: menus }
+        // const abilitys = { ability: menus }
 
-        Object.assign(data, abilitys)
+        // Object.assign(data, abilitys)
 
         dispatch({
           type: 'LOGIN',

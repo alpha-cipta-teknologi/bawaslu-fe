@@ -30,7 +30,7 @@ export default {
     method: 'GET'
   },
   getBawasluUpdateDetail: slug => ({
-    path: `/fe/bawaslu-update/${ slug }`,
+    path: `/fe/bawaslu-update/${slug}`,
     method: 'GET'
   }),
   getDataGallery: {
@@ -39,6 +39,10 @@ export default {
   },
   getAllDataCategory: {
     path: '/reff/category/all-data',
+    method: 'GET'
+  },
+  getDataContentHome: {
+    path: '/fe/content',
     method: 'GET'
   }
 }

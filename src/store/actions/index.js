@@ -8,6 +8,7 @@ import * as navigations from 'navigation/store/action'
 import * as forums from 'views/public/forum/store/action'
 import * as bawasluupdates from 'views/public/bawaslu_update/store/action'
 import * as gallerys from 'views/public/gallery/store/action'
+import * as home from 'views/public/home/store/action'
 
 const actions = {
   // ** Layout & Nav
@@ -21,7 +22,8 @@ const actions = {
   // ** Global FE
   forums,
   bawasluupdates,
-  gallerys
+  gallerys,
+  home
 }
 
 export default actions

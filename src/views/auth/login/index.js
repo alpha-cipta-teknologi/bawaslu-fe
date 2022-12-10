@@ -1,13 +1,13 @@
-import React, { useState, useCallback, useContext } from 'react'
+import React, { useState, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 import { Text, Button, Input } from 'core/components'
-import { localStorageHelper, utils, AbilityContext, hooks, toastify } from 'utility'
-
-import { CardAuth } from '../components'
+import { utils, hooks, toastify } from 'utility'
 import { images } from 'constant'
 import { actions } from 'store'
+
+import { CardAuth } from '../components'
 
 const formLoginInputProps = [
   {
@@ -23,13 +23,10 @@ const formLoginInputProps = [
 
 const LoginPage = () => {
   const history = useHistory()
-  const ability = useContext(AbilityContext)
 
   const handleLogin = hooks.useCustomDispatch(actions.auth.handleLogin)
-  const getDataProfile = hooks.useCustomDispatch(actions.auth.getDataProfile)
 
   const lazyLoad = useSelector(state => state.misc).lazyLoad
-  const navigations = useSelector(state => state.navigations).allData
 
   const [formLogin, setFormLogin] = useState({
     username: '',
@@ -47,23 +44,17 @@ const LoginPage = () => {
     } else {
       setShowErrorInput(false)
 
-      // handle login dispatch
-      // u/ dummy, simpan localstorage, save navigations to abilitys
-      //await localStorageHelper.setItem('userData', utils.removeProperties(formLogin, 'password'))
-
-      //history.push('/')
-
-      handleLogin(formLogin, async data => {
+      handleLogin(formLogin, async () => {
         try {
           history.push('/')
 
-          toastify.success(`You have successfully logged`)
+          toastify.success('You have successfully logged in')
 
         } catch (error) {
           toastify.error('Maaf, terjadi kesalahan. Silakan muat ulang halaman beberapa saat lagi')
         }
       })
-  
+
     }
   }
 

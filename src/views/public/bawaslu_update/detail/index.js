@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react'
-
-import { Text, CustomIcon, Card, Input, Button } from 'core/components'
-import { Link, useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { HeartIcon, EyeIcon } from '@heroicons/react/24/outline'
 import { useSelector } from 'react-redux'
+
+import { Text, CustomIcon, Card, Input, Button } from 'core/components'
 import { hooks, utils, momentHelper } from 'utility'
 import { actions } from 'store'
 import { apiConfig } from 'configs'
 import { images } from 'constant'
 
-const BawasluUpdateDetailPage = () => {
+import { MoreArticles, TopArticles } from '../components'
 
+const BawasluUpdateDetailPage = () => {
+  const history = useHistory()
   const { slug } = useParams()
 
   // ** Store & Actions
@@ -22,11 +24,9 @@ const BawasluUpdateDetailPage = () => {
   const bawasluList = useSelector(state => state.bawasluupdates).bawasluList
   const bawasluDetail = useSelector(state => state.bawasluupdates).bawasluDetail
   const lazyLoad = useSelector(state => state.misc).lazyLoad
-  const { userdata } = utils.isUserLoggedIn() ? utils.getUserData() : {userdata: null}
+  const { userdata } = utils.isUserLoggedIn() ? utils.getUserData() : { userdata: null }
 
   // ** States
-  const [currentPage, setCurrentPage] = useState(1)
-  const [rowsPerPage, setRowsPerPage] = useState(10)
   const [commentArticle, setCommentArticle] = useState('')
   const [replyCommentArticle, setReplyCommentArticle] = useState('')
   const [articleId, setArticleId] = useState('')
@@ -39,31 +39,44 @@ const BawasluUpdateDetailPage = () => {
 
   useEffect(() => {
     getDataBawasluUpdate({
-      page: currentPage,
-      perPage: rowsPerPage
+      page: 1,
+      perPage: 10
     })
-  }, [currentPage])
-
-  useEffect(() => {
-    getBawasluUpdateDetail(slug, 
-      async data => {
-        setArticleId(data.id)
-      }
-    )
   }, [])
 
+  const actionGetDataComment = articleId => {
+    getDataCommentBawasluUpdate({
+      group: 2,
+      id_external: articleId,
+      perPage: 1000,
+      page: 1
+    }, async dt => {
+      setDataComment(dt)
+    })
+  }
+
   useEffect(() => {
-    if (articleId) {
-      getDataCommentBawasluUpdate({
-        group: 2,
-        id_external: articleId,
-        perPage: 1000,
-        page: 1
-      }, async dt => {
-        setDataComment(dt)
-      })
-    }
-  }, [articleId])
+    getBawasluUpdateDetail(slug,
+      async data => {
+        setArticleId(data.id)
+
+        actionGetDataComment(data.id)
+      }
+    )
+  }, [slug])
+
+  // useEffect(() => {
+  //   if (articleId) {
+  //     getDataCommentBawasluUpdate({
+  //       group: 2,
+  //       id_external: articleId,
+  //       perPage: 1000,
+  //       page: 1
+  //     }, async dt => {
+  //       setDataComment(dt)
+  //     })
+  //   }
+  // }, [articleId])
 
   const handleCommentArticle = async () => {
 
@@ -85,28 +98,34 @@ const BawasluUpdateDetailPage = () => {
       status: 1,
       comment: commentArticle,
       id: articleId
+    }, isSuccess => {
+      if (isSuccess) {
+        actionGetDataComment(articleId)
+      }
     })
 
     setCommentArticle('')
   }
 
   const handleOpenReplyComment = async (commentid, author = null) => {
-
-    const oldDataComment = dataComment
-    oldDataComment.values = oldDataComment.values.map(d => {
-      if (d.id === commentid) {
-        if (d.is_comment) {
-          d.is_comment = false
+    const newDataComment = {
+      ...dataComment,
+      values: dataComment.values.map(d => {
+        if (d.id === commentid) {
+          if (d.is_comment) {
+            d.is_comment = false
+          } else {
+            d.is_comment = true
+          }
         } else {
-          d.is_comment = true
+          d.is_comment = false
         }
-      } else {
-        d.is_comment = false
-      }
 
-      return d
-    })
-    setDataComment(oldDataComment)
+        return d
+      })
+    }
+
+    setDataComment(newDataComment)
 
     if (author) setReplyCommentArticle(`@${author.username} `)
   }
@@ -155,64 +174,10 @@ const BawasluUpdateDetailPage = () => {
     handleOpenReplyComment(commentid)
   }
 
-  return (
-    <div className='py-3 md:py-6'>
-      <Text weight='font-bold' size='text-2xl' className='mb-7'>Bawaslu Update</Text>
-      <div className='flex flex-col w-full md:flex-row'>
-        <div className='w-full md:flex-auto md:w-96 h-[434px] mb-7 md:mb-0'>
-          <img
-            className='w-full h-full'
-            src={apiConfig.baseUrl + bawasluDetail.path_image}
-            alt={bawasluDetail.title}
-          />
-        </div>
-        <div className='w-full md:flex-1 md:pl-7'>
-          {bawasluList.data.map((data) => {
-            return (
-              <Link to={`/bawaslu_update/${data.slug}`} key={data.id}>
-                <div className='flex flex-row mb-3' key={data.id}>
-                  <img
-                    className='h-[140px] w-[200px] md:h-[76px] md:w-[120px]'
-                    src={apiConfig.baseUrl + data.path_thumbnail}
-                    alt={data.title}
-                  />
-                  <div className='flex flex-col flex-auto pl-3'>
-                    <Text size='text-xxs'>{momentHelper.formatDateFull(data.created_date)}</Text>
-                    <Text weight='font-bold' size='text-sm'>
-                      {data.title}
-                    </Text>
-                  </div>
-                </div>
-              </Link>
-            )
-          }).slice(0, 5)}
-        </div>
-      </div>
-      <div className='flex flex-row w-full my-4'>
-        <div className='flex flex-row items-center mr-4'>
-          <EyeIcon className='w-5 h-5 mr-1' />
-          <Text size='text-xs'>{bawasluDetail.counter_view} Melihat</Text>
-        </div>
-        <div className='flex flex-row items-center mr-4'>
-          <HeartIcon className='w-5 h-5 mr-1' />
-          <Text size='text-xs'>{bawasluDetail.counter_like} Menyukai</Text>
-        </div>
-        <div className='flex flex-row items-center mr-4'>
-          <CustomIcon iconName='comment' className='w-5 h-5 mr-1' /> 
-          <Text size='text-xs'>{bawasluDetail.counter_comment} Komentar</Text>
-        </div>
-        <div className='flex flex-row items-center'>
-          <CustomIcon iconName='share' className='w-5 h-5 mr-1' /> 
-          <Text size='text-xs'>{bawasluDetail.counter_share} Dibagikan</Text>
-        </div>
-      </div>
-      <div className='flex flex-col'>
-        <Text size='text-xxs' className='mb-3'>{momentHelper.formatDateFull(bawasluDetail.created_date)}</Text>
-        <Text weight='font-bold' size='text-sm' className='mb-3'>
-          {bawasluDetail.title}
-        </Text>
-        <div className='mb-3' dangerouslySetInnerHTML={{__html: bawasluDetail.description}} />
-      </div>
+  const renderCardComment = () => {
+    const loadingComment = utils.isLazyLoading(lazyLoad, 'commentForumArticle')
+
+    return (
       <Card cardClassName='mb-2 bg-[#F6F9FB]' contentClassName='flex flex-row justify-around items-center' paddingVertical='p-3' paddingHorizontal='p-3'>
         <div className='flex-shrink-0 bg-gray-200 h-8 w-8 rounded-full'>
           <img
@@ -224,28 +189,94 @@ const BawasluUpdateDetailPage = () => {
         </div>
         <Input
           containerClassName='border border-solid border-[#E0E0E0] flex-auto mx-4'
-          key={'title'}
-          id={'title'}
+          key='title'
+          id='title'
           placeholder='Tambahkan Komentar'
           onChange={(e) => setCommentArticle(e.target.value)}
           value={commentArticle}
         />
         <Button.ButtonPrimary
-          onClick={() => handleCommentArticle()}
+          onClick={handleCommentArticle}
           spacing='py-2.5 px-5'
           fontSize='text-base'
+          loading={loadingComment}
+          disabled={loadingComment}
         >
           Tambah Komentar
         </Button.ButtonPrimary>
       </Card>
+    )
+  }
+
+  const renderCardReplyComment = id => {
+    const loadingReply = utils.isLazyLoading(lazyLoad, 'commentForumArticle')
+
+    return (
+      <Card cardClassName='mb-2 bg-[#F6F9FB] md:ml-2 md:mr-2' contentClassName='flex flex-row justify-around items-center' paddingVertical='p-3' paddingHorizontal='p-3'>
+        <Input
+          containerClassName='border border-solid border-[#E0E0E0] flex-auto mr-4'
+          key='title'
+          id='title'
+          placeholder='Balas'
+          value={replyCommentArticle}
+          onChange={(e) => setReplyCommentArticle(e.target.value)}
+          autoFocus
+        />
+        <Button.ButtonPrimary
+          spacing='py-2.5 px-5'
+          fontSize='text-base'
+          onClick={() => handleReplyCommentArticle(id)}
+          disabled={loadingReply}
+          loading={loadingReply}
+        >
+          Balas
+        </Button.ButtonPrimary>
+      </Card>
+    )
+  }
+
+  return (
+    <div className='py-3 md:py-6'>
+      <Text weight='font-bold' size='text-2xl' className='mb-7'>Bawaslu Update</Text>
+
+      <TopArticles mainArticle={bawasluDetail} sideArticleList={bawasluList?.data || []} />
+
+      <div className='flex flex-row w-full my-4'>
+        <div className='flex flex-row items-center mr-4'>
+          <EyeIcon className='w-5 h-5 mr-1' />
+          <Text size='text-xs'>{bawasluDetail.counter_view} Melihat</Text>
+        </div>
+        <div className='flex flex-row items-center mr-4'>
+          <HeartIcon className='w-5 h-5 mr-1' />
+          <Text size='text-xs'>{bawasluDetail.counter_like} Menyukai</Text>
+        </div>
+        <div className='flex flex-row items-center mr-4'>
+          <CustomIcon iconName='comment' className='w-5 h-5 mr-1' />
+          <Text size='text-xs'>{bawasluDetail.counter_comment} Komentar</Text>
+        </div>
+        <div className='flex flex-row items-center'>
+          <CustomIcon iconName='share' className='w-5 h-5 mr-1' />
+          <Text size='text-xs'>{bawasluDetail.counter_share} Dibagikan</Text>
+        </div>
+      </div>
+      <div className='flex flex-col'>
+        <Text size='text-xxs' className='mb-3'>{momentHelper.formatDateFull(bawasluDetail.created_date)}</Text>
+        <Text weight='font-bold' size='text-sm' className='mb-3'>
+          {bawasluDetail.title}
+        </Text>
+        <div className='mb-3' dangerouslySetInnerHTML={{ __html: bawasluDetail.description }} />
+      </div>
+
+      {renderCardComment()}
+
       {dataComment.values.map(data => {
         return (
           <Card cardClassName='mb-2' contentClassName='flex flex-row justify-around' paddingVertical='p-3' paddingHorizontal='p-3' key={data.id}>
             <div className='flex-shrink-0 mr-2.5 bg-gray-200 h-11 w-11 rounded-full'>
               <img
                 className='h-11 w-11 rounded-full'
-                src={apiConfig.baseUrl + data.author.image_foto}
-                onError={(e) => (e.target.src = images.empty_state.profile)}
+                src={data.author.image_foto ? apiConfig.baseUrl + data.author.image_foto : ''}
+                onError={e => (e.target.src = images.empty_state.profile)}
                 alt={data.author.full_name}
               />
             </div>
@@ -272,99 +303,61 @@ const BawasluUpdateDetailPage = () => {
                   <HeartIcon className='w-5 h-5 mr-1 fill-[#EB5757] stroke-[#EB5757]' />
                 </div> */}
                 <div onClick={() => handleOpenReplyComment(data.id, data.author)} className='flex flex-row items-center mr-4 cursor-pointer'>
-                  <CustomIcon iconName='comment' className='w-5 h-5 mr-1' /> 
+                  <CustomIcon iconName='comment' className='w-5 h-5 mr-1' />
                   <Text size='text-xs' cursor='cursor-pointer'>Balas</Text>
                 </div>
               </div>
-            {data.is_comment &&
-              <Card cardClassName='mb-2 bg-[#F6F9FB] md:ml-2 md:mr-2' contentClassName='flex flex-row justify-around items-center' paddingVertical='p-3' paddingHorizontal='p-3'>
-                <Input
-                  containerClassName='border border-solid border-[#E0E0E0] flex-auto mr-4'
-                  key={'title'}
-                  id={'title'}
-                  placeholder='Balas'
-                  value={replyCommentArticle}
-                  onChange={(e) => setReplyCommentArticle(e.target.value)}
-                  autoFocus
-                />
-                <Button.ButtonPrimary
-                  spacing='py-2.5 px-5'
-                  fontSize='text-base'
-                  onClick={() => handleReplyCommentArticle(data.id)}
-                >
-                Balas
-                </Button.ButtonPrimary>
-              </Card>
-            }
-            {data.reply_comment.map(rdt => {
-              return (
-                <Card cardClassName='mb-2 md:ml-2 md:mr-2' contentClassName='flex flex-row justify-around' paddingVertical='p-3' paddingHorizontal='p-3' border='border-0' key={rdt.id}>
-                  <div className='flex-shrink-0 mr-2.5 bg-gray-200 h-8 w-8 rounded-full'>
-                    <img
-                      className='h-8 w-8 rounded-full'
-                      src={apiConfig.baseUrl + rdt.author.image_foto}
-                      onError={(e) => (e.target.src = images.empty_state.profile)}
-                      alt={rdt.author.full_name}
-                    />
-                  </div>
-                  <div className='flex-auto'>
-                    <div className='flex flex-row justify-between'>
-                      <Text
-                        size='text-xs'
-                        weight='font-bold'
-                        lineClamp='line-clamp-1'
-                        cursor='cursor-pointer'
-                      >{rdt.author.full_name}</Text>
-                      <Text
-                        size='text-xxs'
-                        color='text-grey-base'
-                        lineClamp='line-clamp-1'
-                        cursor='cursor-pointer'
-                      >{`${momentHelper.formatDateFull(rdt.created_date)} ${momentHelper.formatTime(rdt.created_date)}`}</Text>
+              {!!data.is_comment && renderCardReplyComment(data.id)}
+              {data.reply_comment.map(rdt => {
+                return (
+                  <Card cardClassName='mb-2 md:ml-2 md:mr-2' contentClassName='flex flex-row justify-around' paddingVertical='p-3' paddingHorizontal='p-3' border='border-0' key={rdt.id}>
+                    <div className='flex-shrink-0 mr-2.5 bg-gray-200 h-8 w-8 rounded-full'>
+                      <img
+                        className='h-8 w-8 rounded-full'
+                        src={rdt.author.image_foto ? apiConfig.baseUrl + rdt.author.image_foto : ''}
+                        onError={(e) => (e.target.src = images.empty_state.profile)}
+                        alt={rdt.author.full_name}
+                      />
                     </div>
-                    <Text size='text-sm' className='mb-1'>
-                      {rdt.comment}
-                    </Text>
-                    <div className='flex flex-row w-full mt-2'>
-                      {/* <div className='flex flex-row items-center mr-4'>
+                    <div className='flex-auto'>
+                      <div className='flex flex-row justify-between'>
+                        <Text
+                          size='text-xs'
+                          weight='font-bold'
+                          lineClamp='line-clamp-1'
+                          cursor='cursor-pointer'
+                        >{rdt.author.full_name}</Text>
+                        <Text
+                          size='text-xxs'
+                          color='text-grey-base'
+                          lineClamp='line-clamp-1'
+                          cursor='cursor-pointer'
+                        >{`${momentHelper.formatDateFull(rdt.created_date)} ${momentHelper.formatTime(rdt.created_date)}`}</Text>
+                      </div>
+                      <Text size='text-sm' className='mb-1'>
+                        {rdt.comment}
+                      </Text>
+                      <div className='flex flex-row w-full mt-2'>
+                        {/* <div className='flex flex-row items-center mr-4'>
                         <HeartIcon className='w-5 h-5 mr-1 fill-[#EB5757] stroke-[#EB5757]' />
                       </div> */}
-                      <div onClick={() => handleOpenReplyComment(data.id, rdt.author)} className='flex flex-row items-center mr-4 cursor-pointer'>
-                        <CustomIcon iconName='comment' className='w-5 h-5 mr-1' /> 
-                        <Text size='text-xs' cursor='cursor-pointer'>Balas</Text>
+                        <div onClick={() => handleOpenReplyComment(data.id, rdt.author)} className='flex flex-row items-center mr-4 cursor-pointer'>
+                          <CustomIcon iconName='comment' className='w-5 h-5 mr-1' />
+                          <Text size='text-xs' cursor='cursor-pointer'>Balas</Text>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Card>
-              )
-            })}
+                  </Card>
+                )
+              })}
             </div>
           </Card>
         )
       })}
-      
+
       <Text weight='font-bold' size='text-2xl' className='my-7'>Berita Lainnya</Text>
-      <div className='flex flex-wrap'>
-        {bawasluList.data.map((data, key) => {
-          return (
-            <Link to={`/bawaslu_update/${data.slug}`} key={data.id}>
-              <div className='flex flex-col mr-3 mb-7' key={key}>
-                <img
-                  className='h-[140px] w-[200px]'
-                  src={apiConfig.baseUrl + data.path_thumbnail}
-                  alt={data.title}
-                />
-                <div className='flex flex-col mt-3 w-[200px]'>
-                  <Text size='text-xxs'>{momentHelper.formatDateFull(data.created_date)}</Text>
-                  <Text weight='font-bold' size='text-sm'>
-                    {data.title}
-                  </Text>
-                </div>
-              </div>
-            </Link>
-          )
-        })}
-      </div>
+
+      <MoreArticles limit={5} />
     </div>
   )
 }

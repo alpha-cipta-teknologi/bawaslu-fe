@@ -61,7 +61,8 @@ const Input = ({
   const inputClassNames = styleHelper.classNames(
     'font-primary font-normal text-blue-navy',
     setResponsiveTextSize(textSize),
-    'focus:ring-0 outline-0 border-none block w-full pb-3 pt-0.5 px-3.5',
+    'focus:ring-0 outline-0 border-none block w-full px-3.5',
+    label ? 'pb-3 pt-0.5' : 'py-3',
     // 'placeholder:text-drcGrey-base placeholder:font-primary placeholder:font-normal',
     // ...placeholderResponsiveSize,
     spacing,
@@ -336,7 +337,7 @@ const Input = ({
             ? 'bg-white'
             : bgColor
       )}>
-        {renderLabel()}
+        {label && renderLabel()}
 
         {renderInputBasedOnType()}
       </div>

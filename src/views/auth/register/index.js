@@ -1,7 +1,8 @@
 import React, { useState, useCallback } from 'react'
 import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 
-import { Text, Button, Input } from 'core/components'
+import { Button, Input } from 'core/components'
 import { utils, hooks, toastify } from 'utility'
 import { actions } from 'store'
 
@@ -56,6 +57,8 @@ const formRegisterInputProps = [
 ]
 
 const RegisterPage = () => {
+  const history = useHistory()
+
   const lazyLoad = useSelector(state => state.misc).lazyLoad
   const handleRegister = hooks.useCustomDispatch(actions.auth.handleRegister)
 
@@ -83,11 +86,11 @@ const RegisterPage = () => {
       setShowErrorInput(false)
 
       // handle register dispatch
-      handleRegister(formRegister, async data => {
+      handleRegister(formRegister, async () => {
         try {
           history.push('/')
 
-          toastify.success(`You have successfully register, check your email`)
+          toastify.success('You have successfully register, check your email')
 
         } catch (error) {
           toastify.error('Maaf, terjadi kesalahan. Silakan muat ulang halaman beberapa saat lagi')

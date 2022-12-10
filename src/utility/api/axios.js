@@ -19,7 +19,8 @@ const axiosInstance = axios.create({ baseURL: config.baseUrl })
 
 const refreshAccessToken = async () => {
   try {
-    const result = await axiosRequest(endpoints.refreshToken)
+    const refreshToken = getToken(storageRefreshTokenKeyName)
+    const result = await axiosRequest(endpoints.refreshToken, { refresh_token: refreshToken })
 
     return result
   } catch (error) {
@@ -37,7 +38,7 @@ axiosInstance.interceptors.request.use(
     // ** If token is present add it to request's Authorization Header
     if (refreshToken && config.url === endpoints.refreshToken.path) {
       // ** eslint-disable-next-line no-param-reassign
-      const authorization = `${ authConfig.tokenType } ${ refreshToken }`
+      const authorization = `${authConfig.tokenType} ${refreshToken}`
 
       config.headers = {
         ...config.headers,
@@ -45,7 +46,7 @@ axiosInstance.interceptors.request.use(
       }
     } else if (accessToken && config.url !== endpoints.refreshToken.path) {
       // ** eslint-disable-next-line no-param-reassign
-      const authorization = `${ authConfig.tokenType } ${ accessToken }`
+      const authorization = `${authConfig.tokenType} ${accessToken}`
 
       config.headers = {
         ...config.headers,
@@ -74,7 +75,7 @@ const forceLogout = () => {
 // ** Add request/response interceptor
 axiosInstance.interceptors.response.use(response => {
   return response
-}, async function(error) {
+}, async function (error) {
   const originalRequest = error.config
 
   if (!error.response) {
@@ -86,16 +87,8 @@ axiosInstance.interceptors.response.use(response => {
 
     console.log('==== Interceptors Error Response ====', error.response)
 
-    if (
-      (status === 400 || status === 401) &&
-      respData &&
-      (respData.stat_msg.toLowerCase() === 'token not valid' || respData.stat_msg.toLowerCase() === 'token is invalid')
-    ) {
-      forceLogout()
-
-      return new Promise(() => { })
-    } else if (status === 401 || status === 403) {
-      if (config.url?.includes('refresh-token')) {
+    if (status === 401 || status === 403) {
+      if (config.url?.includes(endpoints.refreshToken.path)) {
         forceLogout()
 
         return new Promise(() => { })
@@ -108,7 +101,7 @@ axiosInstance.interceptors.response.use(response => {
           const { code, data } = await refreshAccessToken()
 
           if (code === 200) {
-            axios.defaults.headers.common['Authorization'] = await `${ authConfig.tokenType } ${ data.access_token }`
+            axios.defaults.headers.common['Authorization'] = await `${authConfig.tokenType} ${data.access_token}`
 
             await setToken(data.access_token, data.refresh_token)
 
@@ -132,7 +125,7 @@ axiosInstance.interceptors.response.use(response => {
         }
       }
     } else {
-      toastify.error(respData.stat_msg)
+      toastify.error(respData.message)
 
       return Promise.reject(error)
     }

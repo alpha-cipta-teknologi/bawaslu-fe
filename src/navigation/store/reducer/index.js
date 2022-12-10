@@ -1,5 +1,5 @@
 // ** Import action types
-import { GET_ALL_DATA_NAVIGATION, LOGOUT } from '../actionTypes'
+import { LOGOUT } from '../actionTypes'
 
 // ** Initial State
 const initialState = {
@@ -64,9 +64,6 @@ const initialState = {
 
 const navigationReducer = (state = initialState, action) => {
   switch (action.type) {
-    case GET_ALL_DATA_NAVIGATION:
-      return { ...state, allData: action.data }
-
     case LOGOUT:
       return initialState
 
@@ -74,7 +71,7 @@ const navigationReducer = (state = initialState, action) => {
       return {
         ...state,
         allData: initialState.allData
-      } // change to `return state` jika api navigation ada
+      }
   }
 }
 

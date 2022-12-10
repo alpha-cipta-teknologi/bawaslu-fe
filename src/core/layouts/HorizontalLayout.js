@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import * as HeroIcon from '@heroicons/react/24/outline'
 
-import { styleHelper, utils } from 'utility'
+import { utils } from 'utility'
 
 import { ScrollUp } from '../components'
 
@@ -12,13 +12,7 @@ import Footer from './components/Footer'
 const HorizontalLayout = ({ children, routerProps }) => {
   const navStore = useSelector(state => state.navigations)
 
-  // const getAllDataNavigation = hooks.useCustomDispatch(actions.navigations.getAllDataNavigation)
-
   const [navigations, setNavigations] = useState([])
-
-  // useEffect(() => {
-  //   getAllDataNavigation()
-  // }, [])
 
   const convertNavigationData = r => {
     const ParentIcon = HeroIcon[r.menu_icon] ? HeroIcon[r.menu_icon] : HeroIcon.Bars3Icon

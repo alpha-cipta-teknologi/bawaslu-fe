@@ -13,15 +13,7 @@ import { history } from '../history'
 
 const persistConfig = {
   key: 'root',
-  storage,
-  blacklist: [
-    'reportSales',
-    'reportCRC',
-    'reportOrder',
-    'reportPromo',
-    'absenSalesman',
-    'manPower'
-  ]
+  storage
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

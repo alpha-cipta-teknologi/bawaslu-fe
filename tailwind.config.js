@@ -9,6 +9,7 @@ module.exports = {
       },
       fontSize: {
         xxs: '0.625rem',
+        '2.5xl': '1.75rem',
         '5.5xl': ['3.25rem', '4rem']
       },
       colors: {
@@ -40,7 +41,8 @@ module.exports = {
             3: '#D8D8D8',
             4: '#D9D9D9',
             5: '#D2D2D2',
-            6: '#DBDBDB'
+            6: '#DBDBDB',
+            7: '#828282'
           },
           base: '#999999',
           dark: '#595959'
@@ -66,7 +68,10 @@ module.exports = {
       },
       borderRadius: {
         '2sm': '3px'
-      }
+      },
+      backgroundImage: {
+        gradient1: 'linear-gradient(180deg, rgba(51, 51, 51, 0) 0%, #333333 100%)'
+      },
     },
   },
   plugins: [

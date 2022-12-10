@@ -15,7 +15,7 @@ import paramsGlobal from './params'
 import forums from 'views/public/forum/store/reducer'
 import bawasluupdates from 'views/public/bawaslu_update/store/reducer'
 import gallerys from 'views/public/gallery/store/reducer'
-
+import home from 'views/public/home/store/reducer'
 
 import { history } from '../../history'
 
@@ -33,7 +33,8 @@ const reducers = {
   // ** Global FE
   forums,
   bawasluupdates,
-  gallerys
+  gallerys,
+  home
 }
 
 const rootReducer = combineReducers({
