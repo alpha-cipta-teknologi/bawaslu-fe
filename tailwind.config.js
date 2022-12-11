@@ -70,7 +70,8 @@ module.exports = {
         '2sm': '3px'
       },
       backgroundImage: {
-        gradient1: 'linear-gradient(180deg, rgba(51, 51, 51, 0) 0%, #333333 100%)'
+        gradient1: 'linear-gradient(180deg, rgba(51, 51, 51, 0) 0%, #333333 100%)',
+        gradient2: 'linear-gradient(180.59deg, rgba(51, 51, 51, 0) -11.75%, #333333 118.76%)'
       },
     },
   },
