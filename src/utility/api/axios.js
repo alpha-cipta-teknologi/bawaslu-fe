@@ -125,7 +125,9 @@ axiosInstance.interceptors.response.use(response => {
         }
       }
     } else {
-      toastify.error(respData.message)
+      if (status !== 404) {
+        toastify.error(respData.message)
+      }
 
       return Promise.reject(error)
     }

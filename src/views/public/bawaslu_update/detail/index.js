@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux'
 import { Text, CustomIcon, Card, Input, Button } from 'core/components'
 import { hooks, utils, momentHelper } from 'utility'
 import { actions } from 'store'
-import { apiConfig } from 'configs'
 import { images } from 'constant'
 
 import { MoreArticles, TopArticles } from '../components'
@@ -182,7 +181,7 @@ const BawasluUpdateDetailPage = () => {
         <div className='flex-shrink-0 bg-gray-200 h-8 w-8 rounded-full'>
           <img
             className='h-8 w-8 rounded-full'
-            src={`${userdata} ? ${apiConfig.baseUrl + userdata?.image_foto} : ${images.empty_state.profile}`}
+            src={userdata && userdata?.image_foto ? utils.getImageAPI(userdata?.image_foto) : images.empty_state.profile}
             onError={(e) => (e.target.src = images.empty_state.profile)}
             alt={userdata?.full_name}
           />
@@ -273,7 +272,7 @@ const BawasluUpdateDetailPage = () => {
             <div className='flex-shrink-0 mr-2.5 bg-gray-200 h-11 w-11 rounded-full'>
               <img
                 className='h-11 w-11 rounded-full'
-                src={data.author.image_foto ? apiConfig.baseUrl + data.author.image_foto : ''}
+                src={utils.getImageAPI(data.author.image_foto)}
                 onError={e => (e.target.src = images.empty_state.profile)}
                 alt={data.author.full_name}
               />
@@ -312,7 +311,7 @@ const BawasluUpdateDetailPage = () => {
                     <div className='flex-shrink-0 mr-2.5 bg-gray-200 h-8 w-8 rounded-full'>
                       <img
                         className='h-8 w-8 rounded-full'
-                        src={rdt.author.image_foto ? apiConfig.baseUrl + rdt.author.image_foto : ''}
+                        src={utils.getImageAPI(rdt.author.image_foto)}
                         onError={(e) => (e.target.src = images.empty_state.profile)}
                         alt={rdt.author.full_name}
                       />

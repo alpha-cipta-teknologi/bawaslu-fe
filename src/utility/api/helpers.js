@@ -38,7 +38,7 @@ export const axiosRequest = async (endpoint, body) => {
     const data = await {
       code: response.status,
       stat_code: result?.stat_code || response.status,
-      stat_msg: result?.stat_msg || '',
+      message: result?.message || '',
       data: result?.data || [],
       pagination: result?.pagination || {}
     }
@@ -57,7 +57,7 @@ export const axiosRequest = async (endpoint, body) => {
         const dataError = {
           code: error.response.status,
           stat_code: result?.stat_code,
-          stat_msg: result?.stat_msg,
+          message: result?.message,
           data: result?.data || [],
           pagination: result?.pagination
         }

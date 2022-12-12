@@ -1,14 +1,10 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { convertNodeToElement } from 'react-html-parser'
-import { EllipsisVerticalIcon, HeartIcon } from '@heroicons/react/24/outline'
 import _truncate from 'lodash/truncate'
 
-import { Card, Tabs, Text, CustomIcon, TextHTML, Menu } from 'core/components'
-import { hooks, momentHelper, styleHelper, toastify, utils } from 'utility'
+import { Card, Tabs, Text, CustomIcon, ForumArticleList } from 'core/components'
+import { hooks, styleHelper, utils } from 'utility'
 import { actions } from 'store'
-import { apiConfig } from 'configs'
 
 import { FormChangePassword, FormUpdateProfile } from './components'
 
@@ -35,150 +31,21 @@ const profileMenus = [
   }
 ]
 
-const menuCardArticle = [
-  {
-    id: 'delete',
-    name: 'Hapus',
-    icon: () => <CustomIcon iconName='trash_outline' />
-  }
-]
-
-const ExtendedTextArticle = ({ text, length = 200 }) => {
-  const [showMore, setShowMore] = useState(false)
-
-  const transformArticle = (node, nodeIdx) => {
-    if (node.type === 'tag' && node.name === 'p' && nodeIdx === 0) {
-      return (
-        <Text
-          key={nodeIdx}
-          type='span'
-          size='text-sm'
-        >
-          {node.children.map((child, childIdx) => {
-            return convertNodeToElement(child, childIdx, transformArticle)
-          })}
-        </Text>
-      )
-    }
-  }
-
-  return (
-    <span>
-      <TextHTML
-        htmlString={showMore ? text : _truncate(text || '', { length })}
-        size='text-sm'
-        options={{ transform: transformArticle }}
-      />{' '}
-
-      {text?.length > length &&
-        <Text
-          type='span'
-          size='text-sm'
-          color='text-primary'
-          underlineOnHover
-          onClick={() => setShowMore(!showMore)}
-        >{showMore ? '(sembunyikan)' : '(lanjut)'}</Text>
-      }
-    </span>
-  )
-}
-
-const CounterArticle = ({
-  text,
-  renderIcon
-}) => {
-  return (
-    <div className='flex flex-row items-center gap-x-1.5'>
-      {renderIcon()}
-      <Text size='text-xs' weight='font-medium'>{text}</Text>
-    </div>
-  )
-}
-
 const ProfilePage = () => {
   const history = useHistory()
 
   const handleLogout = hooks.useCustomDispatch(actions.auth.handleLogout)
-  const getDataForumArticle = hooks.useCustomDispatch(actions.forums.getDataForumArticleAuth)
-  const deleteForumArticle = hooks.useCustomDispatch(actions.forums.deleteForumArticle)
-
-  const forumList = useSelector(state => state.forums).forumList
-  const lazyLoad = useSelector(state => state.misc).lazyLoad
-
-  const observer = useRef()
 
   const { userdata } = utils.isUserLoggedIn() ? utils.getUserData() : { userdata: null }
 
   const [selectedMenuId, setSelectedMenuId] = useState(profileMenus[0].id)
-  const [rowsPerPageForum] = useState(1)
   const [pageForum, setPageForum] = useState(1)
-  const [hasMoreData, setHasMoreData] = useState(true)
   const [formPassword, setFormPassword] = useState({
     old_password: '',
     password: '',
     confirm_password: ''
   })
   const [showErrorInput, setShowErrorInput] = useState(false)
-  const [refreshing, setRefreshing] = useState(true)
-  const [isMounted, setIsMounted] = useState(false)
-
-  const loadingForumArticle = utils.isLazyLoading(lazyLoad, 'getDataForumArticle')
-
-  const lastElementRef = useCallback(node => {
-    if (loadingForumArticle) return
-
-    if (observer.current) observer.current.disconnect()
-    observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMoreData) {
-        setPageForum(prev => prev + 1)
-      }
-    })
-
-    if (node) observer.current.observe(node)
-  }, [loadingForumArticle, hasMoreData])
-
-  useEffect(() => {
-    if (selectedMenuId === 'forum_article') {
-      const pageForumCount = Math.ceil(forumList?.total / rowsPerPageForum) || 1
-
-      if (pageForum >= pageForumCount) {
-        setHasMoreData(false)
-      } else {
-        setHasMoreData(true)
-      }
-    }
-  }, [pageForum, forumList?.total, selectedMenuId])
-
-  const fetchForumArticle = () => {
-    getDataForumArticle({
-      page: pageForum,
-      perPage: rowsPerPageForum
-    }, () => {
-      if (!isMounted) setIsMounted(true)
-      if (refreshing) setRefreshing(false)
-    })
-  }
-
-  useEffect(() => {
-    if (selectedMenuId === 'forum_article') {
-      fetchForumArticle()
-    }
-  }, [pageForum, selectedMenuId])
-
-  // ==== Refreshing ====
-  useEffect(() => {
-    if (refreshing) {
-      window.scrollTo({
-        left: 0,
-        top: 0
-      })
-
-      if (selectedMenuId === 'forum_article' && isMounted) {
-        if (pageForum !== 1) setPageForum(1)
-        else fetchForumArticle()
-      }
-    }
-  }, [refreshing, selectedMenuId])
 
   const onLogout = () => {
     handleLogout()
@@ -201,105 +68,18 @@ const ProfilePage = () => {
     }
   }
 
-  const onClickMenuCardArticle = (menu, data) => {
-    if (menu.id === 'delete') {
-      console.log('delete', data)
-      deleteForumArticle(data.id, () => {
-        toastify.success('Berhasil menghapus postingan')
-
-        setRefreshing(true)
-      })
-    }
-  }
-
-  const renderCardArticle = data => {
-    const author = data.author
-
-    return (
-      <Card paddingHorizontal='px-0' paddingVertical='py-4'>
-        <div className='px-3 grid gap-y-1.5'>
-          <div className='flex justify-between'>
-            <div className='flex'>
-              <div className='mr-4 flex-shrink-0 self-center'>
-                <img
-                  className='inline-block h-11 w-11 rounded-full'
-                  src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-                  alt={author?.full_name}
-                />
-              </div>
-              <div className='grid gap-y-1'>
-                <Text size='text-sm' weight='font-bold' color='text-black-default'>{author.full_name}</Text>
-                <Text size='text-xs' color='text-grey-base'>{momentHelper.formatDateFull(data.created_date)}</Text>
-              </div>
-            </div>
-
-            <Menu
-              renderButton={() => <EllipsisVerticalIcon className='w-5 h-5' />}
-              menuItems={menuCardArticle}
-              onClickMenuItem={menu => onClickMenuCardArticle(menu, data)}
-            />
-          </div>
-
-          <Text weight='font-bold'>{data.title}</Text>
-
-          <ExtendedTextArticle text={data.description || ''} />
-        </div>
-
-        {data.path_image && (
-          <img
-            alt={data.title}
-            src={apiConfig.baseUrl + data.path_image}
-            className='w-full h-full max-h-80 object-cover mt-1.5'
-          />
-        )}
-
-        <div className='flex flex-row w-full mt-6 px-3 gap-x-4.5'>
-          <CounterArticle
-            renderIcon={() => (
-              <HeartIcon className={styleHelper.classNames(
-                'w-5 h-5',
-                data.like ? 'fill-[#EB5757] stroke-[#EB5757]' : ''
-              )} />
-            )}
-            text={`${data.counter_like} Menyukai`}
-          />
-          <CounterArticle
-            renderIcon={() => <CustomIcon iconName='comment' className='w-5 h-5' />}
-            text={`${data.counter_comment} Komentar`}
-          />
-          <CounterArticle
-            renderIcon={() => <CustomIcon iconName='share' className='w-5 h-5' />}
-            text={`${data.counter_share} Dibagikan`}
-          />
-        </div>
-      </Card>
-    )
-  }
-
-  const renderForumArticles = () => {
-    return (
-      <div className='grid gap-y-4'>
-        {forumList?.data?.map((data, i) => {
-          const isLastElement = forumList?.data?.length === i + 1
-
-          return isLastElement ? (
-            <div key={i} ref={lastElementRef}>
-              {renderCardArticle(data)}
-            </div>
-          ) : (
-            <div key={i}>
-              {renderCardArticle(data)}
-            </div>
-          )
-        })}
-      </div>
-    )
-  }
-
   const renderContent = () => {
     switch (selectedMenuId) {
       case 'forum_article':
-        return renderForumArticles()
+        return (
+          <ForumArticleList
+            fulfilledCondition={selectedMenuId === 'forum_article'}
+            emptyStateTitle='Tidak ada postingan'
+            page={pageForum}
+            setPage={setPageForum}
+            withActionCard
+          />
+        )
       case 'profile':
         return (
           <FormUpdateProfile

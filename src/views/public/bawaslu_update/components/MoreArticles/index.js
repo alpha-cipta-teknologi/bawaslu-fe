@@ -29,7 +29,7 @@ const MoreArticles = ({ limit }) => {
                 <Link to={`/bawaslu_update/${data.slug}`}>
                   <img
                     className='h-[140px] w-full object-cover'
-                    src={data.path_thumbnail ? apiConfig.baseUrl + data.path_thumbnail : ''}
+                    src={utils.getImageAPI(data.path_thumbnail)}
                     alt={data.title}
                   />
                 </Link>

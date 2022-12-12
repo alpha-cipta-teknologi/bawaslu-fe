@@ -2,8 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { Text } from 'core/components'
-import { apiConfig } from 'configs'
-import { momentHelper } from 'utility'
+import { momentHelper, utils } from 'utility'
 
 const TopArticles = ({
   mainArticle,
@@ -17,7 +16,7 @@ const TopArticles = ({
           <div className='w-full h-full bg-gray-200'>
             <img
               className='w-full h-full object-cover'
-              src={mainArticle?.path_thumbnail ? apiConfig.baseUrl + mainArticle?.path_thumbnail : ''}
+              src={utils.getImageAPI(mainArticle?.path_thumbnail)}
               alt={mainArticle?.title}
             />
           </div>
@@ -43,7 +42,7 @@ const TopArticles = ({
               <Link to={`/bawaslu_update/${data.slug}`} className='w-full'>
                 <img
                   className='h-28 sm:h-[140px] sm:max-w-[200px] md:h-[76px] w-full md:max-w-[120px] object-cover'
-                  src={data.path_thumbnail ? apiConfig.baseUrl + data.path_thumbnail : ''}
+                  src={utils.getImageAPI(data.path_thumbnail)}
                   alt={data.title}
                 />
               </Link>

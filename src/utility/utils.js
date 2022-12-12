@@ -1,3 +1,4 @@
+import { apiConfig } from 'configs'
 import _ from 'lodash'
 
 import * as momentHelper from './moment'
@@ -389,4 +390,10 @@ export const getBase64 = (file) => {
       resolve('')
     }
   })
+}
+
+export const getImageAPI = path => {
+  if (path) return apiConfig.baseUrl + path
+
+  return ''
 }

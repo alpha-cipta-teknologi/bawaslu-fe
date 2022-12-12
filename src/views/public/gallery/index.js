@@ -107,7 +107,7 @@ const GalleryPage = () => {
                   onLoad={({ currentTarget }) => {
                     currentTarget.className = 'h-[150px] sm:h-[196px] object-cover'
                   }}
-                  src={apiConfig.baseUrl + data.path_thumbnail}
+                  src={utils.getImageAPI(data.path_thumbnail)}
                   alt={data.folder_name}
                 />
 
@@ -145,7 +145,7 @@ const GalleryPage = () => {
       <ModalGallery
         open={openModal}
         setOpen={setOpenModal}
-        src={galleryDetail.detail?.length ? apiConfig.baseUrl + galleryDetail.detail[activeImageIdx]?.path_image : ''}
+        src={galleryDetail.detail?.length ? utils.getImageAPI(galleryDetail.detail[activeImageIdx]?.path_image) : ''}
         alt={galleryDetail.folder_name}
         content={galleryDetail.description}
         onClickArrow={action => {

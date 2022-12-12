@@ -7,7 +7,6 @@ import { hooks, utils } from 'utility'
 import { actions } from 'store'
 
 import { CustomIcon, Menu } from '../../../components'
-import { apiConfig } from 'configs'
 
 const userNavigation = [
   {
@@ -46,7 +45,7 @@ const MenuProfile = () => {
           <span className='flex items-center gap-x-4'>
             <img
               className='h-10 w-10 rounded-full'
-              src={userdata?.image_foto ? apiConfig.baseUrl + userdata?.image_foto : images.empty_state.profile}
+              src={userdata?.image_foto ? utils.getImageAPI(userdata?.image_foto) : images.empty_state.profile}
               onError={({ currentTarget }) => {
                 currentTarget.onerror = null
                 currentTarget.src = images.empty_state.profile

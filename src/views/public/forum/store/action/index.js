@@ -57,10 +57,23 @@ export const getDataForumArticleAuth = (queryParams, callback = null) => {
           }
         })
 
-        callback ? callback(values) : null
+        if (callback) callback(values)
       }
     },
-    null,
+    (response, dispatch) => {
+      if (response.code === 404) {
+        dispatch({
+          type: GET_DATA_FORUM_ARTICLE,
+          data: {
+            data: [],
+            total: 0,
+            page: queryParams.page || 1
+          }
+        })
+
+        if (callback) callback([])
+      }
+    },
     dispatch => dispatch(lazyLoadStart('getDataForumArticle')),
     dispatch => dispatch(lazyLoadEnd('getDataForumArticle'))
   )

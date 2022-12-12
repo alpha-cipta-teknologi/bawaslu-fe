@@ -1,6 +1,7 @@
 import { ReactComponent as Bell } from 'assets/images/icons/bell.svg'
 import { ReactComponent as Calendar } from 'assets/images/icons/calendar.svg'
 import { ReactComponent as Document } from 'assets/images/icons/document.svg'
+import { ReactComponent as EmptyData } from 'assets/images/icons/empty_data.svg'
 import { ReactComponent as Lock } from 'assets/images/icons/lock.svg'
 import { ReactComponent as Logout } from 'assets/images/icons/logout.svg'
 import { ReactComponent as Logout_2 } from 'assets/images/icons/logout_2.svg'
@@ -23,6 +24,7 @@ export default {
     bell: Bell,
     calendar: Calendar,
     document: Document,
+    empty_data: EmptyData,
     lock: Lock,
     logout: Logout,
     logout_2: Logout_2,

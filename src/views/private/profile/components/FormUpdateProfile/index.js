@@ -174,7 +174,7 @@ const FormUpdateProfile = ({
           <span className='bg-[#FAFAFA] rounded w-20 h-20 relative flex border border-[#F0F0F0]'>
             {value ? (
               <img
-                src={typeof value === 'string' ? apiConfig.baseUrl + value : profilePicture}
+                src={typeof value === 'string' ? utils.getImageAPI(value) : profilePicture}
                 className='w-full h-full object-cover'
                 alt='profile'
               />
