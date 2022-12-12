@@ -105,7 +105,7 @@ const BasicButton = ({
             debouncedOnClick(e)
           }, 500)
         }}
-        disabled={disabled}
+        disabled={disabled || loading}
         type={type}
       >
         {loading ? (

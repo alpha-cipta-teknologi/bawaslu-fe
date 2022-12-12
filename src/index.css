@@ -235,15 +235,21 @@ input[type="search"]::-webkit-search-results-decoration {
   }
 }
 
-/* Override react google maps api */
-.gm-style-moc {
-  opacity: 0 !important;
+/* HTML */
+.html-str a {
+  all: revert;
 }
 
-@media only screen and ( min-width: 980px ) {
-  .gm-style-moc {
-    opacity: 0 !important;
-  }
+.html-str menu {
+  all: revert;
+}
+
+.html-str ul {
+  all: revert;
+}
+
+.html-str ol {
+  all: revert;
 }
 
 /* Override React Date Picker */

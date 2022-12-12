@@ -13,6 +13,7 @@ import Image from './Image'
 import ImagePreview from './ImagePreview'
 import Input from './Input'
 import Logo from './Logo'
+import Menu from './Menu'
 import Modal from './Modal'
 import ModalLoader from './ModalLoader'
 import ScrollUp from './ScrollUp'
@@ -22,7 +23,9 @@ import Spinner from './Loader/Spinner'
 import SwalIcon from './SwalIcon'
 import Switch from './Switch'
 import SyncLoader from './Loader/SyncLoader'
+import Tabs from './Tabs'
 import Text from './Text'
+import TextHTML from './TextHTML'
 import TimePicker from './DatePicker/TimePicker'
 import Tooltip from './Tooltip'
 import TopLoaderBar from './Loader/TopLoaderBar'
@@ -45,6 +48,7 @@ export {
   ImagePreview,
   Input,
   Logo,
+  Menu,
   Modal,
   ModalLoader,
   ScrollUp,
@@ -54,7 +58,9 @@ export {
   SwalIcon,
   Switch,
   SyncLoader,
+  Tabs,
   Text,
+  TextHTML,
   TimePicker,
   Tooltip,
   TopLoaderBar,

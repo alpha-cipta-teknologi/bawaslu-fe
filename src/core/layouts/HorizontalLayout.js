@@ -95,9 +95,7 @@ const HorizontalLayout = ({ children, routerProps }) => {
     <div className='min-h-screen'>
       <Navbar navigations={navigations} routerProps={routerProps} />
 
-      <main>
-        {children}
-      </main>
+      {children}
 
       <Footer />
 

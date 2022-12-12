@@ -10,6 +10,8 @@ import * as bawasluupdates from 'views/public/bawaslu_update/store/action'
 import * as gallerys from 'views/public/gallery/store/action'
 import * as home from 'views/public/home/store/action'
 
+import * as profile from 'views/private/profile/store/action'
+
 const actions = {
   // ** Layout & Nav
   layout,
@@ -19,6 +21,7 @@ const actions = {
   tables,
   // ** Auth
   auth,
+  profile,
   // ** Global FE
   forums,
   bawasluupdates,

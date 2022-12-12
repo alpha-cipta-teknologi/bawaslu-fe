@@ -15,107 +15,109 @@ import {
 
 // ** Get data on page or row change
 export const getDataForumArticle = (queryParams, callback = null) => {
-    return api.request(
-      endpoints.getDataForumArticle,
-      queryParams,
-      (response, dispatch, success) => {
-        if (success) {
-          const { data: {values, total} } = response
+  return api.request(
+    endpoints.getDataForumArticle,
+    queryParams,
+    (response, dispatch, success) => {
+      if (success) {
+        const { data: { values, total } } = response
 
-          dispatch({
-            type: GET_DATA_FORUM_ARTICLE,
-            data: {
-              data: values && values.length ? values : [],
-              total
-            }
-          })
+        dispatch({
+          type: GET_DATA_FORUM_ARTICLE,
+          data: {
+            data: values && values.length ? values : [],
+            total,
+            page: queryParams.page || 1
+          }
+        })
 
-          callback ? callback(values) : null
-        }
-      },
-      null,
-      dispatch => dispatch(lazyLoadStart('getDataForumArticle')),
-      dispatch => dispatch(lazyLoadEnd('getDataForumArticle'))
-    )
+        callback ? callback(values) : null
+      }
+    },
+    null,
+    dispatch => dispatch(lazyLoadStart('getDataForumArticle')),
+    dispatch => dispatch(lazyLoadEnd('getDataForumArticle'))
+  )
 }
 
 export const getDataForumArticleAuth = (queryParams, callback = null) => {
-    return api.request(
-      endpoints.getDataForumArticleAuth,
-      queryParams,
-      (response, dispatch, success) => {
-        if (success) {
-          const { data: {values, total} } = response
+  return api.request(
+    endpoints.getDataForumArticleAuth,
+    queryParams,
+    (response, dispatch, success) => {
+      if (success) {
+        const { data: { values, total } } = response
 
-          dispatch({
-            type: GET_DATA_FORUM_ARTICLE,
-            data: {
-              data: values && values.length ? values : [],
-              total
-            }
-          })
+        dispatch({
+          type: GET_DATA_FORUM_ARTICLE,
+          data: {
+            data: values && values.length ? values : [],
+            total,
+            page: queryParams.page || 1
+          }
+        })
 
-          callback ? callback(values) : null
-        }
-      },
-      null,
-      dispatch => dispatch(lazyLoadStart('getDataForumArticle')),
-      dispatch => dispatch(lazyLoadEnd('getDataForumArticle'))
-    )
+        callback ? callback(values) : null
+      }
+    },
+    null,
+    dispatch => dispatch(lazyLoadStart('getDataForumArticle')),
+    dispatch => dispatch(lazyLoadEnd('getDataForumArticle'))
+  )
 }
 
 // ** Create Forum Article
 export const createForumArticle = (formForum, callback = null) => {
-    return api.request(
-      endpoints.createForumArticle,
-      formForum,
-      (response, dispatch, success) => {
-        if (success) {
-          callback ? callback(success) : null
-        }
-      },
-      () => {
-        callback ? callback(false) : null
-      },
-      dispatch => dispatch(lazyLoadStart('createForumArticle')),
-      dispatch => dispatch(lazyLoadEnd('createForumArticle'))
-    )
+  return api.request(
+    endpoints.createForumArticle,
+    formForum,
+    (response, dispatch, success) => {
+      if (success) {
+        callback ? callback(success) : null
+      }
+    },
+    () => {
+      callback ? callback(false) : null
+    },
+    dispatch => dispatch(lazyLoadStart('createForumArticle')),
+    dispatch => dispatch(lazyLoadEnd('createForumArticle'))
+  )
 }
 
 // ** Like Forum Article
 export const likeForumArticle = (formLike, callback = null) => {
-    return api.request(
-      endpoints.likeForumArticle,
-      formLike,
-      (response, dispatch, success) => {
-        if (success) {
-          callback ? callback(success) : null
-        }
-      },
-      () => {
-        callback ? callback(false) : null
-      },
-      dispatch => dispatch(lazyLoadStart('likeForumArticle')),
-      dispatch => dispatch(lazyLoadEnd('likeForumArticle'))
-    )
+  return api.request(
+    endpoints.likeForumArticle,
+    formLike,
+    (response, dispatch, success) => {
+      if (success) {
+        callback ? callback(success) : null
+      }
+    },
+    () => {
+      callback ? callback(false) : null
+    },
+    dispatch => dispatch(lazyLoadStart('likeForumArticle')),
+    dispatch => dispatch(lazyLoadEnd('likeForumArticle'))
+  )
 }
 
 // ** Comment Forum Article
 export const commentForumArticle = (formComment, callback = null) => {
-    return api.request(
-      endpoints.commentForumArticle,
-      formComment,
-      (response, dispatch, success) => {
-        if (success) {
-          callback ? callback(success) : null
-        }
-      },
-      () => {
-        callback ? callback(false) : null
-      },
-      dispatch => dispatch(lazyLoadStart('commentForumArticle')),
-      dispatch => dispatch(lazyLoadEnd('commentForumArticle'))
-    )
+  return api.request(
+    endpoints.commentForumArticle,
+    formComment,
+    (response, dispatch, success) => {
+      if (success) {
+        callback ? callback(success) : null
+      }
+    },
+    () => {
+      callback ? callback(false) : null
+    },
+    dispatch => dispatch(lazyLoadStart('commentForumArticle')),
+    dispatch => dispatch(lazyLoadEnd('commentForumArticle'))
+  )
 }
 
 // ** Show Comment Forum Article
@@ -151,5 +153,21 @@ export const getAllDataCategory = (queryParams, callback = null) => {
     null,
     dispatch => dispatch(lazyLoadStart('getAllDataCategory')),
     dispatch => dispatch(lazyLoadEnd('getAllDataCategory'))
+  )
+}
+
+// ** Delete Forum Article
+export const deleteForumArticle = (id, callback = null) => {
+  return api.request(
+    endpoints.deleteForumArticle(id),
+    null,
+    (response, dispatch, success) => {
+      if (success) {
+        if (callback) callback()
+      }
+    },
+    null,
+    dispatch => dispatch(lazyLoadStart('deleteForumArticle')),
+    dispatch => dispatch(lazyLoadEnd('deleteForumArticle'))
   )
 }

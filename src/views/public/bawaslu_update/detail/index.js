@@ -200,7 +200,6 @@ const BawasluUpdateDetailPage = () => {
           spacing='py-2.5 px-5'
           fontSize='text-base'
           loading={loadingComment}
-          disabled={loadingComment}
         >
           Tambah Komentar
         </Button.ButtonPrimary>
@@ -227,7 +226,6 @@ const BawasluUpdateDetailPage = () => {
           fontSize='text-base'
           onClick={() => handleReplyCommentArticle(id)}
           disabled={loadingReply}
-          loading={loadingReply}
         >
           Balas
         </Button.ButtonPrimary>

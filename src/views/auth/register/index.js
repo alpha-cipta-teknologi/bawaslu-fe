@@ -123,7 +123,7 @@ const RegisterPage = () => {
 
   const renderFormRegister = () => {
     const disabled = utils.isEmptyForm(formRegister)
-    const loading = utils.isLazyLoading(lazyLoad, 'login')
+    const loading = utils.isLazyLoading(lazyLoad, 'register')
 
     return (
       <form className='grid gap-y-6' onSubmit={onSubmitRegister}>

@@ -22,14 +22,12 @@ export const axiosRequest = async (endpoint, body) => {
   }
   const requestBody = isFormData ? convertToFormData(body) : body
 
-  // console.log('==== ENDPOINT ====', endpoint, requestBody)
-
   try {
     const response = await axiosInstance.request({
       url,
       method,
       headers,
-      data: (method !== 'GET' && requestBody) || null,
+      data: (method !== 'GET' && requestBody) || undefined,
       params: (method === 'GET' && requestBody)
     })
 
@@ -99,7 +97,7 @@ export const requestDownloadFile = async (endpoint, body, name = '') => {
     const link = await document.createElement('a')
     link.href = await objectUrl
 
-    const fileName = `${ name ? name : Date.now() }.xlsx`
+    const fileName = `${name ? name : Date.now()}.xlsx`
 
     await link.setAttribute('download', fileName)
     await document.body.appendChild(link)

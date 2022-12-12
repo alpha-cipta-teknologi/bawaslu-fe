@@ -7,7 +7,11 @@ import layout from './layout'
 import navigations from 'navigation/store/reducer'
 import misc from './misc'
 import tables from './table'
+
+// ** Auth
 import auth from './auth'
+import profile from 'views/private/profile/store/reducer'
+
 // ** Param Global
 import paramsGlobal from './params'
 
@@ -28,6 +32,7 @@ const reducers = {
   tables,
   // ** Auth
   auth,
+  profile,
   // ** Param Global
   paramsGlobal,
   // ** Global FE

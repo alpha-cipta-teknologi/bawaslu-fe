@@ -11,13 +11,14 @@ export default {
     path: '/auth/refresh-token',
     method: 'GET'
   },
-  changePassword: {
-    path: '/users/change_password',
-    method: 'POST'
-  },
+  updateProfile: id => ({
+    path: `/app/resource/${id}`,
+    method: 'PUT',
+    type: 'form-data'
+  }),
   // ** Profile
-  getDataProfile: {
-    path: '/users/profile',
+  getDataProfile: id => ({
+    path: `/app/resource/${id}`,
     method: 'GET'
-  }
+  })
 }

@@ -39,6 +39,7 @@ const Input = ({
   restrictVal,
   showError,
   setShowError,
+  children,
   ...rest
 }) => {
   const inputRef = useRef(null)
@@ -228,6 +229,31 @@ const Input = ({
             />
           </div>
         )
+      case 'photo_profile':
+        return (
+          <>
+            {children}
+
+            <div className='w-auto mt-2'>
+              <label htmlFor={id} className='inline-flex cursor-pointer w-auto'>
+                <input
+                  id={id}
+                  name={name}
+                  type='file'
+                  className='sr-only'
+                  onChange={onChangeFile}
+                  {...rest}
+                />
+
+                <Text
+                  weight='font-bold'
+                  size='text-sm'
+                  cursor='cursor-pointer'
+                >{value ? 'Ubah' : 'Pilih'} Foto</Text>
+              </label>
+            </div>
+          </>
+        )
       case 'file':
         return (
           <div className='sm:col-span-6'>
@@ -329,18 +355,22 @@ const Input = ({
       onFocus={() => setFocus(true)}
       onBlur={() => setFocus(false)}
     >
-      <div className={styleHelper.classNames(
-        'block w-full border rounded relative border-grey-lighter-2',
-        disabled
-          ? 'bg-grey-light-5 bg-opacity-50'
-          : focus
-            ? 'bg-white'
-            : bgColor
-      )}>
-        {label && renderLabel()}
+      {type === 'photo_profile'
+        ? renderInputBasedOnType()
+        : (
+          <div className={styleHelper.classNames(
+            'block w-full border rounded relative border-grey-lighter-2',
+            disabled
+              ? 'bg-grey-light-5 bg-opacity-50'
+              : focus
+                ? 'bg-white'
+                : bgColor
+          )}>
+            {label && renderLabel()}
 
-        {renderInputBasedOnType()}
-      </div>
+            {renderInputBasedOnType()}
+          </div>
+        )}
 
       {(errorText || error) && (
         <Text
@@ -383,6 +413,7 @@ Input.propTypes = {
     'radio',
     'file',
     'file-dropzone',
+    'photo_profile',
     'textarea'
   ]),
   errorText: PropTypes.string,
