@@ -1,14 +1,12 @@
-import { api } from 'utility'
+import { api, utils } from 'utility'
 import { endpoints } from 'constant'
-import {
-  lazyLoadStart,
-  lazyLoadEnd,
-  setProgress
-} from 'store/actions/misc'
+import { lazyLoadStart, lazyLoadEnd } from 'store/actions/misc'
 
 // ** Import action types
 import {
-  GET_DATA_FORUM_ARTICLE
+  GET_DATA_FORUM_ARTICLE,
+  GET_DATA_COMMENT_FORUM_ARTICLE,
+  UPDATE_COUNTER
 } from '../actionTypes'
 
 /* eslint-disable no-unused-expressions */
@@ -105,6 +103,14 @@ export const likeForumArticle = (formLike, callback = null) => {
     (response, dispatch, success) => {
       if (success) {
         callback ? callback(success) : null
+
+        dispatch({
+          type: UPDATE_COUNTER,
+          data: {
+            id: formLike.id,
+            type: 'like'
+          }
+        })
       }
     },
     () => {
@@ -116,20 +122,32 @@ export const likeForumArticle = (formLike, callback = null) => {
 }
 
 // ** Comment Forum Article
-export const commentForumArticle = (formComment, callback = null) => {
+export const commentForumArticle = (payload, callback = null) => {
+  const formComment = utils.removeProperties(payload, 'articleid', 'comment_type')
+
   return api.request(
     endpoints.commentForumArticle,
     formComment,
     (response, dispatch, success) => {
       if (success) {
-        callback ? callback(success) : null
+        if (callback) callback(success)
+
+        if (payload.articleid) {
+          dispatch({
+            type: UPDATE_COUNTER,
+            data: {
+              id: payload.articleid,
+              type: 'comment'
+            }
+          })
+        }
       }
     },
     () => {
-      callback ? callback(false) : null
+      if (callback) callback(false)
     },
-    dispatch => dispatch(lazyLoadStart('commentForumArticle')),
-    dispatch => dispatch(lazyLoadEnd('commentForumArticle'))
+    dispatch => dispatch(lazyLoadStart(`commentForumArticle${payload.comment_type || ''}`)),
+    dispatch => dispatch(lazyLoadEnd(`commentForumArticle${payload.comment_type || ''}`))
   )
 }
 
@@ -142,10 +160,38 @@ export const getDataCommentForumArticle = (queryParams, callback = null) => {
       if (success) {
         const { data } = response
 
-        callback ? callback(data) : null
+        dispatch({
+          type: GET_DATA_COMMENT_FORUM_ARTICLE,
+          data: {
+            id: queryParams.id_external,
+            data
+          }
+        })
+
+        if (callback) callback(data)
       }
     },
-    null,
+    (response, dispatch) => {
+      if (response.code === 404) {
+        dispatch({
+          type: GET_DATA_COMMENT_FORUM_ARTICLE,
+          data: {
+            id: queryParams.id_external,
+            data: {
+              total: 0,
+              values: []
+            }
+          }
+        })
+
+        if (callback) {
+          callback({
+            total: 0,
+            values: []
+          })
+        }
+      }
+    },
     dispatch => dispatch(lazyLoadStart('getDataCommentForumArticle')),
     dispatch => dispatch(lazyLoadEnd('getDataCommentForumArticle'))
   )

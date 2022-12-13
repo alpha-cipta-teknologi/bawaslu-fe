@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { Text, Card, Button, CustomIcon, Input } from 'core/components'
+import { Text, Card, Button, CustomIcon, Input, ForumArticleList } from 'core/components'
 import { HeartIcon } from '@heroicons/react/24/outline'
 import { hooks, utils, momentHelper } from 'utility'
 import { actions } from 'store'
@@ -24,32 +24,31 @@ const ForumListPage = () => {
 
   // ** States
   const [currentPage, setCurrentPage] = useState(1)
-  const [rowsPerPage, setRowsPerPage] = useState(10)
   const [forumArticles, setForumArticle] = useState([])
   const [commentArticle, setCommentArticle] = useState('')
   const [replyCommentArticle, setReplyCommentArticle] = useState('')
 
   const loading = utils.isLazyLoading(lazyLoad, 'getDataForumArticle')
 
-  useEffect(() => {
-    getDataForumArticle({
-      page: currentPage,
-      perPage: rowsPerPage,
-      ...userdata
-        ? { type: 'fe' }
-        : {}
-    }, async data => {
-      let oldForumArticles = forumArticles
-      oldForumArticles = oldForumArticles.concat(data)
-      setForumArticle(oldForumArticles.map(d => {
-        d.comment = {
-          values: [],
-          total: 0
-        }
-        return d
-      }))
-    })
-  }, [currentPage])
+  // useEffect(() => {
+  //   getDataForumArticle({
+  //     page: currentPage,
+  //     perPage: rowsPerPage,
+  //     ...userdata
+  //       ? { type: 'fe' }
+  //       : {}
+  //   }, async data => {
+  //     let oldForumArticles = forumArticles
+  //     oldForumArticles = oldForumArticles.concat(data)
+  //     setForumArticle(oldForumArticles.map(d => {
+  //       d.comment = {
+  //         values: [],
+  //         total: 0
+  //       }
+  //       return d
+  //     }))
+  //   })
+  // }, [currentPage])
 
   const handleLike = async id => {
     let oldForumArticles = forumArticles
@@ -239,26 +238,47 @@ const ForumListPage = () => {
     handleOpenReplyComment(articleid, commentid)
   }
 
+  const renderCardCreatePost = () => {
+    return (
+      <Card cardClassName='w-full' paddingHorizontal='px-3' paddingVertical='py-3'>
+        <Text weight='font-bold' spacing='mb-4'>Buat Thread</Text>
+        <Button.ButtonPrimary
+          href={`${!utils.isUserLoggedIn() ? '/login' : '/forum/create'}`}
+          spacing='py-2.5 px-5'
+          fontSize='text-base'
+          sizing='w-full'
+        >
+          Buat
+        </Button.ButtonPrimary>
+      </Card>
+    )
+  }
+
   return (
-    <div className='py-5 md:py-11'>
-      <div className='flex flex-col w-full md:flex-row'>
-        <div className='w-full md:flex-1 md:w-20'>
-          <Card cardClassnames='flex-row'>
-            <Text weight='font-bold'>Trending</Text>
-            <ul className="list-disc pl-3 pr-3">
+    <div className='py-6 md:py-11'>
+      <div className='grid lg:grid-cols-12 flex-col w-full md:flex-row gap-5'>
+        <div className='w-full flex lg:hidden'>
+          {renderCardCreatePost()}
+        </div>
+
+        <div className='w-full lg:col-span-3'>
+          <Card paddingHorizontal='px-3' paddingVertical='py-3'>
+            <Text weight='font-bold' spacing='mb-4'>Trending</Text>
+
+            <ul className='list-outside list-disc ml-4 text-sm grid gap-y-3'>
               {forumList.data.map(data => {
                 return (
-                  <li key={data.id}><Text size='text-sm'>{data.title}</Text></li>
+                  <li key={data.id}><Text size='text-sm' weight='font-bold'>{data.title}</Text></li>
                 )
               })}
             </ul>
           </Card>
         </div>
-        <div className='flex flex-col w-full md:flex-auto md:w-60 overflow-y-auto h-screen'>
-          {forumArticles.map(data => {
+        <div className='flex flex-col w-full lg:col-span-6 lg:overflow-y-auto custom-scrollbar lg:h-screen'>
+          {/* {forumArticles.map(data => {
             return (
               <Fragment key={data.id}>
-                <Card cardClassName='mt-1 mb-2 md:mt-0 md:ml-2 md:mr-2' contentClassName='flex flex-col'>
+                <Card cardClassName='mb-2 lg:mx-2' contentClassName='flex flex-col'>
                   <span className='flex items-center p-2 hover:bg-gray-100 cursor-pointer'>
                     <div className='flex-shrink-0 mr-2.5 bg-gray-200 h-8 w-8 rounded-full'>
                       <img
@@ -367,9 +387,6 @@ const ForumListPage = () => {
                           {dt.comment}
                         </Text>
                         <div className='flex flex-row w-full mt-2 mb-1'>
-                          {/* <div className='flex flex-row items-center mr-4'>
-                            <HeartIcon className='w-5 h-5 mr-1 fill-[#EB5757] stroke-[#EB5757]' />
-                          </div> */}
                           <div onClick={() => handleOpenReplyComment(data.id, dt.id, dt.author)} className='flex flex-row items-center mr-4 cursor-pointer'>
                             <CustomIcon iconName='comment' className='w-5 h-5 mr-1' />
                             <Text size='text-xs' cursor='cursor-pointer'>Balas</Text>
@@ -425,9 +442,6 @@ const ForumListPage = () => {
                                   {rdt.comment}
                                 </Text>
                                 <div className='flex flex-row w-full mt-2'>
-                                  {/* <div className='flex flex-row items-center mr-4'>
-                                    <HeartIcon className='w-5 h-5 mr-1 fill-[#EB5757] stroke-[#EB5757]' />
-                                  </div> */}
                                   <div onClick={() => handleOpenReplyComment(data.id, dt.id, rdt.author)} className='flex flex-row items-center mr-4 cursor-pointer'>
                                     <CustomIcon iconName='comment' className='w-5 h-5 mr-1' />
                                     <Text size='text-xs' cursor='cursor-pointer'>Balas</Text>
@@ -444,20 +458,17 @@ const ForumListPage = () => {
                 }
               </Fragment>
             )
-          })}
+          })} */}
+          <ForumArticleList
+            fulfilledCondition
+            emptyStateTitle='Tidak ada thread'
+            wrapperListClassName='lg:mx-2'
+            page={currentPage}
+            setPage={setCurrentPage}
+          />
         </div>
-        <div className='w-full md:flex-1 md:w-20'>
-          <Card>
-            <Text weight='font-bold' spacing='mb-4'>Buat Thread</Text>
-            <Button.ButtonPrimary
-              href={`${!utils.isUserLoggedIn() ? '/login' : '/forum/create'}`}
-              spacing='py-2.5 px-5'
-              fontSize='text-base'
-              sizing='w-full'
-            >
-              Buat
-            </Button.ButtonPrimary>
-          </Card>
+        <div className='w-full hidden lg:block lg:col-span-3'>
+          {renderCardCreatePost()}
         </div>
       </div>
     </div>
