@@ -1,45 +1,62 @@
-import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { Text } from 'core/components'
-import { hooks, utils, momentHelper } from 'utility'
-import { actions } from 'store'
-import { apiConfig } from 'configs'
+import { Text, EmptyState } from 'core/components'
+import { utils } from 'utility'
 
 import { TopArticles, MoreArticles } from '../components'
 
 const BawasluUpdateListPage = () => {
-
-  // ** Store & Actions
-  const getDataBawasluUpdate = hooks.useCustomDispatch(actions.bawasluupdates.getDataBawasluUpdate)
-
   const bawasluList = useSelector(state => state.bawasluupdates).bawasluList
   const lazyLoad = useSelector(state => state.misc).lazyLoad
-  const { userdata } = utils.isUserLoggedIn() ? utils.getUserData() : { userdata: null }
 
   // ** States
   const [currentPage, setCurrentPage] = useState(1)
-  const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [isMounted, setIsMounted] = useState(false)
 
-  const loading = utils.isLazyLoading(lazyLoad, 'getDataBawasluUpdate')
+  const renderTopArticles = () => {
+    const loading = utils.isLazyLoading(lazyLoad, 'getDataBawasluUpdate') && !isMounted
 
-  useEffect(() => {
-    getDataBawasluUpdate({
-      page: currentPage,
-      perPage: rowsPerPage
-    })
-  }, [currentPage])
+    if (loading || bawasluList?.data?.length) {
+      return (
+        <TopArticles
+          mainArticle={bawasluList?.data[0]}
+          sideArticleList={bawasluList?.data}
+          loading={loading}
+          isOverlayMainArticle
+        />
+      )
+    }
+
+    return <EmptyState title='Tidak ada artikel yang tersedia' />
+  }
+
+  const renderMoreArticles = () => {
+    const loading = utils.isLazyLoading(lazyLoad, 'getDataBawasluUpdate')
+
+    if (loading || bawasluList?.data?.length || !isMounted) {
+      return (
+        <MoreArticles
+          page={currentPage}
+          setPage={setCurrentPage}
+          isMounted={isMounted}
+          setIsMounted={setIsMounted}
+        />
+      )
+    }
+
+    return <EmptyState title='Tidak ada artikel yang tersedia' />
+  }
 
   return (
     <div className='py-6 md:py-7'>
       <Text weight='font-bold' size='text-2.5xl' spacing='mb-7'>Bawaslu Update</Text>
 
-      <TopArticles mainArticle={bawasluList?.data[0]} sideArticleList={bawasluList?.data} isOverlayMainArticle />
+      {renderTopArticles()}
 
       <Text weight='font-bold' size='text-2.5xl' className='my-7'>Update Terbaru</Text>
 
-      <MoreArticles />
+      {renderMoreArticles()}
     </div>
   )
 }

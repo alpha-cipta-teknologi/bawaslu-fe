@@ -16,32 +16,46 @@ import {
 
 // ** Get data on page or row change
 export const getDataBawasluUpdate = (queryParams, callback = null) => {
-    return api.request(
-      endpoints.getDataBawasluUpdate,
-      queryParams,
-      (response, dispatch, success) => {
-        if (success) {
-          const { data: {values, total} } = response
+  return api.request(
+    endpoints.getDataBawasluUpdate,
+    queryParams,
+    (response, dispatch, success) => {
+      if (success) {
+        const { data: { values, total } } = response
 
-          dispatch({
-            type: GET_DATA_BAWASLU_UPDATE,
-            data: {
-              data: values && values.length ? values : [],
-              total
-            }
-          })
+        dispatch({
+          type: GET_DATA_BAWASLU_UPDATE,
+          data: {
+            data: values && values.length ? values : [],
+            total,
+            page: queryParams.page || 1
+          }
+        })
 
-          callback ? callback(values) : null
-        }
-      },
-      null,
-      dispatch => dispatch(lazyLoadStart('getDataBawasluUpdate')),
-      dispatch => dispatch(lazyLoadEnd('getDataBawasluUpdate'))
-    )
+
+        if (callback) callback(values)
+      }
+    },
+    (response, dispatch) => {
+      if (response.code === 404) {
+        dispatch({
+          type: GET_DATA_BAWASLU_UPDATE,
+          data: {
+            data: [],
+            total: 0,
+            page: queryParams.page || 1
+          }
+        })
+
+        if (callback) callback([])
+      }
+    },
+    dispatch => dispatch(lazyLoadStart('getDataBawasluUpdate')),
+    dispatch => dispatch(lazyLoadEnd('getDataBawasluUpdate'))
+  )
 }
 
 export const getBawasluUpdateDetail = (slug, callback = null) => {
-
   return api.request(
     endpoints.getBawasluUpdateDetail(slug),
     null,

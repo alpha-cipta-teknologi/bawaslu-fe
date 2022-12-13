@@ -15,7 +15,6 @@ const BawasluUpdateDetailPage = () => {
   const { slug } = useParams()
 
   // ** Store & Actions
-  const getDataBawasluUpdate = hooks.useCustomDispatch(actions.bawasluupdates.getDataBawasluUpdate)
   const getBawasluUpdateDetail = hooks.useCustomDispatch(actions.bawasluupdates.getBawasluUpdateDetail)
   const commentBawasluUpdate = hooks.useCustomDispatch(actions.forums.commentForumArticle)
   const getDataCommentBawasluUpdate = hooks.useCustomDispatch(actions.forums.getDataCommentForumArticle)
@@ -26,6 +25,7 @@ const BawasluUpdateDetailPage = () => {
   const { userdata } = utils.isUserLoggedIn() ? utils.getUserData() : { userdata: null }
 
   // ** States
+  const [isMounted, setIsMounted] = useState(false)
   const [commentArticle, setCommentArticle] = useState('')
   const [replyCommentArticle, setReplyCommentArticle] = useState('')
   const [articleId, setArticleId] = useState('')
@@ -33,15 +33,8 @@ const BawasluUpdateDetailPage = () => {
     values: [],
     total: 0
   })
-
-  const loading = utils.isLazyLoading(lazyLoad, 'getBawasluUpdateDetail')
-
-  useEffect(() => {
-    getDataBawasluUpdate({
-      page: 1,
-      perPage: 10
-    })
-  }, [])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [refreshing, setRefreshing] = useState(true)
 
   const actionGetDataComment = articleId => {
     getDataCommentBawasluUpdate({
@@ -62,6 +55,8 @@ const BawasluUpdateDetailPage = () => {
         actionGetDataComment(data.id)
       }
     )
+
+    setRefreshing(true)
   }, [slug])
 
   // useEffect(() => {
@@ -236,7 +231,12 @@ const BawasluUpdateDetailPage = () => {
     <div className='py-3 md:py-6'>
       <Text weight='font-bold' size='text-2xl' className='mb-7'>Bawaslu Update</Text>
 
-      <TopArticles mainArticle={bawasluDetail} sideArticleList={bawasluList?.data || []} />
+      <TopArticles
+        mainArticle={bawasluDetail}
+        sideArticleList={bawasluList?.data || []}
+        loading={utils.isLazyLoading(lazyLoad, 'getDataBawasluUpdate') && !isMounted}
+        isPageDetail
+      />
 
       <div className='flex flex-row w-full my-4'>
         <div className='flex flex-row items-center mr-4'>
@@ -354,7 +354,14 @@ const BawasluUpdateDetailPage = () => {
 
       <Text weight='font-bold' size='text-2xl' className='my-7'>Berita Lainnya</Text>
 
-      <MoreArticles limit={5} />
+      <MoreArticles
+        page={currentPage}
+        setPage={setCurrentPage}
+        refreshing={refreshing}
+        setRefreshing={setRefreshing}
+        isMounted={isMounted}
+        setIsMounted={setIsMounted}
+      />
     </div>
   )
 }

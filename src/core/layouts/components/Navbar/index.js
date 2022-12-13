@@ -87,7 +87,7 @@ const Navbar = ({ navigations, routerProps }) => {
               <div className='absolute inset-y-0 right-0 flex items-center md:static md:inset-auto md:ml-6 md:pr-0'>
                 <div className='hidden md:mr-[26px] md:flex md:items-center md:space-x-3 lg:space-x-5 2xl:space-x-7 h-full'>
                   {navigations.map((nav, index) => {
-                    const isLinkActive = layoutHelper.isNavLinkActive(nav.navLink, currentURL, routerProps)
+                    const isLinkActive = currentURL?.includes(nav.navLink)
 
                     return (
                       <Text

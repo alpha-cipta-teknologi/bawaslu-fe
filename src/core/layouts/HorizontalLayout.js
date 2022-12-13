@@ -4,13 +4,14 @@ import * as HeroIcon from '@heroicons/react/24/outline'
 
 import { utils } from 'utility'
 
-import { ScrollUp } from '../components'
+import { ScrollUp, TopLoaderBar } from '../components'
 
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 
 const HorizontalLayout = ({ children, routerProps }) => {
   const navStore = useSelector(state => state.navigations)
+  const progress = useSelector(state => state.misc).progress
 
   const [navigations, setNavigations] = useState([])
 
@@ -100,6 +101,8 @@ const HorizontalLayout = ({ children, routerProps }) => {
       <Footer />
 
       <ScrollUp />
+
+      <TopLoaderBar progress={progress} />
     </div>
   )
 }

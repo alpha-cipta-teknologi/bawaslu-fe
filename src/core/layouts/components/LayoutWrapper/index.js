@@ -1,10 +1,7 @@
 // ** React Imports
-import { Fragment } from 'react'
-import { useSelector } from 'react-redux'
+import React from 'react'
 
 import { styleHelper } from 'utility'
-
-import { TopLoaderBar } from '../../../components'
 
 import 'animate.css'
 
@@ -15,11 +12,6 @@ const LayoutWrapper = ({
   transition,
   wrapperClass
 }) => {
-  const progress = useSelector(state => state.misc).progress
-
-  //** Vars
-  const Tag = layout === 'HorizontalLayout' && !appLayout ? 'div' : Fragment
-
   return (
     <div className={styleHelper.classNames(
       wrapperClass,
@@ -30,8 +22,6 @@ const LayoutWrapper = ({
     )}>
       <div className='width-container' style={{ minHeight: 'calc(100vh - 80px)' }}>
         {children}
-
-        <TopLoaderBar progress={progress} />
       </div>
     </div>
   )

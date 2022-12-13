@@ -66,14 +66,6 @@ const reducers = (state = initialState, action) => {
                   like: !d.like,
                   counter_like: !!d.like ? d.counter_like - 1 : d.counter_like + 1
                 }
-                // if (d.like) {
-                //   d.like = false
-                //   d.counter_like = d.counter_like - 1
-                // } else {
-                //   d.like = true
-                //   d.counter_like = d.counter_like + 1
-                // }
-
               }
             } else if (action.data.type === 'comment') {
               if (d.id === action.data.id) {
@@ -81,7 +73,6 @@ const reducers = (state = initialState, action) => {
                   ...d,
                   counter_comment: d.counter_comment + 1
                 }
-                // d.counter_comment = d.counter_comment + 1
               }
             }
 
