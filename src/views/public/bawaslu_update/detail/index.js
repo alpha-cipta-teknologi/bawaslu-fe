@@ -3,8 +3,8 @@ import { useHistory, useParams } from 'react-router-dom'
 import { HeartIcon, EyeIcon } from '@heroicons/react/24/outline'
 import { useSelector } from 'react-redux'
 
-import { Text, CustomIcon, Card, Input, Button } from 'core/components'
-import { hooks, utils, momentHelper } from 'utility'
+import { Text, CustomIcon, Card, Input, Button, CounterArticle } from 'core/components'
+import { hooks, utils, momentHelper, styleHelper } from 'utility'
 import { actions } from 'store'
 import { images } from 'constant'
 
@@ -18,6 +18,7 @@ const BawasluUpdateDetailPage = () => {
   const getBawasluUpdateDetail = hooks.useCustomDispatch(actions.bawasluupdates.getBawasluUpdateDetail)
   const commentBawasluUpdate = hooks.useCustomDispatch(actions.forums.commentForumArticle)
   const getDataCommentBawasluUpdate = hooks.useCustomDispatch(actions.forums.getDataCommentForumArticle)
+  const likeBawasluUpdate = hooks.useCustomDispatch(actions.forums.likeForumArticle)
 
   const bawasluList = useSelector(state => state.bawasluupdates).bawasluList
   const bawasluDetail = useSelector(state => state.bawasluupdates).bawasluDetail
@@ -48,7 +49,10 @@ const BawasluUpdateDetailPage = () => {
   }
 
   useEffect(() => {
-    getBawasluUpdateDetail(slug,
+    getBawasluUpdateDetail({
+      slug,
+      isUserLoggedIn: utils.isUserLoggedIn()
+    },
       async data => {
         setArticleId(data.id)
 
@@ -59,18 +63,28 @@ const BawasluUpdateDetailPage = () => {
     setRefreshing(true)
   }, [slug])
 
-  // useEffect(() => {
-  //   if (articleId) {
-  //     getDataCommentBawasluUpdate({
-  //       group: 2,
-  //       id_external: articleId,
-  //       perPage: 1000,
-  //       page: 1
-  //     }, async dt => {
-  //       setDataComment(dt)
-  //     })
-  //   }
-  // }, [articleId])
+  const onClickScrollDown = id => {
+    if (window) {
+      window.scrollTo({
+        top: (document?.getElementById(id)?.offsetTop || 80) - 80,
+        left: 0,
+        behavior: 'smooth'
+      })
+    }
+  }
+
+  const handleLike = id => {
+    if (!utils.isUserLoggedIn()) {
+      history.push('/login')
+      return
+    }
+
+    likeBawasluUpdate({
+      group: 2,
+      id,
+      reducer: 'bawasluupdates'
+    })
+  }
 
   const handleCommentArticle = async () => {
 
@@ -91,7 +105,9 @@ const BawasluUpdateDetailPage = () => {
       group: 2,
       status: 1,
       comment: commentArticle,
-      id: articleId
+      id: articleId,
+      articleid: articleId,
+      reducer: 'bawasluupdates'
     }, isSuccess => {
       if (isSuccess) {
         actionGetDataComment(articleId)
@@ -161,7 +177,9 @@ const BawasluUpdateDetailPage = () => {
       group: 3,
       status: 1,
       comment: replyCommentArticle,
-      id: commentid
+      id: commentid,
+      comment_type: 'Reply',
+      articleid: articleId
     })
 
     setReplyCommentArticle('')
@@ -172,7 +190,7 @@ const BawasluUpdateDetailPage = () => {
     const loadingComment = utils.isLazyLoading(lazyLoad, 'commentForumArticle')
 
     return (
-      <Card cardClassName='mb-2 bg-[#F6F9FB]' contentClassName='flex flex-row justify-around items-center' paddingVertical='p-3' paddingHorizontal='p-3'>
+      <Card id='comment-section' cardClassName='mb-2 bg-[#F6F9FB]' contentClassName='flex flex-row justify-around items-center' paddingVertical='p-3' paddingHorizontal='p-3'>
         <div className='flex-shrink-0 bg-gray-200 h-8 w-8 rounded-full'>
           <img
             className='h-8 w-8 rounded-full'
@@ -202,7 +220,7 @@ const BawasluUpdateDetailPage = () => {
   }
 
   const renderCardReplyComment = id => {
-    const loadingReply = utils.isLazyLoading(lazyLoad, 'commentForumArticle')
+    const loadingReply = utils.isLazyLoading(lazyLoad, 'commentForumArticleReply')
 
     return (
       <Card cardClassName='mb-2 bg-[#F6F9FB] md:ml-2 md:mr-2' contentClassName='flex flex-row justify-around items-center' paddingVertical='p-3' paddingHorizontal='p-3'>
@@ -238,23 +256,31 @@ const BawasluUpdateDetailPage = () => {
         isPageDetail
       />
 
-      <div className='flex flex-row w-full my-4'>
-        <div className='flex flex-row items-center mr-4'>
-          <EyeIcon className='w-5 h-5 mr-1' />
-          <Text size='text-xs'>{bawasluDetail.counter_view} Melihat</Text>
-        </div>
-        <div className='flex flex-row items-center mr-4'>
-          <HeartIcon className='w-5 h-5 mr-1' />
-          <Text size='text-xs'>{bawasluDetail.counter_like} Menyukai</Text>
-        </div>
-        <div className='flex flex-row items-center mr-4'>
-          <CustomIcon iconName='comment' className='w-5 h-5 mr-1' />
-          <Text size='text-xs'>{bawasluDetail.counter_comment} Komentar</Text>
-        </div>
-        <div className='flex flex-row items-center'>
-          <CustomIcon iconName='share' className='w-5 h-5 mr-1' />
-          <Text size='text-xs'>{bawasluDetail.counter_share} Dibagikan</Text>
-        </div>
+      <div className='flex flex-row w-full my-4 gap-x-4'>
+        <CounterArticle
+          renderIcon={() => <EyeIcon className='w-5 h-5' />}
+          text={`${bawasluDetail.counter_view || 0} Melihat`}
+        />
+
+        <CounterArticle
+          renderIcon={() => (
+            <HeartIcon className={styleHelper.classNames(
+              'w-5 h-5 cursor-pointer',
+              bawasluDetail.like ? 'fill-[#EB5757] stroke-[#EB5757]' : ''
+            )} />
+          )}
+          text={`${bawasluDetail.counter_like || 0} Menyukai`}
+          onClick={() => handleLike(bawasluDetail.id)}
+        />
+        <CounterArticle
+          renderIcon={() => (<CustomIcon iconName='comment' className='w-5 h-5 cursor-pointer' />)}
+          text={`${bawasluDetail.counter_comment || 0} Komentar`}
+          onClick={() => onClickScrollDown('comment-section')}
+        />
+        <CounterArticle
+          renderIcon={() => <CustomIcon iconName='share' className='w-5 h-5' />}
+          text={`${bawasluDetail.counter_share || 0} Dibagikan`}
+        />
       </div>
       <div className='flex flex-col'>
         <Text size='text-xxs' className='mb-3'>{momentHelper.formatDateFull(bawasluDetail.created_date)}</Text>

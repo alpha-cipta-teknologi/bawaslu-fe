@@ -37,6 +37,10 @@ export default {
     path: `/fe/bawaslu-update/${slug}`,
     method: 'GET'
   }),
+  getBawasluUpdateDetailAuth: slug => ({
+    path: `/forum/bawaslu-update/${slug}`,
+    method: 'GET'
+  }),
   getDataGallery: {
     path: '/fe/gallery',
     method: 'GET'

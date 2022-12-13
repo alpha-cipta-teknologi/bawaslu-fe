@@ -96,21 +96,24 @@ export const createForumArticle = (formForum, callback = null) => {
 }
 
 // ** Like Forum Article
-export const likeForumArticle = (formLike, callback = null) => {
+export const likeForumArticle = (payload, callback = null) => {
+  const formLike = utils.removeProperties(payload, 'reducer')
+
   return api.request(
     endpoints.likeForumArticle,
     formLike,
     (response, dispatch, success) => {
       if (success) {
-        callback ? callback(success) : null
-
         dispatch({
           type: UPDATE_COUNTER,
           data: {
             id: formLike.id,
-            type: 'like'
+            type: 'like',
+            reducer: payload.reducer
           }
         })
+
+        if (callback) callback(success)
       }
     },
     () => {
@@ -123,7 +126,7 @@ export const likeForumArticle = (formLike, callback = null) => {
 
 // ** Comment Forum Article
 export const commentForumArticle = (payload, callback = null) => {
-  const formComment = utils.removeProperties(payload, 'articleid', 'comment_type')
+  const formComment = utils.removeProperties(payload, 'articleid', 'comment_type', 'reducer')
 
   return api.request(
     endpoints.commentForumArticle,
@@ -137,7 +140,8 @@ export const commentForumArticle = (payload, callback = null) => {
             type: UPDATE_COUNTER,
             data: {
               id: payload.articleid,
-              type: 'comment'
+              type: 'comment',
+              reducer: payload.reducer
             }
           })
         }

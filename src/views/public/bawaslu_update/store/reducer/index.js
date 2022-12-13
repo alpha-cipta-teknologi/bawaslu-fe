@@ -1,4 +1,5 @@
 // ** Import action types
+import { UPDATE_COUNTER } from 'views/public/forum/store/actionTypes'
 import {
   GET_DATA_BAWASLU_UPDATE,
   GET_BAWASLU_UPDATE_DETAIL
@@ -51,14 +52,31 @@ const reducers = (state = initialState, action) => {
             total: action.data.total
           }
       }
-    // return {
-    //   ...state,
-    //   bawasluList: action.data
-    // }
+
     case GET_BAWASLU_UPDATE_DETAIL:
       return {
         ...state,
         bawasluDetail: action.data
+      }
+
+    case UPDATE_COUNTER:
+      const isUpdateCounter = state.bawasluDetail.id === action.data.id && action.data.reducer === 'bawasluupdates'
+      const isUpdateLike = action.data.type === 'like' && isUpdateCounter
+
+      return {
+        ...state,
+        bawasluDetail: {
+          ...state.bawasluDetail,
+          like: isUpdateLike
+            ? !state.bawasluDetail.like
+            : state.bawasluDetail.like,
+          counter_like: isUpdateLike
+            ? !!state.bawasluDetail.like ? state.bawasluDetail.counter_like - 1 : state.bawasluDetail.counter_like + 1
+            : state.bawasluDetail.counter_like,
+          counter_comment: action.data.type === 'comment' && isUpdateCounter
+            ? state.bawasluDetail.counter_comment + 1
+            : state.bawasluDetail.counter_comment
+        }
       }
 
     default:

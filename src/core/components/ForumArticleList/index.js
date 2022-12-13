@@ -10,6 +10,7 @@ import { actions } from 'store'
 import { images } from 'constant'
 
 import Card from '../Card'
+import CounterArticle from '../CounterArticle'
 import Text from '../Text'
 import Input from '../Input'
 import Button from '../Button'
@@ -73,19 +74,6 @@ const ExtendedTextArticle = ({ text, length = 300 }) => {
         >{showMore ? '(sembunyikan)' : '(lanjut)'}</Text>
       }
     </span>
-  )
-}
-
-const CounterArticle = ({
-  text,
-  renderIcon,
-  onClick
-}) => {
-  return (
-    <div className='flex flex-row items-center gap-x-1.5' onClick={onClick}>
-      {renderIcon()}
-      <Text size='text-xs' weight='font-medium' cursor='cursor-pointer'>{text}</Text>
-    </div>
   )
 }
 
@@ -199,7 +187,8 @@ const ForumArticleList = ({
 
     likeForumArticle({
       group: 1,
-      id
+      id,
+      reducer: 'forums'
     })
   }
 
@@ -234,7 +223,8 @@ const ForumArticleList = ({
       status: 1,
       comment: commentArticle,
       id,
-      articleid: id
+      articleid: id,
+      reducer: 'forums'
     }, isSuccess => {
       if (isSuccess) {
         handleShowComment(id)
@@ -268,7 +258,8 @@ const ForumArticleList = ({
       status: 1,
       comment: replyCommentArticle,
       id: commentid === 0 ? articleid : commentid,
-      comment_type: 'Reply'
+      comment_type: 'Reply',
+      reducer: 'forums'
     }, isSuccess => {
       if (isSuccess) {
         handleShowComment(articleid)

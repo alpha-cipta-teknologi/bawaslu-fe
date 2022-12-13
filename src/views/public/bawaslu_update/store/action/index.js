@@ -55,9 +55,9 @@ export const getDataBawasluUpdate = (queryParams, callback = null) => {
   )
 }
 
-export const getBawasluUpdateDetail = (slug, callback = null) => {
+export const getBawasluUpdateDetail = (payload, callback = null) => {
   return api.request(
-    endpoints.getBawasluUpdateDetail(slug),
+    payload.isUserLoggedIn ? endpoints.getBawasluUpdateDetailAuth(payload.slug) : endpoints.getBawasluUpdateDetail(payload.slug),
     null,
     (response, dispatch, success) => {
       if (success) {
@@ -84,4 +84,3 @@ export const getBawasluUpdateDetail = (slug, callback = null) => {
     }
   )
 }
-

@@ -4,6 +4,7 @@ import BackNav from './BackNav'
 import Breadcrumb from './Breadcrumb'
 import Button from './Button'
 import Card from './Card'
+import CounterArticle from './CounterArticle'
 import CustomIcon from './CustomIcon'
 import DatePicker from './DatePicker'
 import Dropdown from './Dropdown'
@@ -40,6 +41,7 @@ export {
   Breadcrumb,
   Button,
   Card,
+  CounterArticle,
   CustomIcon,
   DatePicker,
   Dropdown,

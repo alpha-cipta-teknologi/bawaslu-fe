@@ -14,7 +14,6 @@ const ForumListPage = () => {
   const { userdata } = utils.isUserLoggedIn() ? utils.getUserData() : { userdata: null }
 
   // ** Store & Actions
-  const getDataForumArticle = hooks.useCustomDispatch(userdata ? actions.forums.getDataForumArticleAuth : actions.forums.getDataForumArticle)
   const likeForumArticle = hooks.useCustomDispatch(actions.forums.likeForumArticle)
   const commentForumArticle = hooks.useCustomDispatch(actions.forums.commentForumArticle)
   const getDataCommentForumArticle = hooks.useCustomDispatch(actions.forums.getDataCommentForumArticle)
