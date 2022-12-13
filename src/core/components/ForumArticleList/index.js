@@ -155,7 +155,7 @@ const ForumArticleList = ({
     getDataForumArticle({
       page,
       perPage: rowsPerPage,
-      ...userdata
+      ...userdata && !withActionCard
         ? { type: 'fe' }
         : {}
     }, () => {

@@ -18,6 +18,7 @@ import {
   BlankLayout,
   HorizontalLayout
 } from 'core/layouts'
+import { HistoryWrapper } from 'core/components'
 // ** Utils
 import {
   utils,
@@ -184,30 +185,32 @@ const Router = ({ history }) => {
 
   return (
     <AppRouter history={history}>
-      <Switch>
-        <Route
-          exact
-          path='/'
-          render={() => {
-            return <Redirect to={DefaultRoute} />
-          }}
-        />
-        {/* Not Auth Route */}
-        <Route
-          exact
-          path='/not-authorized'
-          render={() => (
-            <Layouts.BlankLayout>
-              <NotAuthorized />
-            </Layouts.BlankLayout>
-          )}
-        />
+      <HistoryWrapper>
+        <Switch>
+          <Route
+            exact
+            path='/'
+            render={() => {
+              return <Redirect to={DefaultRoute} />
+            }}
+          />
+          {/* Not Auth Route */}
+          <Route
+            exact
+            path='/not-authorized'
+            render={() => (
+              <Layouts.BlankLayout>
+                <NotAuthorized />
+              </Layouts.BlankLayout>
+            )}
+          />
 
-        {ResolveRoutes()}
+          {ResolveRoutes()}
 
-        {/* NotFound Error page */}
-        <Route path='*' component={ErrorNotFound} />
-      </Switch>
+          {/* NotFound Error page */}
+          <Route path='*' component={ErrorNotFound} />
+        </Switch>
+      </HistoryWrapper>
     </AppRouter>
   )
 }

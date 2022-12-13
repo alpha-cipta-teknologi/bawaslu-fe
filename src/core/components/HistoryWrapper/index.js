@@ -1,16 +1,9 @@
-import React, { useEffect, Fragment } from 'react'
+import React, { useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
 
-import { actions } from 'store'
-import { hooks } from 'utility'
-
 const HistoryWrapper = ({ history, children }) => {
-  const setBrowserBackStack = hooks.useCustomDispatch(actions.navigations.setBrowserBackStack)
-
   useEffect(() => {
-    const unlisten = history.listen((location, action) => {
-      setBrowserBackStack({ action, location })
-
+    const unlisten = history.listen(() => {
       window.scrollTo(0, 0)
     })
 
@@ -19,7 +12,7 @@ const HistoryWrapper = ({ history, children }) => {
     }
   }, [])
 
-  return <Fragment>{ children }</Fragment>
+  return <>{children}</>
 }
 
 export default withRouter(HistoryWrapper)
