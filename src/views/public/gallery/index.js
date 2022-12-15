@@ -5,7 +5,6 @@ import { Skeleton, Text, Tooltip } from 'core/components'
 import { useSelector } from 'react-redux'
 import { hooks, utils, styleHelper } from 'utility'
 import { actions } from 'store'
-import { apiConfig } from 'configs'
 
 import { ModalGallery } from './components'
 
@@ -106,6 +105,9 @@ const GalleryPage = () => {
                   className='h-[150px] sm:h-[196px] w-full sm:w-1/4 object-cover skeleton-box'
                   onLoad={({ currentTarget }) => {
                     currentTarget.className = 'h-[150px] sm:h-[196px] object-cover'
+                  }}
+                  onError={({ currentTarget }) => {
+                    currentTarget.className = 'h-[150px] sm:h-[196px] sm:w-[250px] w-[200px] bg-gray-200'
                   }}
                   src={utils.getImageAPI(data.path_thumbnail)}
                   alt={data.folder_name}

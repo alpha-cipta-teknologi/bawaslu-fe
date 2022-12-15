@@ -253,6 +253,30 @@ const ForumListPage = () => {
     )
   }
 
+  const renderCardTrending = () => {
+    const data = forumList?.data || [] // todo: ganti dengan data khusus trending
+
+    return (
+      <div className='w-full lg:col-span-3'>
+        <Card paddingHorizontal='px-3' paddingVertical='py-3'>
+          <Text weight='font-bold' spacing='mb-4'>Trending</Text>
+
+          {!data.length && !loading ? (
+            <Text size='text-sm'>Tidak ada data</Text>
+          ) : (
+            <ul className='list-outside list-disc ml-4 text-sm grid gap-y-3'>
+              {data.map(data => {
+                return (
+                  <li key={data.id}><Text size='text-sm' weight='font-bold'>{data.title}</Text></li>
+                )
+              })}
+            </ul>
+          )}
+        </Card>
+      </div>
+    )
+  }
+
   return (
     <div className='py-6 md:py-11'>
       <div className='grid lg:grid-cols-12 flex-col w-full md:flex-row gap-5'>
@@ -260,19 +284,8 @@ const ForumListPage = () => {
           {renderCardCreatePost()}
         </div>
 
-        <div className='w-full lg:col-span-3'>
-          <Card paddingHorizontal='px-3' paddingVertical='py-3'>
-            <Text weight='font-bold' spacing='mb-4'>Trending</Text>
+        {renderCardTrending()}
 
-            <ul className='list-outside list-disc ml-4 text-sm grid gap-y-3'>
-              {forumList.data.map(data => {
-                return (
-                  <li key={data.id}><Text size='text-sm' weight='font-bold'>{data.title}</Text></li>
-                )
-              })}
-            </ul>
-          </Card>
-        </div>
         <div className='flex flex-col w-full lg:col-span-6 lg:overflow-y-auto custom-scrollbar lg:h-screen'>
           {/* {forumArticles.map(data => {
             return (

@@ -1,5 +1,9 @@
 import LoginPage from './auth/login'
 import RegisterPage from './auth/register'
+import ForgotPasswordPage from './auth/forgot-password'
+import ResetPasswordPage from './auth/reset-password'
+import ResetPasswordSuccessPage from './auth/reset-password/success'
+import OtpPage from './auth/otp'
 import ErrorPage from './misc/Error'
 import NotAuthorizedPage from './misc/NotAuthorized'
 import ProfilePage from './private/profile'
@@ -13,6 +17,10 @@ import GalleryPage from './public/gallery'
 export {
   LoginPage,
   RegisterPage,
+  ForgotPasswordPage,
+  ResetPasswordPage,
+  ResetPasswordSuccessPage,
+  OtpPage,
   ErrorPage,
   NotAuthorizedPage,
   ProfilePage,

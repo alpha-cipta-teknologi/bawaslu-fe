@@ -32,14 +32,14 @@ const PublicRoutes = [
     className: 'bg-grey-lighter-1'
   },
   {
-    path: '/bawaslu_update',
+    path: '/bawaslu-update',
     component: BawasluUpdateListPage,
     meta: {
       publicRoute: true
     }
   },
   {
-    path: '/bawaslu_update/:slug',
+    path: '/bawaslu-update/:slug',
     component: BawasluUpdateDetailPage,
     meta: {
       publicRoute: true

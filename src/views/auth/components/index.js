@@ -1,3 +1,4 @@
 import CardAuth from './CardAuth'
+import CardPassword from './CardPassword'
 
-export { CardAuth }
+export { CardAuth, CardPassword }

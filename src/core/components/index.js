@@ -18,6 +18,7 @@ import Logo from './Logo'
 import Menu from './Menu'
 import Modal from './Modal'
 import ModalLoader from './ModalLoader'
+import OtpInput from './OtpInput'
 import ScrollUp from './ScrollUp'
 import Select from './Select'
 import Skeleton from './Skeleton'
@@ -55,6 +56,7 @@ export {
   Menu,
   Modal,
   ModalLoader,
+  OtpInput,
   ScrollUp,
   Select,
   Skeleton,

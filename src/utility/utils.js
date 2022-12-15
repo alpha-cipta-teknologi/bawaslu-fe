@@ -397,3 +397,21 @@ export const getImageAPI = path => {
 
   return ''
 }
+
+export const setCountdownTimer = (
+  time,
+  update,
+  complete
+) => {
+  const start = new Date().getTime()
+  const interval = setInterval(() => {
+    const now = time - (new Date().getTime() - start)
+
+    if (now <= 0) {
+      clearInterval(interval)
+      if (complete) complete()
+    } else {
+      if (update) update(Math.floor(now / 1000))
+    }
+  }, 100)
+}

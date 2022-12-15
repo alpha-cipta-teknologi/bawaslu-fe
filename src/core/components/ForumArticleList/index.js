@@ -92,6 +92,7 @@ const ForumArticleList = ({
   // ** Store & Actions
   const getDataForumArticle = hooks.useCustomDispatch(userdata ? actions.forums.getDataForumArticleAuth : actions.forums.getDataForumArticle)
   const deleteForumArticle = hooks.useCustomDispatch(actions.forums.deleteForumArticle)
+  const deleteCommentArticle = hooks.useCustomDispatch(actions.forums.deleteCommentArticle)
   const likeForumArticle = hooks.useCustomDispatch(actions.forums.likeForumArticle)
   const commentForumArticle = hooks.useCustomDispatch(actions.forums.commentForumArticle)
   const getDataCommentForumArticle = hooks.useCustomDispatch(actions.forums.getDataCommentForumArticle)
@@ -169,6 +170,15 @@ const ForumArticleList = ({
     }
   }, [refreshing, fulfilledCondition])
 
+  const handleShowComment = async id => {
+    getDataCommentForumArticle({
+      group: 1,
+      id_external: id,
+      perPage: 1000,
+      page: 1
+    })
+  }
+
   const onClickMenuCardArticle = (menu, data) => {
     if (menu.id === 'delete') {
       deleteForumArticle(data.id, () => {
@@ -178,6 +188,19 @@ const ForumArticleList = ({
       })
     }
   }
+
+  // const onClickMenuCardComment = (menu, data, dataComment, group) => {
+  //   if (menu.id === 'delete') {
+  //     deleteCommentArticle({
+  //       id: dataComment.id,
+  //       group
+  //     }, () => {
+  //       toastify.success('Berhasil menghapus comment')
+
+  //       handleShowComment(data.id)
+  //     })
+  //   }
+  // }
 
   const handleLike = id => {
     if (!utils.isUserLoggedIn()) {
@@ -189,15 +212,6 @@ const ForumArticleList = ({
       group: 1,
       id,
       reducer: 'forums'
-    })
-  }
-
-  const handleShowComment = async id => {
-    getDataCommentForumArticle({
-      group: 1,
-      id_external: id,
-      perPage: 1000,
-      page: 1
     })
   }
 
@@ -362,7 +376,8 @@ const ForumArticleList = ({
               />
             </div>
             <Input
-              containerClassName='border border-solid border-[#E0E0E0] flex-auto mx-4'
+              containerClassName='flex-auto mx-4'
+              borderColor='border-grey-light-1'
               key='commentar'
               id='commentar'
               placeholder='Tambahkan Komentar'
@@ -401,12 +416,23 @@ const ForumArticleList = ({
                     lineClamp='line-clamp-1'
                     cursor='cursor-pointer'
                   >{dt.author.full_name}</Text>
-                  <Text
-                    size='text-xxs'
-                    color='text-grey-base'
-                    lineClamp='line-clamp-1'
-                    cursor='cursor-pointer'
-                  >{`${momentHelper.formatDateFull(dt.created_date)} ${momentHelper.formatTime(dt.created_date)}`}</Text>
+
+                  <div className='flex flex-row gap-x-2.5'>
+                    <Text
+                      size='text-xxs'
+                      color='text-grey-base'
+                      lineClamp='line-clamp-1'
+                      cursor='cursor-pointer'
+                    >{`${momentHelper.formatDateFull(dt.created_date)} ${momentHelper.formatTime(dt.created_date)}`}</Text>
+
+                    {/* {utils.isUserLoggedIn() && (
+                      <Menu
+                        renderButton={() => <EllipsisVerticalIcon className='w-4 h-4' />}
+                        menuItems={menuCardArticle}
+                        onClickMenuItem={menu => onClickMenuCardComment(menu, data, dt, 1)}
+                      />
+                    )} */}
+                  </div>
                 </div>
                 <Text size='text-sm' className='mb-1'>
                   {dt.comment}
@@ -421,7 +447,8 @@ const ForumArticleList = ({
                 {isReplyComment &&
                   <Card cardClassName='mb-2 bg-[#F6F9FB] md:ml-2 md:mr-2' contentClassName='flex flex-row justify-around items-center' paddingVertical='p-3' paddingHorizontal='p-3'>
                     <Input
-                      containerClassName='border border-solid border-[#E0E0E0] flex-auto mr-4'
+                      containerClassName='flex-auto mr-4'
+                      borderColor='border-grey-light-1'
                       key='title'
                       id='title'
                       placeholder='Balas'
@@ -489,30 +516,30 @@ const ForumArticleList = ({
   }
 
   const renderForumArticles = () => {
-    if (!forumList?.data?.length && !loadingForumArticle && isMounted) {
+    if ((loadingForumArticle && !isMounted) || forumList?.data?.length) {
       return (
-        <EmptyState title={emptyStateTitle} />
+        <div className={styleHelper.classNames('grid gap-y-4', wrapperListClassName)}>
+          {forumList?.data?.map((data, i) => {
+            const isLastElement = forumList?.data?.length === i + 1
+
+            return isLastElement ? (
+              <div key={i} ref={lastElementRef}>
+                {renderCardArticle(data)}
+                {renderCommentSection(data)}
+              </div>
+            ) : (
+              <div key={i}>
+                {renderCardArticle(data)}
+                {renderCommentSection(data)}
+              </div>
+            )
+          })}
+        </div>
       )
     }
 
     return (
-      <div className={styleHelper.classNames('grid gap-y-4', wrapperListClassName)}>
-        {forumList?.data?.map((data, i) => {
-          const isLastElement = forumList?.data?.length === i + 1
-
-          return isLastElement ? (
-            <div key={i} ref={lastElementRef}>
-              {renderCardArticle(data)}
-              {renderCommentSection(data)}
-            </div>
-          ) : (
-            <div key={i}>
-              {renderCardArticle(data)}
-              {renderCommentSection(data)}
-            </div>
-          )
-        })}
-      </div>
+      <EmptyState title={emptyStateTitle} />
     )
   }
 

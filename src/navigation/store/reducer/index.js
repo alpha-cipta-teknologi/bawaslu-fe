@@ -30,7 +30,7 @@ const initialState = {
       menu_id: 3,
       menu_name: 'Bawaslu Update',
       menu_icon: '',
-      module_name: 'bawaslu_update',
+      module_name: 'bawaslu-update',
       type_menu: '',
       seq_number: 2,
       parent_id: 0,

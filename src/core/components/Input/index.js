@@ -40,6 +40,7 @@ const Input = ({
   showError,
   setShowError,
   children,
+  borderColor = 'border-grey-lighter-2',
   ...rest
 }) => {
   const inputRef = useRef(null)
@@ -49,11 +50,8 @@ const Input = ({
   const [error, setError] = useState(errorText || '')
 
   const labelClassNames = styleHelper.classNames(
-    'block font-primary',
+    'block font-primary text-blue-navy',
     setResponsiveTextSize(labelSize),
-    focus
-      ? 'text-primary font-medium'
-      : 'text-blue-navy',
     labelClassName,
     'pt-3 px-3.5'
   )
@@ -62,11 +60,11 @@ const Input = ({
   const inputClassNames = styleHelper.classNames(
     'font-primary font-normal text-blue-navy',
     setResponsiveTextSize(textSize),
-    'focus:ring-0 outline-0 border-none block w-full px-3.5',
+    'focus:ring-0 outline-0 border-0 block w-full px-3.5 rounded',
     label ? 'pb-3 pt-0.5' : 'py-3',
     // 'placeholder:text-drcGrey-base placeholder:font-primary placeholder:font-normal',
     // ...placeholderResponsiveSize,
-    spacing,
+    label ? spacing : '',
     inputClassName,
     disabled
       ? 'bg-grey-light-5 bg-opacity-50'
@@ -359,7 +357,10 @@ const Input = ({
         ? renderInputBasedOnType()
         : (
           <div className={styleHelper.classNames(
-            'block w-full border rounded relative border-grey-lighter-2',
+            'block w-full border rounded relative',
+            focus
+              ? 'border-blue-midnight'
+              : borderColor,
             disabled
               ? 'bg-grey-light-5 bg-opacity-50'
               : focus
@@ -423,6 +424,7 @@ Input.propTypes = {
   trailingIcon: PropTypes.element,
   spacing: PropTypes.string,
   bgColor: PropTypes.string,
+  borderColor: PropTypes.string,
   required: PropTypes.bool,
   disabled: PropTypes.bool,
   showError: PropTypes.bool,

@@ -79,7 +79,7 @@ export const getBawasluUpdateDetail = (payload, callback = null) => {
       dispatch(lazyLoadStart('getBawasluUpdateDetail'))
     },
     dispatch => {
-      dispatch(setProgress('reset'))
+      dispatch(setProgress('end'))
       dispatch(lazyLoadEnd('getBawasluUpdateDetail'))
     }
   )

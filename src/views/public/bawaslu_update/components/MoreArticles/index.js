@@ -80,7 +80,7 @@ const MoreArticles = ({
     return (
       <div className='flex flex-col w-full'>
         <Skeleton loading={loading} avatar={{ sizing: 'h-[140px] w-full' }}>
-          <Link to={`/bawaslu_update/${data.slug}`}>
+          <Link to={`/bawaslu-update/${data.slug}`}>
             <img
               className='h-[140px] w-full object-cover'
               src={utils.getImageAPI(data.path_thumbnail)}
@@ -97,7 +97,7 @@ const MoreArticles = ({
               size='text-sm'
               lineClamp='line-clamp-2'
               cursor='cursor-pointer'
-              href={`/bawaslu_update/${data.slug}`}
+              href={`/bawaslu-update/${data.slug}`}
               underlineOnHover
             >
               {data.title}

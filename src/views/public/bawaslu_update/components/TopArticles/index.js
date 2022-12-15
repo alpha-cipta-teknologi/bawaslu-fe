@@ -27,7 +27,7 @@ const TopArticles = ({
     return (
       <div className='grid flex-col w-full md:flex-row md:grid-cols-12 md:gap-x-7'>
         <div className='w-full h-[434px] relative mb-7 md:mb-0 md:col-span-8 md:row-span-5'>
-          <Link to={`/bawaslu_update/${mainArticle?.slug}`}>
+          <Link to={`/bawaslu-update/${mainArticle?.slug}`}>
             <div className='w-full h-full bg-gray-200'>
               <img
                 className='w-full h-full object-cover'
@@ -59,7 +59,7 @@ const TopArticles = ({
                 {sideArticleList.map((data) => {
                   return (
                     <div className='w-full flex flex-row items-center gap-x-3' key={data.id}>
-                      <Link to={`/bawaslu_update/${data.slug}`} className='w-full'>
+                      <Link to={`/bawaslu-update/${data.slug}`} className='w-full'>
                         <img
                           className='h-28 sm:h-[140px] sm:max-w-[200px] md:h-[76px] w-full md:max-w-[120px] object-cover'
                           src={utils.getImageAPI(data.path_thumbnail)}
@@ -68,7 +68,7 @@ const TopArticles = ({
                       </Link>
                       <div className='flex flex-col gap-y-1'>
                         <Text size='text-xs' color='text-grey-light-7'>{momentHelper.formatDateFull(data.created_date)}</Text>
-                        <Text weight='font-bold' size='text-sm' lineClamp='line-clamp-2' href={`/bawaslu_update/${data.slug}`} underlineOnHover>
+                        <Text weight='font-bold' size='text-sm' lineClamp='line-clamp-2' href={`/bawaslu-update/${data.slug}`} underlineOnHover>
                           {data.title}
                         </Text>
                       </div>

@@ -155,24 +155,6 @@ const BawasluUpdateDetailPage = () => {
       image_foto: userdata.image_foto
     }
 
-    const oldDataComment = dataComment
-    oldDataComment.values = oldDataComment.values.map(d => {
-      if (d.id === commentid) {
-        d.reply_comment.unshift({
-          id: commentid,
-          id_external: commentid,
-          group_comment: 3,
-          comment: replyCommentArticle,
-          created_date: momentHelper.now(),
-          author,
-          reply_comment: []
-        })
-      }
-
-      return d
-    })
-    setDataComment(oldDataComment)
-
     commentBawasluUpdate({
       group: 3,
       status: 1,
@@ -180,6 +162,29 @@ const BawasluUpdateDetailPage = () => {
       id: commentid,
       comment_type: 'Reply',
       articleid: articleId
+    }, isSuccess => {
+      if (isSuccess) {
+        const oldDataComment = {
+          ...dataComment,
+          values: dataComment.values.map(d => {
+            if (d.id === commentid) {
+              d.reply_comment.unshift({
+                id: commentid,
+                id_external: commentid,
+                group_comment: 3,
+                comment: replyCommentArticle,
+                created_date: momentHelper.now(),
+                author,
+                reply_comment: []
+              })
+            }
+
+            return d
+          })
+        }
+
+        setDataComment(oldDataComment)
+      }
     })
 
     setReplyCommentArticle('')
@@ -200,7 +205,8 @@ const BawasluUpdateDetailPage = () => {
           />
         </div>
         <Input
-          containerClassName='border border-solid border-[#E0E0E0] flex-auto mx-4'
+          containerClassName='flex-auto mx-4'
+          borderColor='border-grey-light-1'
           key='title'
           id='title'
           placeholder='Tambahkan Komentar'
@@ -225,7 +231,8 @@ const BawasluUpdateDetailPage = () => {
     return (
       <Card cardClassName='mb-2 bg-[#F6F9FB] md:ml-2 md:mr-2' contentClassName='flex flex-row justify-around items-center' paddingVertical='p-3' paddingHorizontal='p-3'>
         <Input
-          containerClassName='border border-solid border-[#E0E0E0] flex-auto mr-4'
+          containerClassName='flex-auto mr-4'
+          borderColor='border-grey-light-1'
           key='title'
           id='title'
           placeholder='Balas'

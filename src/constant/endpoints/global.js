@@ -29,6 +29,10 @@ export default {
     path: `/forum/article/${id}`,
     method: 'DELETE'
   }),
+  deleteCommentArticle: {
+    path: '/forum/comment',
+    method: 'DELETE'
+  },
   getDataBawasluUpdate: {
     path: '/fe/bawaslu-update',
     method: 'GET'

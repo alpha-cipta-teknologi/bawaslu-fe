@@ -91,6 +91,7 @@ const LoginPage = () => {
         <div className='flex'>
           <Text
             weight='font-semibold'
+            href='/forgot-password'
             underlineOnHover
           >Lupa Kata Sandi?</Text>
         </div>

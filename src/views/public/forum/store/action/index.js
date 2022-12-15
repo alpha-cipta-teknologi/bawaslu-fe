@@ -29,10 +29,23 @@ export const getDataForumArticle = (queryParams, callback = null) => {
           }
         })
 
-        callback ? callback(values) : null
+        if (callback) callback(success, values)
       }
     },
-    null,
+    (response, dispatch) => {
+      if (response.code === 404) {
+        dispatch({
+          type: GET_DATA_FORUM_ARTICLE,
+          data: {
+            data: [],
+            total: 0,
+            page: queryParams.page || 1
+          }
+        })
+      }
+
+      if (callback) callback(false, [])
+    },
     dispatch => dispatch(lazyLoadStart('getDataForumArticle')),
     dispatch => dispatch(lazyLoadEnd('getDataForumArticle'))
   )
@@ -55,7 +68,7 @@ export const getDataForumArticleAuth = (queryParams, callback = null) => {
           }
         })
 
-        if (callback) callback(values)
+        if (callback) callback(success, values)
       }
     },
     (response, dispatch) => {
@@ -68,9 +81,9 @@ export const getDataForumArticleAuth = (queryParams, callback = null) => {
             page: queryParams.page || 1
           }
         })
-
-        if (callback) callback([])
       }
+
+      if (callback) callback(false, [])
     },
     dispatch => dispatch(lazyLoadStart('getDataForumArticle')),
     dispatch => dispatch(lazyLoadEnd('getDataForumArticle'))
@@ -232,5 +245,21 @@ export const deleteForumArticle = (id, callback = null) => {
     null,
     dispatch => dispatch(lazyLoadStart('deleteForumArticle')),
     dispatch => dispatch(lazyLoadEnd('deleteForumArticle'))
+  )
+}
+
+// ** Delete Comment Article
+export const deleteCommentArticle = (formDelete, callback = null) => {
+  return api.request(
+    endpoints.deleteCommentArticle,
+    formDelete,
+    (response, dispatch, success) => {
+      if (success) {
+        if (callback) callback()
+      }
+    },
+    null,
+    dispatch => dispatch(lazyLoadStart('deleteCommentArticle')),
+    dispatch => dispatch(lazyLoadEnd('deleteCommentArticle'))
   )
 }

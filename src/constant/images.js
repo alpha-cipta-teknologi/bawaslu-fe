@@ -1,5 +1,6 @@
 import { ReactComponent as Bell } from 'assets/images/icons/bell.svg'
 import { ReactComponent as Calendar } from 'assets/images/icons/calendar.svg'
+import { ReactComponent as CheckCircle } from 'assets/images/icons/check_circle.svg'
 import { ReactComponent as Document } from 'assets/images/icons/document.svg'
 import { ReactComponent as EmptyData } from 'assets/images/icons/empty_data.svg'
 import { ReactComponent as Lock } from 'assets/images/icons/lock.svg'
@@ -9,6 +10,7 @@ import { ReactComponent as PlayButton } from 'assets/images/icons/play_button.sv
 import { ReactComponent as Like } from 'assets/images/icons/like.svg'
 import { ReactComponent as Comment } from 'assets/images/icons/message_comment.svg'
 import { ReactComponent as Share } from 'assets/images/icons/share.svg'
+import { ReactComponent as Swap } from 'assets/images/icons/swap.svg'
 import { ReactComponent as Trash_Outline } from 'assets/images/icons/trash_outline.svg'
 import { ReactComponent as User } from 'assets/images/icons/user.svg'
 
@@ -23,6 +25,7 @@ export default {
   icons: {
     bell: Bell,
     calendar: Calendar,
+    check_circle: CheckCircle,
     document: Document,
     empty_data: EmptyData,
     lock: Lock,
@@ -32,6 +35,7 @@ export default {
     like: Like,
     comment: Comment,
     share: Share,
+    swap: Swap,
     trash_outline: Trash_Outline,
     user: User
   },
