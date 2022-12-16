@@ -11,14 +11,26 @@ export default {
     path: '/auth/refresh-token',
     method: 'GET'
   },
-  updateProfile: id => ({
-    path: `/app/resource/${id}`,
-    method: 'PUT',
-    type: 'form-data'
+  accountVerification: {
+    path: '/auth/verify',
+    method: 'GET'
+  },
+  forgotPassword: {
+    path: '/auth/forgot-password',
+    method: 'POST'
+  },
+  resetPassword: confirmHash => ({
+    path: `/auth/reset-password?confirm_hash=${confirmHash}`,
+    method: 'POST'
   }),
   // ** Profile
   getDataProfile: id => ({
     path: `/app/resource/${id}`,
     method: 'GET'
+  }),
+  updateProfile: id => ({
+    path: `/app/resource/${id}`,
+    method: 'PUT',
+    type: 'form-data'
   })
 }

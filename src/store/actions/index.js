@@ -1,7 +1,6 @@
 import * as layout from './layout'
 import * as auth from './auth'
 import * as misc from './misc'
-import * as tables from './table'
 import * as navigations from 'navigation/store/action'
 
 // ** Global FE
@@ -16,9 +15,8 @@ const actions = {
   // ** Layout & Nav
   layout,
   navigations,
-  // ** Misc & Component
+  // ** Misc
   misc,
-  tables,
   // ** Auth
   auth,
   profile,

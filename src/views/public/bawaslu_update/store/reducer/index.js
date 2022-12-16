@@ -75,7 +75,13 @@ const reducers = (state = initialState, action) => {
             : state.bawasluDetail.counter_like,
           counter_comment: action.data.type === 'comment' && isUpdateCounter
             ? state.bawasluDetail.counter_comment + 1
-            : state.bawasluDetail.counter_comment
+            : state.bawasluDetail.counter_comment,
+          counter_view: action.data.type === 'view' && isUpdateCounter
+            ? state.bawasluDetail.counter_view + 1
+            : state.bawasluDetail.counter_view,
+          counter_share: action.data.type === 'share' && isUpdateCounter
+            ? state.bawasluDetail.counter_view + 1
+            : state.bawasluDetail.counter_view
         }
       }
 

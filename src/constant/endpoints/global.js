@@ -45,6 +45,10 @@ export default {
     path: `/forum/bawaslu-update/${slug}`,
     method: 'GET'
   }),
+  counterViewShare: {
+    path: '/forum/counter',
+    method: 'POST'
+  },
   getDataGallery: {
     path: '/fe/gallery',
     method: 'GET'
@@ -56,5 +60,17 @@ export default {
   getDataContentHome: {
     path: '/fe/content',
     method: 'GET'
-  }
+  },
+  getDataProvinces: {
+    path: '/area/province',
+    method: 'GET'
+  },
+  getDataRegencies: {
+    path: '/area/regency',
+    method: 'GET'
+  },
+  getDataRegenciesByProvince: provinceId => ({
+    path: `/area/regency/${provinceId}`,
+    method: 'GET'
+  })
 }

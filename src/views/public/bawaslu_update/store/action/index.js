@@ -7,6 +7,7 @@ import {
 } from 'store/actions/misc'
 
 // ** Import action types
+import { UPDATE_COUNTER } from 'views/public/forum/store/actionTypes'
 import {
   GET_DATA_BAWASLU_UPDATE,
   GET_BAWASLU_UPDATE_DETAIL
@@ -82,5 +83,31 @@ export const getBawasluUpdateDetail = (payload, callback = null) => {
       dispatch(setProgress('end'))
       dispatch(lazyLoadEnd('getBawasluUpdateDetail'))
     }
+  )
+}
+
+export const counterViewShare = (formCounter, callback = null) => {
+  return api.request(
+    endpoints.counterViewShare,
+    formCounter,
+    (response, dispatch, success) => {
+      if (success) {
+        const { data } = response
+
+        dispatch({
+          type: UPDATE_COUNTER,
+          data: {
+            id: formCounter.id,
+            type: formCounter.counter,
+            reducer: 'bawasluupdates'
+          }
+        })
+
+        if (callback) callback(data)
+      }
+    },
+    null,
+    dispatch => dispatch(lazyLoadStart('counterViewShare')),
+    dispatch => dispatch(lazyLoadEnd('counterViewShare'))
   )
 }

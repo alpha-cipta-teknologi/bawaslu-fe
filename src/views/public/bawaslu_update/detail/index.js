@@ -16,6 +16,7 @@ const BawasluUpdateDetailPage = () => {
 
   // ** Store & Actions
   const getBawasluUpdateDetail = hooks.useCustomDispatch(actions.bawasluupdates.getBawasluUpdateDetail)
+  const counterViewShare = hooks.useCustomDispatch(actions.bawasluupdates.counterViewShare)
   const commentBawasluUpdate = hooks.useCustomDispatch(actions.forums.commentForumArticle)
   const getDataCommentBawasluUpdate = hooks.useCustomDispatch(actions.forums.getDataCommentForumArticle)
   const likeBawasluUpdate = hooks.useCustomDispatch(actions.forums.likeForumArticle)
@@ -55,8 +56,13 @@ const BawasluUpdateDetailPage = () => {
     },
       async data => {
         setArticleId(data.id)
-
         actionGetDataComment(data.id)
+
+        // counterViewShare({
+        //   id: data.id,
+        //   group: 2,
+        //   counter: 'view'
+        // })
       }
     )
 
@@ -85,6 +91,14 @@ const BawasluUpdateDetailPage = () => {
       reducer: 'bawasluupdates'
     })
   }
+
+  // const handleShare = id => {
+  //   counterViewShare({
+  //     id,
+  //     group: 2,
+  //     counter: 'share'
+  //   })
+  // }
 
   const handleCommentArticle = async () => {
 
@@ -287,6 +301,7 @@ const BawasluUpdateDetailPage = () => {
         <CounterArticle
           renderIcon={() => <CustomIcon iconName='share' className='w-5 h-5' />}
           text={`${bawasluDetail.counter_share || 0} Dibagikan`}
+        // onClick={() => handleShare(bawasluDetail.id)}
         />
       </div>
       <div className='flex flex-col'>

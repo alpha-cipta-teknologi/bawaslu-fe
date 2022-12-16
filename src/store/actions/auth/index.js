@@ -13,17 +13,6 @@ export const handleLogin = (formLogin, callback = null) => {
     (response, dispatch, success) => {
       if (success) {
         const data = response.data
-        // const menus = data.roles?.map(r => {
-        //   return {
-        //     action: 'read',
-        //     subject: r.menu_name.toLowerCase(),
-        //     resource: r.module_name
-        //   }
-        // })
-
-        // const abilitys = { ability: menus }
-
-        // Object.assign(data, abilitys)
 
         dispatch({
           type: 'LOGIN',
@@ -76,4 +65,36 @@ export const handleLogout = () => {
     localStorageHelper.clearItem('userData')
     localStorageHelper.clearToken()
   }
+}
+
+export const forgotPassword = (formForgot, callback = null) => {
+  return api.request(
+    endpoints.forgotPassword,
+    formForgot,
+    (response, dispatch, success) => {
+      if (success) {
+        if (callback) callback(success)
+      }
+    },
+    null,
+    dispatch => dispatch(lazyLoadStart('forgotPassword')),
+    dispatch => dispatch(lazyLoadEnd('forgotPassword'))
+  )
+}
+
+export const resetPassword = (payload, callback = null) => {
+  const formReset = { password: payload.password }
+
+  return api.request(
+    endpoints.resetPassword(payload.confirm_hash),
+    formReset,
+    (response, dispatch, success) => {
+      if (success) {
+        if (callback) callback(success)
+      }
+    },
+    null,
+    dispatch => dispatch(lazyLoadStart('resetPassword')),
+    dispatch => dispatch(lazyLoadEnd('resetPassword'))
+  )
 }

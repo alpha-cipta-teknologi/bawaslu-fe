@@ -70,29 +70,6 @@ export const isEmptyForm = (obj, emptyVal = '') => {
   }).length)
 }
 
-// ** Check if icon from database is valid with 3rd party (react-feather)
-export const isValidIconFeather = (iconName) => iconName && !(iconName.substr(0, 2).toLowerCase() === 'fa')
-
-// ** Convert restrict level number to text
-export const convertRestrictLevel = (restrictLevel) => {
-  switch (restrictLevel.toString()) {
-    case '0':
-      return 'Open All Akses'
-    case '2':
-      return 'Restrict Regional'
-    case '3':
-      return 'Restrict Area'
-    case '4':
-      return 'Restrict City'
-    default:
-      return ''
-  }
-}
-
-export const findRestrictLevel = (restrictLevel, value) => {
-  return restrictLevel.find(res => `${res.value}` === `${value}`)
-}
-
 // ** Remove property or properties from object
 export const removeProperty = (propKey, { [propKey]: propValue, ...rest }) => rest
 export const removeProperties = (object, ...keys) => (keys.length ? removeProperties(removeProperty(keys.pop() || '', object), ...keys) : object)

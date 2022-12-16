@@ -6,14 +6,11 @@ import { connectRouter } from 'connected-react-router'
 import layout from './layout'
 import navigations from 'navigation/store/reducer'
 import misc from './misc'
-import tables from './table'
+import areas from './area'
 
 // ** Auth
 import auth from './auth'
 import profile from 'views/private/profile/store/reducer'
-
-// ** Param Global
-import paramsGlobal from './params'
 
 // ** Global FE
 import forums from 'views/public/forum/store/reducer'
@@ -27,14 +24,12 @@ const reducers = {
   // ** Layout & Nav
   layout,
   navigations,
-  // ** Misc & Component
+  // ** Misc
   misc,
-  tables,
+  areas,
   // ** Auth
   auth,
   profile,
-  // ** Param Global
-  paramsGlobal,
   // ** Global FE
   forums,
   bawasluupdates,
