@@ -98,3 +98,20 @@ export const resetPassword = (payload, callback = null) => {
     dispatch => dispatch(lazyLoadEnd('resetPassword'))
   )
 }
+
+export const accountVerification = (confirmHash, callback = null) => {
+  return api.request(
+    endpoints.accountVerification,
+    { confirm_hash: confirmHash },
+    (response, dispatch, success) => {
+      if (success) {
+        if (callback) callback(success)
+      }
+    },
+    () => {
+      if (callback) callback(false)
+    },
+    dispatch => dispatch(lazyLoadStart('accountVerification')),
+    dispatch => dispatch(lazyLoadEnd('accountVerification'))
+  )
+}

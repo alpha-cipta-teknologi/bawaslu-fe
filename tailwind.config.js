@@ -74,6 +74,16 @@ module.exports = {
         gradient1: 'linear-gradient(180deg, rgba(51, 51, 51, 0) 0%, #333333 100%)',
         gradient2: 'linear-gradient(180.59deg, rgba(51, 51, 51, 0) -11.75%, #333333 118.76%)'
       },
+      keyframes: {
+        sync: {
+          '33%': { transform: 'translateY(10px)' },
+          '66%': { transform: 'translateY(-10px)' },
+          '100%': { transform: 'translateY(0)' }
+        }
+      },
+      animation: {
+        sync: 'sync 0.6s ease-in-out infinite',
+      }
     },
   },
   plugins: [

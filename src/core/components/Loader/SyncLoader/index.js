@@ -5,7 +5,7 @@ import { styleHelper } from 'utility'
 
 const SyncLoader = ({
   loading = true,
-  bgColor = 'bg-drcGreen',
+  bgColor = 'bg-primary',
   wrapperClassName,
   sizing = 'w-4 h-4',
   spacing = 'm-2'
@@ -23,17 +23,17 @@ const SyncLoader = ({
   }
 
   return (
-    <span className={ wrapperClassName }>
-      { Array.from(Array(3).keys()).map(val => (
+    <span className={wrapperClassName}>
+      {Array.from(Array(3).keys()).map(val => (
         <span
-          key={ val }
-          className={ roundClassName }
-          style={ {
+          key={val}
+          className={roundClassName}
+          style={{
             animationFillMode: 'both',
-            animationDelay: `${ val * 0.07 }s`
-          } }
+            animationDelay: `${val * 0.07}s`
+          }}
         />
-      )) }
+      ))}
     </span>
   )
 }

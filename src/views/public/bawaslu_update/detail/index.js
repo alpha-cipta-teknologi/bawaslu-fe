@@ -58,11 +58,11 @@ const BawasluUpdateDetailPage = () => {
         setArticleId(data.id)
         actionGetDataComment(data.id)
 
-        // counterViewShare({
-        //   id: data.id,
-        //   group: 2,
-        //   counter: 'view'
-        // })
+        counterViewShare({
+          id: data.id,
+          group: 2,
+          counter: 'view'
+        })
       }
     )
 
@@ -92,13 +92,13 @@ const BawasluUpdateDetailPage = () => {
     })
   }
 
-  // const handleShare = id => {
-  //   counterViewShare({
-  //     id,
-  //     group: 2,
-  //     counter: 'share'
-  //   })
-  // }
+  const handleShare = id => {
+    counterViewShare({
+      id,
+      group: 2,
+      counter: 'share'
+    })
+  }
 
   const handleCommentArticle = async () => {
 

@@ -1,9 +1,9 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
-import { Button, Input } from 'core/components'
-import { utils, hooks, toastify } from 'utility'
+import { AsyncSelect, Button, Input } from 'core/components'
+import { utils, hooks, toastify, validation } from 'utility'
 import { actions } from 'store'
 
 import { CardAuth } from '../components'
@@ -22,18 +22,18 @@ const formRegisterInputProps = [
   {
     label: 'Kota Tempat Lahir',
     name: 'place_of_birth',
-    type: 'text'
+    type: 'async-select'
   },
-  // {
-  //   label: 'Provinsi',
-  //   name: 'province_id',
-  //   type: 'text'
-  // },
-  // {
-  //   label: 'Kabupaten/Kota',
-  //   name: 'regency_id',
-  //   type: 'text'
-  // },
+  {
+    label: 'Provinsi',
+    name: 'province_id',
+    type: 'async-select'
+  },
+  {
+    label: 'Kabupaten/Kota',
+    name: 'regency_id',
+    type: 'async-select'
+  },
   {
     label: 'Email',
     name: 'email',
@@ -56,24 +56,53 @@ const formRegisterInputProps = [
   }
 ]
 
+const initialSelect = {
+  value: '',
+  label: ''
+}
+
 const RegisterPage = () => {
   const history = useHistory()
 
   const lazyLoad = useSelector(state => state.misc).lazyLoad
+  const allProvinces = useSelector(state => state.areas).allProvinces
+  const allRegencies = useSelector(state => state.areas).allRegencies
+  const dataRegencies = useSelector(state => state.areas).dataRegencies
+
   const handleRegister = hooks.useCustomDispatch(actions.auth.handleRegister)
+  const getDataProvinces = hooks.useCustomDispatch(actions.areas.getDataProvinces)
+  const getDataRegencies = hooks.useCustomDispatch(actions.areas.getDataRegencies)
+  const getDataRegenciesByProvince = hooks.useCustomDispatch(actions.areas.getDataRegenciesByProvince)
 
   const [formRegister, setFormRegister] = useState({
     full_name: '',
     date_of_birth: '',
-    place_of_birth: '',
-    // province_id: '',
-    // regency_id: '',
+    place_of_birth: initialSelect,
+    province_id: initialSelect,
+    regency_id: initialSelect,
     email: '',
     telepon: '',
     password: '',
     confirm_password: ''
   })
+  const [selectedSelect, setSelectedSelect] = useState({
+    place_of_birth: initialSelect,
+    province_id: initialSelect,
+    regency_id: initialSelect
+  })
   const [showErrorInput, setShowErrorInput] = useState(false)
+
+  useEffect(() => {
+    getDataProvinces()
+  }, [])
+
+  useEffect(() => {
+    if (+selectedSelect.province_id.value > 0) {
+      const province_id = +selectedSelect.province_id.value
+
+      getDataRegenciesByProvince(province_id)
+    }
+  }, [selectedSelect.province_id.value])
 
   const onSubmitRegister = event => {
     event.preventDefault()
@@ -85,8 +114,29 @@ const RegisterPage = () => {
     } else {
       setShowErrorInput(false)
 
+      const validationPassMatch = validation.passwordMatch(formRegister.password, formRegister.confirm_password)
+
+      if (!validationPassMatch) {
+        toastify.error('Password dan konfirmasi password tidak sesuai')
+
+        return
+      }
+
+      const requestBody = {
+        ...formRegister,
+        place_of_birth: selectedSelect.place_of_birth.label,
+        province_id: {
+          ...selectedSelect.province_id,
+          value: +selectedSelect.province_id.value
+        },
+        regency_id: {
+          ...selectedSelect.regency_id,
+          value: +selectedSelect.regency_id.value
+        }
+      }
+
       // handle register dispatch
-      handleRegister(formRegister, async () => {
+      handleRegister(requestBody, async () => {
         try {
           history.push('/')
 
@@ -106,12 +156,84 @@ const RegisterPage = () => {
     }))
   }, [])
 
+  const onChangeSelect = useCallback((option, keyName) => {
+    if (keyName === 'province_id') {
+      setSelectedSelect(prevSelect => ({
+        ...prevSelect,
+        [keyName]: option,
+        regency_id: initialSelect
+      }))
+    } else {
+      setSelectedSelect(prevSelect => ({
+        ...prevSelect,
+        [keyName]: option
+      }))
+    }
+  }, [])
+
+  const defaultOptions = (keyName) => {
+    switch (keyName) {
+      case 'place_of_birth':
+        return allRegencies || []
+      case 'province_id':
+        return allProvinces || []
+      case 'regency_id':
+        return selectedSelect.province_id.value ? (dataRegencies || []) : []
+      default:
+        return []
+    }
+  }
+
+  const loadingSelect = (keyName) => {
+    switch (keyName) {
+      case 'place_of_birth':
+        return utils.isLazyLoading(lazyLoad, 'getDataRegencies')
+      case 'province_id':
+        return utils.isLazyLoading(lazyLoad, 'getDataProvinces')
+      case 'regency_id':
+        return utils.isLazyLoading(lazyLoad, 'getDataRegenciesByProvince')
+    }
+  }
+
+  const promiseSelect = (inputValue, keyName) => {
+    return new Promise((resolve) => {
+      if (keyName === 'place_of_birth') {
+        getDataRegencies({
+          page: 1,
+          perPage: 10,
+          q: inputValue
+        }, data => {
+          resolve(data || [])
+        })
+      } else if (keyName === 'province_id' || keyName === 'regency_id') {
+        resolve(utils.filterSelectData(inputValue, defaultOptions(keyName)))
+      }
+    })
+  }
+
   const renderInput = (inputProps) => {
+    const keyName = inputProps.name || ''
+
+    if (inputProps.type === 'async-select') {
+      return (
+        <AsyncSelect
+          key={keyName}
+          label={inputProps.label}
+          value={selectedSelect[keyName]}
+          onChange={value => onChangeSelect(value, keyName)}
+          defaultOptions={defaultOptions(keyName)}
+          // placeholder={ inputProps.placeholder }
+          loading={loadingSelect(keyName)}
+          loadOptions={inputValue => promiseSelect(inputValue, keyName)}
+        />
+      )
+    }
+
     return (
       <Input
-        key={inputProps.name}
-        id={inputProps.name}
-        value={formRegister[inputProps.name || '']}
+        key={keyName}
+        id={keyName}
+        value={formRegister[keyName]}
         onChange={onChangeForm}
         labelClassName='flex'
         showError={showErrorInput}

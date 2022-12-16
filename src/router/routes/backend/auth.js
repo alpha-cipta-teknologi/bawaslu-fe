@@ -1,4 +1,13 @@
-import { ForgotPasswordPage, LoginPage, OtpPage, RegisterPage, ResetPasswordPage, ResetPasswordSuccessPage } from 'views'
+import {
+  ForgotPasswordPage,
+  LoginPage,
+  OtpPage,
+  RegisterPage,
+  ResetPasswordPage,
+  ResetPasswordSuccessPage,
+  AccountVerificationPage,
+  AccountVerificationErrorPage
+} from 'views'
 
 const AuthRoutes = [
   {
@@ -41,6 +50,22 @@ const AuthRoutes = [
   {
     path: '/otp-verification',
     component: OtpPage,
+    meta: {
+      publicRoute: true
+    }
+  },
+  {
+    path: '/account-verification',
+    component: AccountVerificationPage,
+    layout: 'BlankLayout',
+    meta: {
+      publicRoute: true
+    }
+  },
+  {
+    path: '/verification/error',
+    component: AccountVerificationErrorPage,
+    layout: 'HeaderLayout',
     meta: {
       publicRoute: true
     }
