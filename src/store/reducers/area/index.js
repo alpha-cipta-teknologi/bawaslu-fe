@@ -1,10 +1,7 @@
 const initState = {
   allProvinces: [],
   allRegencies: [],
-  dataRegencies: {
-    total: 0,
-    values: []
-  }
+  dataRegencies: []
 }
 
 const areaReducer = (state = initState, action) => {
@@ -12,7 +9,7 @@ const areaReducer = (state = initState, action) => {
     case 'GET_DATA_PROVINCES':
       return {
         ...state,
-        dataProvinces: action.data
+        allProvinces: action.data
       }
 
     case 'GET_DATA_REGENCIES':

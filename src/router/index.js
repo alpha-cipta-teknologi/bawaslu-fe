@@ -16,6 +16,7 @@ import {
 import {
   LayoutWrapper,
   BlankLayout,
+  HeaderLayout,
   HorizontalLayout
 } from 'core/layouts'
 import { HistoryWrapper } from 'core/components'
@@ -47,7 +48,7 @@ const Router = ({ history }) => {
   const DefaultLayout = themeConfig.layout.type === 'horizontal' ? 'HorizontalLayout' : 'BlankLayout'
 
   // ** All of the available layouts
-  const Layouts = { BlankLayout, HorizontalLayout }
+  const Layouts = { BlankLayout, HeaderLayout, HorizontalLayout }
 
   // ** Return Filtered Array of Routes & Paths
   const LayoutRoutesAndPaths = layout => {
@@ -199,9 +200,9 @@ const Router = ({ history }) => {
             exact
             path='/not-authorized'
             render={() => (
-              <Layouts.BlankLayout>
+              <Layouts.HeaderLayout>
                 <NotAuthorized />
-              </Layouts.BlankLayout>
+              </Layouts.HeaderLayout>
             )}
           />
 

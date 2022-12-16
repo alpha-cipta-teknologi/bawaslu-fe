@@ -3,6 +3,8 @@ import RegisterPage from './auth/register'
 import ForgotPasswordPage from './auth/forgot-password'
 import ResetPasswordPage from './auth/reset-password'
 import ResetPasswordSuccessPage from './auth/reset-password/success'
+import AccountVerificationPage from './auth/account-verification'
+import AccountVerificationErrorPage from './auth/account-verification/error'
 import OtpPage from './auth/otp'
 import ErrorPage from './misc/Error'
 import NotAuthorizedPage from './misc/NotAuthorized'
@@ -21,6 +23,8 @@ export {
   ResetPasswordPage,
   ResetPasswordSuccessPage,
   OtpPage,
+  AccountVerificationPage,
+  AccountVerificationErrorPage,
   ErrorPage,
   NotAuthorizedPage,
   ProfilePage,

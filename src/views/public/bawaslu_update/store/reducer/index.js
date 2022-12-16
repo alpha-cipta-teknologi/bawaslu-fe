@@ -80,8 +80,8 @@ const reducers = (state = initialState, action) => {
             ? state.bawasluDetail.counter_view + 1
             : state.bawasluDetail.counter_view,
           counter_share: action.data.type === 'share' && isUpdateCounter
-            ? state.bawasluDetail.counter_view + 1
-            : state.bawasluDetail.counter_view
+            ? state.bawasluDetail.counter_share + 1
+            : state.bawasluDetail.counter_share
         }
       }
 

@@ -10,6 +10,7 @@ import DatePicker from './DatePicker'
 import Dropdown from './Dropdown'
 import EmptyState from './EmptyState'
 import ForumArticleList from './ForumArticleList'
+import Header from './Header'
 import HistoryWrapper from './HistoryWrapper'
 import Image from './Image'
 import ImagePreview from './ImagePreview'
@@ -48,6 +49,7 @@ export {
   Dropdown,
   EmptyState,
   ForumArticleList,
+  Header,
   HistoryWrapper,
   Image,
   ImagePreview,

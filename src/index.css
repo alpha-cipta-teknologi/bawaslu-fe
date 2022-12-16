@@ -155,6 +155,31 @@ body {
   border-radius: 50px;
 }
 
+.custom-scrollbar-secondary {
+  scrollbar-color: rgba(54, 95, 140, 0.5) rgba(54, 95, 140, 0.2);
+  scrollbar-width: thin;
+}
+
+.custom-scrollbar-secondary::-webkit-scrollbar {
+  width: 4px;
+  border-radius: 50px;
+  height: 0px;
+}
+
+.custom-scrollbar-secondary::-webkit-scrollbar-track {
+  background: rgba(54, 95, 140, 0.2);
+  border-radius: 50px;
+}
+
+.custom-scrollbar-secondary::-webkit-scrollbar-thumb {
+  background: rgba(54, 95, 140, 0.5);
+  border-radius: 50px;
+}
+
+.custom-scrollbar-secondary::-webkit-scrollbar-corner {
+  border-radius: 50px;
+}
+
 .object-contain-important {
   object-fit: contain !important;
 }

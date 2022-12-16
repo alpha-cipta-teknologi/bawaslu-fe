@@ -13,7 +13,6 @@ import { styleHelper, hooks } from 'utility'
 import Spinner from '../Loader/Spinner'
 import PortalSelect from '../PortalSelect'
 import Text, { setResponsiveTextSize } from '../Text'
-import { setResponsivePlaceholderTextSize } from '../Input'
 
 const AsyncSelect = ({
   loadOptions: propsLoadOptions,
@@ -32,7 +31,9 @@ const AsyncSelect = ({
   placeholder,
   renderOption,
   disabled,
-  isMulti
+  isMulti,
+  borderColor = 'border-grey-lighter-2',
+  bgColor = 'bg-white'
 }) => {
   const inputRef = useRef(null)
 
@@ -41,7 +42,6 @@ const AsyncSelect = ({
   const [loadedOptions, setLoadedOptions] = useState([])
   const [defaultOptions, setDefaultOptions] = useState([])
 
-  const placeholderResponsiveSize = setResponsivePlaceholderTextSize(textSize)
   const debouncedQuery = hooks.useDebounce(query, 800)
   const options = query
     ? loadedOptions
@@ -77,33 +77,31 @@ const AsyncSelect = ({
   }, [debouncedQuery])
 
   const inputClassNames = (open) => styleHelper.classNames(
-    'font-primary font-normal text-drcBlack-2',
-    'placeholder:text-drcGrey-base placeholder:font-primary placeholder:font-normal',
+    'font-primary font-normal text-blue-navy',
     setResponsiveTextSize(textSize),
-    ...placeholderResponsiveSize,
+    // 'placeholder:text-drcGrey-base placeholder:font-primary placeholder:font-normal',
+    // ...placeholderResponsiveSize,
     inputClassName,
-    isMulti ? 'max-w-[50%] w-full truncate' : 'block w-full border rounded-2lg',
+    isMulti ? 'max-w-[50%] w-full truncate' : 'block w-full rounded',
     isMulti ? 'p-0' : padding,
     isMulti
       ? 'border-0 ring-0 focus:border-0 focus:ring-0 p-0'
-      : open
-        ? 'focus:ring-0 focus:border-drcGreen'
-        : 'focus:ring-0 focus:border-drcGrey-soft border-drcGrey-soft',
+      : 'focus:ring-0 outline-0 border-0',
     disabled
       ? isMulti
         ? 'bg-transparent'
-        : 'bg-drcGrey-soft bg-opacity-50'
-      : 'bg-white cursor-pointer',
-    isMulti ? '' : 'custom-scrollbar'
+        : 'bg-grey-light-5 bg-opacity-50'
+      : open
+        ? 'bg-white'
+        : bgColor,
+    isMulti ? '' : 'custom-scrollbar-secondary'
   )
 
-  const labelClassNames = (open) => styleHelper.classNames(
-    'block font-primary',
+  const labelClassNames = styleHelper.classNames(
+    'block font-primary text-blue-navy',
     setResponsiveTextSize(labelSize),
-    open
-      ? 'text-drcGreen font-bold'
-      : 'text-drcBlack-2',
-    labelClassName
+    labelClassName,
+    'pt-3 px-3.5'
   )
 
   const onChangeQuery = event => {
@@ -158,8 +156,8 @@ const AsyncSelect = ({
             className={styleHelper.classNames(
               'h-5 w-5',
               open
-                ? 'text-drcGreen'
-                : 'text-black'
+                ? 'text-blue-midnight'
+                : 'text-black-default'
             )}
             aria-hidden='true'
           />
@@ -174,28 +172,28 @@ const AsyncSelect = ({
         'block w-full border rounded-2lg',
         padding,
         open
-          ? 'focus:ring-0 focus:border-drcGreen'
+          ? 'focus:ring-0 focus:border-blue-midnight'
           : 'focus:ring-0 focus:border-drcGrey-soft border-drcGrey-soft',
         disabled
           ? 'bg-drcGrey-soft bg-opacity-50'
           : 'bg-white cursor-pointer',
-        'custom-scrollbar'
+        'custom-scrollbar-secondary'
       )
 
       return (
         <>
           <span className={containerMultiSelectClassNames}>
-            <div className='flex flex-wrap gap-2 max-h-12 overflow-y-auto custom-scrollbar'>
+            <div className='flex flex-wrap gap-2 max-h-12 overflow-y-auto custom-scrollbar-secondary'>
               {value?.map((option, index) => {
                 return (
-                  <span key={index} className='inline-flex z-10 rounded-full items-center py-0.5 pl-2.5 pr-1 text-sm font-medium bg-drcGreen bg-opacity-10 text-drcGreen text-opacity-70'>
+                  <span key={index} className='inline-flex z-10 rounded-full items-center py-0.5 pl-2.5 pr-1 text-sm font-medium bg-blue-midnight bg-opacity-10 text-blue-midnight text-opacity-70'>
                     {option.label}
                     <span
-                      className='flex-shrink-0 ml-0.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-drcGreen text-opacity-40 hover:bg-drcGreen hover:bg-opacity-20 hover:text-drcGreen hover:text-opacity-50 focus:outline-none'
+                      className='flex-shrink-0 ml-0.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-blue-midnight text-opacity-40 hover:bg-blue-midnight hover:bg-opacity-20 hover:text-blue-midnight hover:text-opacity-50 focus:outline-none'
                       onClick={() => handleSelect(option)}
                     >
                       <span className='sr-only'>Remove option</span>
-                      <XMarkIcon className='w-3 h-3 text-drcGreen' />
+                      <XMarkIcon className='w-3 h-3 text-blue-midnight' />
                     </span>
                   </span>
                 )
@@ -219,7 +217,23 @@ const AsyncSelect = ({
     }
 
     return (
-      <>
+      <div className={styleHelper.classNames(
+        'block w-full border rounded relative',
+        open
+          ? 'border-blue-midnight'
+          : borderColor,
+        disabled
+          ? 'bg-grey-light-5 bg-opacity-50'
+          : open
+            ? 'bg-white'
+            : bgColor
+      )}>
+        <div className={labelClassNames}>
+          {typeof label === 'string'
+            ? <Combobox.Label>{label}</Combobox.Label>
+            : label()}
+        </div>
+
         <Combobox.Input
           ref={inputRef}
           onChange={onChangeQuery}
@@ -232,7 +246,7 @@ const AsyncSelect = ({
         />
 
         {renderComboboxButton(open)}
-      </>
+      </div>
     )
   }
 
@@ -240,7 +254,7 @@ const AsyncSelect = ({
     if (loading) {
       return (
         <div className='my-12.5 center-content'>
-          <Spinner sizing='w-7 h-7' />
+          <Spinner sizing='w-7 h-7' color='text-blue-midnight' />
         </div>
       )
     }
@@ -259,7 +273,7 @@ const AsyncSelect = ({
         value={option}
         className={({ active }) => styleHelper.classNames(
           'cursor-pointer select-none relative py-2 pl-3 pr-9 w-full',
-          active ? 'bg-drcGreen' : ''
+          active ? 'bg-blue-midnight' : ''
         )}
       >
         {({ active, selected: selectedDefault }) => {
@@ -275,7 +289,7 @@ const AsyncSelect = ({
                 type='span'
                 weight={selected ? 'font-semibold' : 'font-normal'}
                 className={styleHelper.classNames(
-                  active ? ' bg-drcGreen' : '',
+                  active ? ' bg-blue-midnight' : '',
                   'break-all'
                 )}
                 color={active ? 'text-white' : 'text-drcBlack-2'}
@@ -289,7 +303,7 @@ const AsyncSelect = ({
                 <span className='absolute inset-y-0 right-0 flex items-center pr-4'>
                   <CheckIcon
                     className={styleHelper.classNames(
-                      active ? 'text-white' : 'text-drcGreen',
+                      active ? 'text-white' : 'text-blue-midnight',
                       'w-5 h-5'
                     )}
                     aria-hidden='true'
@@ -316,19 +330,14 @@ const AsyncSelect = ({
       {({ open }) => {
         return (
           <>
-            <div className={labelClassNames(open)}>
-              {typeof label === 'string'
-                ? <Combobox.Label>{label}</Combobox.Label>
-                : label()}
-            </div>
 
             <div className={styleHelper.classNames('relative', spacing)} onClick={() => inputRef.current?.focus()}>
               <PortalSelect
                 open={open}
                 renderTargetElement={() => renderSelectContainer(open)}
-                afterLeave={() => setQuery('')}
+              // afterLeave={() => setQuery('')}
               >
-                <Combobox.Options className={styleHelper.classNames(borderRadius, 'z-10 mt-1 w-full bg-white shadow-lg max-h-60 py-1 overflow-auto custom-scrollbar hover:outline-none ring-1 ring-black ring-opacity-5 focus:outline-none')}>
+                <Combobox.Options className={styleHelper.classNames(borderRadius, 'z-10 mt-1 w-full bg-white shadow-lg max-h-60 py-1 overflow-auto custom-scrollbar-secondary hover:outline-none ring-1 ring-black-default ring-opacity-5 focus:outline-none')}>
                   {!disabled && renderOptions()}
                 </Combobox.Options>
               </PortalSelect>
