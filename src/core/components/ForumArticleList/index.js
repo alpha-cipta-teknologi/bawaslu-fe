@@ -5,7 +5,7 @@ import { convertNodeToElement } from 'react-html-parser'
 import { EllipsisVerticalIcon, HeartIcon } from '@heroicons/react/24/outline'
 import _truncate from 'lodash/truncate'
 
-import { hooks, momentHelper, styleHelper, toastify, utils } from 'utility'
+import { hooks, momentHelper, styleHelper, toastify, utils, screen } from 'utility'
 import { actions } from 'store'
 import { images } from 'constant'
 
@@ -18,6 +18,8 @@ import CustomIcon from '../CustomIcon'
 import TextHTML from '../TextHTML'
 import Menu from '../Menu'
 import EmptyState from '../EmptyState'
+import PopoverSharedButtons from '../PopoverSharedButtons'
+import { apiConfig } from 'configs'
 
 const menuCardArticle = [
   {
@@ -96,6 +98,7 @@ const ForumArticleList = ({
   const likeForumArticle = hooks.useCustomDispatch(actions.forums.likeForumArticle)
   const commentForumArticle = hooks.useCustomDispatch(actions.forums.commentForumArticle)
   const getDataCommentForumArticle = hooks.useCustomDispatch(actions.forums.getDataCommentForumArticle)
+  const counterViewShare = hooks.useCustomDispatch(actions.forums.counterViewShare)
 
   const forumList = useSelector(state => state.forums).forumList
   const lazyLoad = useSelector(state => state.misc).lazyLoad
@@ -114,6 +117,7 @@ const ForumArticleList = ({
   })
 
   const loadingForumArticle = utils.isLazyLoading(lazyLoad, 'getDataForumArticle')
+  const windowDimensions = hooks.useWindowDimensions()
 
   const lastElementRef = useCallback(node => {
     if (loadingForumArticle) return
@@ -285,6 +289,59 @@ const ForumArticleList = ({
     setReplyCommentArticle('')
   }
 
+  const handleShare = id => {
+    counterViewShare({
+      id,
+      group: 1,
+      counter: 'share',
+      reducer: 'forums'
+    })
+  }
+
+  const renderPopoverShare = (data, isMobile) => {
+    return (
+      <PopoverSharedButtons
+        onShareWindowClose={() => handleShare(data?.id)}
+        title={data?.title}
+        url={`${apiConfig.baseUrlFE}/forum/${data.slug}`}
+      >
+        <CounterArticle
+          renderIcon={() => <CustomIcon iconName='share' className='w-5 h-5' />}
+          text={`${data?.counter_share}${isMobile ? '' : ' Dibagikan'}`}
+        />
+      </PopoverSharedButtons>
+    )
+  }
+
+  const renderCounter = data => {
+    const isMobile = windowDimensions.width < screen.sm
+
+    return (
+      <div className='flex items-center flex-wrap w-full gap-y-2.5 mt-6 px-3 gap-x-4.5'>
+        <CounterArticle
+          renderIcon={() => (
+            <HeartIcon className={styleHelper.classNames(
+              'w-5 h-5 cursor-pointer',
+              data.like ? 'fill-[#EB5757] stroke-[#EB5757]' : ''
+            )} />
+          )}
+          text={`${data.counter_like}${isMobile ? '' : ' Menyukai'}`}
+          onClick={() => handleLike(data.id)}
+        />
+        <CounterArticle
+          renderIcon={() => (<CustomIcon iconName='comment' className='w-5 h-5 cursor-pointer' />)}
+          text={`${data.counter_comment}${isMobile ? '' : ' Komentar'}`}
+          onClick={() => {
+            handleOpenComment(data.id)
+            handleShowComment(data.id)
+          }}
+        />
+
+        {renderPopoverShare(data, isMobile)}
+      </div>
+    )
+  }
+
   const renderCardArticle = data => {
     const author = data.author
 
@@ -332,30 +389,7 @@ const ForumArticleList = ({
           />
         )}
 
-        <div className='flex flex-row w-full mt-6 px-3 gap-x-4.5'>
-          <CounterArticle
-            renderIcon={() => (
-              <HeartIcon className={styleHelper.classNames(
-                'w-5 h-5 cursor-pointer',
-                data.like ? 'fill-[#EB5757] stroke-[#EB5757]' : ''
-              )} />
-            )}
-            text={`${data.counter_like} Menyukai`}
-            onClick={() => handleLike(data.id)}
-          />
-          <CounterArticle
-            renderIcon={() => (<CustomIcon iconName='comment' className='w-5 h-5 cursor-pointer' />)}
-            text={`${data.counter_comment} Komentar`}
-            onClick={() => {
-              handleOpenComment(data.id)
-              handleShowComment(data.id)
-            }}
-          />
-          <CounterArticle
-            renderIcon={() => <CustomIcon iconName='share' className='w-5 h-5' />}
-            text={`${data.counter_share} Dibagikan`}
-          />
-        </div>
+        {renderCounter(data)}
       </Card>
     )
   }

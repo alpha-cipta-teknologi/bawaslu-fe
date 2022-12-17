@@ -276,3 +276,35 @@ export const deleteCommentArticle = (payload, callback = null) => {
     dispatch => dispatch(lazyLoadEnd('deleteCommentArticle'))
   )
 }
+
+export const counterViewShare = (payload, callback = null) => {
+  const formCounter = {
+    id: payload.id,
+    group: payload.group,
+    counter: payload.counter
+  }
+
+  return api.request(
+    endpoints.counterViewShare,
+    formCounter,
+    (response, dispatch, success) => {
+      if (success) {
+        const { data } = response
+
+        dispatch({
+          type: UPDATE_COUNTER,
+          data: {
+            id: payload.id,
+            type: payload.counter,
+            reducer: payload.reducer
+          }
+        })
+
+        if (callback) callback(data)
+      }
+    },
+    null,
+    dispatch => dispatch(lazyLoadStart('counterViewShare')),
+    dispatch => dispatch(lazyLoadEnd('counterViewShare'))
+  )
+}

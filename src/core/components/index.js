@@ -16,6 +16,7 @@ import Menu from './Menu'
 import Modal from './Modal'
 import ModalLoader from './ModalLoader'
 import OtpInput from './OtpInput'
+import PopoverSharedButtons from './PopoverSharedButtons'
 import ScrollUp from './ScrollUp'
 import Select from './Select'
 import SharedButton from './SharedButton'
@@ -49,6 +50,7 @@ export {
   Modal,
   ModalLoader,
   OtpInput,
+  PopoverSharedButtons,
   ScrollUp,
   Select,
   SharedButton,

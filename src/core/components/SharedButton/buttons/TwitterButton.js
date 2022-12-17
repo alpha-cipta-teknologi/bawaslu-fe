@@ -1,6 +1,8 @@
 import { transformObjectToParams } from '../utils'
 import createShareButton from '../createShareButton'
 
+/* eslint-disable prefer-template */
+
 const twitterLink = (
   url,
   {
@@ -10,23 +12,16 @@ const twitterLink = (
     related = []
   }
 ) => {
-  return `https://twitter.com/share${transformObjectToParams({
-    url,
-    text: title,
-    via,
-    hashtags: hashtags.length > 0 ? hashtags.join(',') : undefined,
-    related: related.length > 0 ? related.join(',') : undefined
-  })}`
-  // return (
-  //   'https://twitter.com/share' +
-  //   transformObjectToParams({
-  //     url,
-  //     text: title,
-  //     via,
-  //     hashtags: hashtags.length > 0 ? hashtags.join(',') : undefined,
-  //     related: related.length > 0 ? related.join(',') : undefined
-  //   })
-  // )
+  return (
+    'https://twitter.com/share' +
+    transformObjectToParams({
+      url,
+      text: title,
+      via,
+      hashtags: hashtags.length > 0 ? hashtags.join(',') : undefined,
+      related: related.length > 0 ? related.join(',') : undefined
+    })
+  )
 }
 
 const TwitterShareButton = createShareButton(

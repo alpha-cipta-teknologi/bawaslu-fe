@@ -1,25 +1,20 @@
 import { transformObjectToParams } from '../utils'
 import createShareButton from '../createShareButton'
 
+/* eslint-disable prefer-template */
+
 const linkedinLink = (url, { title, summary, source }) => {
-  return `https://linkedin.com/sharing/share-offsite${transformObjectToParams({
-    url,
-    mini: 'true',
-    title,
-    summary,
-    source
-  })}`
-  // return (
-  //   // 'https://linkedin.com/shareArticle' +
-  //   'https://linkedin.com/sharing/share-offsite' +
-  //   transformObjectToParams({
-  //     url,
-  //     mini: 'true',
-  //     title,
-  //     summary,
-  //     source
-  //   })
-  // )
+  return (
+    // 'https://linkedin.com/shareArticle' +
+    'https://linkedin.com/sharing/share-offsite' +
+    transformObjectToParams({
+      url,
+      mini: 'true',
+      title,
+      summary,
+      source
+    })
+  )
 }
 
 const LinkedinShareButton = createShareButton(

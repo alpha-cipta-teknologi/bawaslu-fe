@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { HeartIcon, EyeIcon } from '@heroicons/react/24/outline'
 import { useSelector } from 'react-redux'
+import { HeartIcon, EyeIcon } from '@heroicons/react/24/outline'
 
-import { Text, CustomIcon, Card, Input, Button, CounterArticle } from 'core/components'
-import { hooks, utils, momentHelper, styleHelper } from 'utility'
+import { Text, CustomIcon, Card, Input, Button, CounterArticle, PopoverSharedButtons } from 'core/components'
+import { hooks, utils, momentHelper, styleHelper, screen } from 'utility'
 import { actions } from 'store'
 import { images } from 'constant'
 
 import { MoreArticles, TopArticles } from '../components'
+import { apiConfig } from 'configs'
 
 const BawasluUpdateDetailPage = () => {
   const history = useHistory()
@@ -16,7 +17,7 @@ const BawasluUpdateDetailPage = () => {
 
   // ** Store & Actions
   const getBawasluUpdateDetail = hooks.useCustomDispatch(actions.bawasluupdates.getBawasluUpdateDetail)
-  const counterViewShare = hooks.useCustomDispatch(actions.bawasluupdates.counterViewShare)
+  const counterViewShare = hooks.useCustomDispatch(actions.forums.counterViewShare)
   const commentBawasluUpdate = hooks.useCustomDispatch(actions.forums.commentForumArticle)
   const getDataCommentBawasluUpdate = hooks.useCustomDispatch(actions.forums.getDataCommentForumArticle)
   const likeBawasluUpdate = hooks.useCustomDispatch(actions.forums.likeForumArticle)
@@ -37,6 +38,8 @@ const BawasluUpdateDetailPage = () => {
   })
   const [currentPage, setCurrentPage] = useState(1)
   const [refreshing, setRefreshing] = useState(true)
+
+  const windowDimensions = hooks.useWindowDimensions()
 
   const actionGetDataComment = articleId => {
     getDataCommentBawasluUpdate({
@@ -61,7 +64,8 @@ const BawasluUpdateDetailPage = () => {
         counterViewShare({
           id: data.id,
           group: 2,
-          counter: 'view'
+          counter: 'view',
+          reducer: 'bawasluupdates'
         })
       }
     )
@@ -92,11 +96,12 @@ const BawasluUpdateDetailPage = () => {
     })
   }
 
-  const handleShare = id => {
+  const handleShare = () => {
     counterViewShare({
-      id,
+      id: bawasluDetail.id,
       group: 2,
-      counter: 'share'
+      counter: 'share',
+      reducer: 'bawasluupdates'
     })
   }
 
@@ -266,6 +271,52 @@ const BawasluUpdateDetailPage = () => {
     )
   }
 
+  const renderPopoverShare = (isMobile) => {
+    return (
+      <PopoverSharedButtons
+        onShareWindowClose={handleShare}
+        title={bawasluDetail?.title}
+        url={`${apiConfig.baseUrlFE}/bawaslu-update/${bawasluDetail.slug}`}
+      >
+        <CounterArticle
+          renderIcon={() => <CustomIcon iconName='share' className='w-5 h-5' />}
+          text={`${bawasluDetail.counter_share || 0}${isMobile ? '' : ' Dibagikan'}`}
+        />
+      </PopoverSharedButtons>
+    )
+  }
+
+  const renderCounter = () => {
+    const isMobile = windowDimensions.width < screen.sm
+
+    return (
+      <div className='items-center flex flex-wrap w-full my-4 gap-y-2.5 gap-x-4'>
+        <CounterArticle
+          renderIcon={() => <EyeIcon className='w-5 h-5' />}
+          text={`${bawasluDetail.counter_view || 0}${isMobile ? '' : ' Melihat'}`}
+        />
+
+        <CounterArticle
+          renderIcon={() => (
+            <HeartIcon className={styleHelper.classNames(
+              'w-5 h-5 cursor-pointer',
+              bawasluDetail.like ? 'fill-[#EB5757] stroke-[#EB5757]' : ''
+            )} />
+          )}
+          text={`${bawasluDetail.counter_like || 0}${isMobile ? '' : ' Menyukai'}`}
+          onClick={() => handleLike(bawasluDetail.id)}
+        />
+        <CounterArticle
+          renderIcon={() => (<CustomIcon iconName='comment' className='w-5 h-5 cursor-pointer' />)}
+          text={`${bawasluDetail.counter_comment || 0}${isMobile ? '' : ' Komentar'}`}
+          onClick={() => onClickScrollDown('comment-section')}
+        />
+
+        {renderPopoverShare(isMobile)}
+      </div>
+    )
+  }
+
   return (
     <div className='py-3 md:py-6'>
       <Text weight='font-bold' size='text-2xl' className='mb-7'>Bawaslu Update</Text>
@@ -277,39 +328,14 @@ const BawasluUpdateDetailPage = () => {
         isPageDetail
       />
 
-      <div className='flex flex-row w-full my-4 gap-x-4'>
-        <CounterArticle
-          renderIcon={() => <EyeIcon className='w-5 h-5' />}
-          text={`${bawasluDetail.counter_view || 0} Melihat`}
-        />
+      {renderCounter()}
 
-        <CounterArticle
-          renderIcon={() => (
-            <HeartIcon className={styleHelper.classNames(
-              'w-5 h-5 cursor-pointer',
-              bawasluDetail.like ? 'fill-[#EB5757] stroke-[#EB5757]' : ''
-            )} />
-          )}
-          text={`${bawasluDetail.counter_like || 0} Menyukai`}
-          onClick={() => handleLike(bawasluDetail.id)}
-        />
-        <CounterArticle
-          renderIcon={() => (<CustomIcon iconName='comment' className='w-5 h-5 cursor-pointer' />)}
-          text={`${bawasluDetail.counter_comment || 0} Komentar`}
-          onClick={() => onClickScrollDown('comment-section')}
-        />
-        <CounterArticle
-          renderIcon={() => <CustomIcon iconName='share' className='w-5 h-5' />}
-          text={`${bawasluDetail.counter_share || 0} Dibagikan`}
-        // onClick={() => handleShare(bawasluDetail.id)}
-        />
-      </div>
-      <div className='flex flex-col'>
-        <Text size='text-xxs' className='mb-3'>{momentHelper.formatDateFull(bawasluDetail.created_date)}</Text>
-        <Text weight='font-bold' size='text-sm' className='mb-3'>
+      <div className='flex flex-col mb-3 gap-y-3'>
+        <Text size='text-sm'>{momentHelper.formatDateFull(bawasluDetail.created_date)}</Text>
+        <Text weight='font-bold' size='text-xl'>
           {bawasluDetail.title}
         </Text>
-        <div className='mb-3' dangerouslySetInnerHTML={{ __html: bawasluDetail.description }} />
+        <div dangerouslySetInnerHTML={{ __html: bawasluDetail.description }} />
       </div>
 
       {renderCardComment()}

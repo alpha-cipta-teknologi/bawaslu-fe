@@ -1,18 +1,16 @@
 import { transformObjectToParams } from '../utils'
 import createShareButton from '../createShareButton'
 
+/* eslint-disable prefer-template */
+
 const telegramLink = (url, { title }) => {
-  return `https://telegram.me/share/${transformObjectToParams({
-    url,
-    text: title
-  })}`
-  // return (
-  //   'https://telegram.me/share/' +
-  //   transformObjectToParams({
-  //     url,
-  //     text: title,
-  //   })
-  // )
+  return (
+    'https://telegram.me/share/' +
+    transformObjectToParams({
+      url,
+      text: title
+    })
+  )
 }
 
 const TelegramShareButton = createShareButton(

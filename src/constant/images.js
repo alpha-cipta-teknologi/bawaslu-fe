@@ -4,16 +4,21 @@ import { ReactComponent as CheckCircle } from 'assets/images/icons/check_circle.
 import { ReactComponent as Document } from 'assets/images/icons/document.svg'
 import { ReactComponent as EmailSent } from 'assets/images/icons/email_sent.svg'
 import { ReactComponent as EmptyData } from 'assets/images/icons/empty_data.svg'
+import { ReactComponent as Facebook } from 'assets/images/icons/facebook.svg'
 import { ReactComponent as Lock } from 'assets/images/icons/lock.svg'
 import { ReactComponent as Logout } from 'assets/images/icons/logout.svg'
 import { ReactComponent as Logout_2 } from 'assets/images/icons/logout_2.svg'
 import { ReactComponent as PlayButton } from 'assets/images/icons/play_button.svg'
 import { ReactComponent as Like } from 'assets/images/icons/like.svg'
+import { ReactComponent as Linkedin } from 'assets/images/icons/linkedin.svg'
 import { ReactComponent as Comment } from 'assets/images/icons/message_comment.svg'
 import { ReactComponent as Share } from 'assets/images/icons/share.svg'
 import { ReactComponent as Swap } from 'assets/images/icons/swap.svg'
 import { ReactComponent as Trash_Outline } from 'assets/images/icons/trash_outline.svg'
+import { ReactComponent as Telegram } from 'assets/images/icons/telegram.svg'
+import { ReactComponent as Twitter } from 'assets/images/icons/twitter.svg'
 import { ReactComponent as User } from 'assets/images/icons/user.svg'
+import { ReactComponent as Whatsapp } from 'assets/images/icons/whatsapp.svg'
 
 export default {
   logo_bawaslu: require('assets/images/logo/logo.png'),
@@ -30,16 +35,21 @@ export default {
     document: Document,
     email_sent: EmailSent,
     empty_data: EmptyData,
+    facebook: Facebook,
     lock: Lock,
     logout: Logout,
     logout_2: Logout_2,
     play_button: PlayButton,
     like: Like,
+    linkedin: Linkedin,
     comment: Comment,
     share: Share,
     swap: Swap,
+    telegram: Telegram,
+    twitter: Twitter,
     trash_outline: Trash_Outline,
-    user: User
+    user: User,
+    whatsapp: Whatsapp
   },
   social_media: {
     instagram: require('assets/images/footer/instagram.png'),
