@@ -20,6 +20,7 @@ import Menu from '../Menu'
 import EmptyState from '../EmptyState'
 import PopoverSharedButtons from '../PopoverSharedButtons'
 import { apiConfig } from 'configs'
+import Spinner from '../Loader/Spinner'
 
 const menuCardArticle = [
   {
@@ -566,25 +567,44 @@ const ForumArticleList = ({
     )
   }
 
+  const renderSpinner = () => {
+    return (
+      <div className='w-full my-12.5 flex justify-center items-center'>
+        <Spinner sizing='w-7.5 h-7.5' />
+      </div>
+    )
+  }
+
   const renderForumArticles = () => {
     if ((loadingForumArticle && !isMounted) || forumList?.data?.length) {
       return (
         <div className={styleHelper.classNames('grid gap-y-4', wrapperListClassName)}>
-          {forumList?.data?.map((data, i) => {
-            const isLastElement = forumList?.data?.length === i + 1
+          {!isMounted || (loadingForumArticle && page === 1)
+            ? renderSpinner()
+            : (
+              <>
+                {forumList?.data?.map((data, i) => {
+                  const isLastElement = forumList?.data?.length === i + 1
 
-            return isLastElement ? (
-              <div key={i} ref={lastElementRef}>
-                {renderCardArticle(data)}
-                {renderCommentSection(data)}
-              </div>
-            ) : (
-              <div key={i}>
-                {renderCardArticle(data)}
-                {renderCommentSection(data)}
-              </div>
-            )
-          })}
+                  return isLastElement ? (
+                    <div key={i} ref={lastElementRef}>
+                      {renderCardArticle(data)}
+                      {renderCommentSection(data)}
+                    </div>
+                  ) : (
+                    <div key={i}>
+                      {renderCardArticle(data)}
+                      {renderCommentSection(data)}
+                    </div>
+                  )
+                })}
+              </>
+            )}
+
+          {loadingForumArticle
+            && isMounted
+            && page > 1
+            && renderSpinner()}
         </div>
       )
     }

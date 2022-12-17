@@ -1,6 +1,7 @@
 // ** Import action types
 import {
   GET_DATA_COMMENT_FORUM_ARTICLE,
+  GET_DATA_TRENDING_FORUM_ARTICLE,
   GET_DATA_FORUM_ARTICLE,
   UPDATE_COUNTER
 } from '../actionTypes'
@@ -10,7 +11,8 @@ const initialState = {
   forumList: {
     data: [],
     total: 0
-  }
+  },
+  trendingForumList: []
 }
 
 const reducers = (state = initialState, action) => {
@@ -51,6 +53,12 @@ const reducers = (state = initialState, action) => {
             }
           })
         }
+      }
+
+    case GET_DATA_TRENDING_FORUM_ARTICLE:
+      return {
+        ...state,
+        trendingForumList: action.data
       }
 
     case UPDATE_COUNTER:

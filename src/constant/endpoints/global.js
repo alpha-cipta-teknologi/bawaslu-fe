@@ -8,6 +8,10 @@ export default {
     path: '/forum/article',
     method: 'GET'
   },
+  getDataTrendingForumArticle: {
+    path: '/fe/trending-article',
+    method: 'GET'
+  },
   createForumArticle: {
     path: '/forum/article',
     method: 'POST',

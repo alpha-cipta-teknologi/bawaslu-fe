@@ -5,6 +5,7 @@ import { lazyLoadStart, lazyLoadEnd } from 'store/actions/misc'
 // ** Import action types
 import {
   GET_DATA_FORUM_ARTICLE,
+  GET_DATA_TRENDING_FORUM_ARTICLE,
   GET_DATA_COMMENT_FORUM_ARTICLE,
   UPDATE_COUNTER
 } from '../actionTypes'
@@ -87,6 +88,37 @@ export const getDataForumArticleAuth = (queryParams, callback = null) => {
     },
     dispatch => dispatch(lazyLoadStart('getDataForumArticle')),
     dispatch => dispatch(lazyLoadEnd('getDataForumArticle'))
+  )
+}
+
+export const getDataTrendingForumArticle = (callback = null) => {
+  return api.request(
+    endpoints.getDataTrendingForumArticle,
+    null,
+    (response, dispatch, success) => {
+      if (success) {
+        const data = response?.data || []
+
+        dispatch({
+          type: GET_DATA_TRENDING_FORUM_ARTICLE,
+          data
+        })
+
+        if (callback) callback(success, data)
+      }
+    },
+    (response, dispatch) => {
+      if (response.code === 404) {
+        dispatch({
+          type: GET_DATA_TRENDING_FORUM_ARTICLE,
+          data: []
+        })
+      }
+
+      if (callback) callback(false, [])
+    },
+    dispatch => dispatch(lazyLoadStart('getDataTrendingForumArticle')),
+    dispatch => dispatch(lazyLoadEnd('getDataTrendingForumArticle'))
   )
 }
 
