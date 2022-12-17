@@ -85,29 +85,3 @@ export const getBawasluUpdateDetail = (payload, callback = null) => {
     }
   )
 }
-
-export const counterViewShare = (formCounter, callback = null) => {
-  return api.request(
-    endpoints.counterViewShare,
-    formCounter,
-    (response, dispatch, success) => {
-      if (success) {
-        const { data } = response
-
-        dispatch({
-          type: UPDATE_COUNTER,
-          data: {
-            id: formCounter.id,
-            type: formCounter.counter,
-            reducer: 'bawasluupdates'
-          }
-        })
-
-        if (callback) callback(data)
-      }
-    },
-    null,
-    dispatch => dispatch(lazyLoadStart('counterViewShare')),
-    dispatch => dispatch(lazyLoadEnd('counterViewShare'))
-  )
-}

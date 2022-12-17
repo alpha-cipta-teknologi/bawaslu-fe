@@ -1,12 +1,10 @@
-import React, { useState, useEffect, Fragment } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { Text, Card, Button, CustomIcon, Input, ForumArticleList } from 'core/components'
-import { HeartIcon } from '@heroicons/react/24/outline'
+
+import { Text, Card, Button, ForumArticleList, Spinner } from 'core/components'
 import { hooks, utils, momentHelper } from 'utility'
 import { actions } from 'store'
-import { apiConfig } from 'configs'
-import { images } from 'constant'
 
 const ForumListPage = () => {
 
@@ -17,8 +15,9 @@ const ForumListPage = () => {
   const likeForumArticle = hooks.useCustomDispatch(actions.forums.likeForumArticle)
   const commentForumArticle = hooks.useCustomDispatch(actions.forums.commentForumArticle)
   const getDataCommentForumArticle = hooks.useCustomDispatch(actions.forums.getDataCommentForumArticle)
+  const getDataTrendingForumArticle = hooks.useCustomDispatch(actions.forums.getDataTrendingForumArticle)
 
-  const forumList = useSelector(state => state.forums).forumList
+  const trendingForumList = useSelector(state => state.forums).trendingForumList
   const lazyLoad = useSelector(state => state.misc).lazyLoad
 
   // ** States
@@ -27,7 +26,9 @@ const ForumListPage = () => {
   const [commentArticle, setCommentArticle] = useState('')
   const [replyCommentArticle, setReplyCommentArticle] = useState('')
 
-  const loading = utils.isLazyLoading(lazyLoad, 'getDataForumArticle')
+  useEffect(() => {
+    getDataTrendingForumArticle()
+  }, [])
 
   // useEffect(() => {
   //   getDataForumArticle({
@@ -253,25 +254,36 @@ const ForumListPage = () => {
     )
   }
 
-  const renderCardTrending = () => {
-    const data = forumList?.data || [] // todo: ganti dengan data khusus trending
+  const renderContentTrending = () => {
+    const data = trendingForumList || []
+    const loading = utils.isLazyLoading(lazyLoad, 'getDataTrendingForumArticle')
 
+    if (loading) {
+      return <Spinner sizing='w-7.5 h-7.5' />
+    }
+
+    if (!data.length && !loading) {
+      return <Text size='text-sm'>Tidak ada data</Text>
+    }
+
+    return (
+      <ul className='list-outside list-disc ml-4 text-sm grid gap-y-3'>
+        {data.map(data => {
+          return (
+            <li key={data.id}><Text size='text-sm' weight='font-bold'>{data.title}</Text></li>
+          )
+        })}
+      </ul>
+    )
+  }
+
+  const renderCardTrending = () => {
     return (
       <div className='w-full lg:col-span-3'>
         <Card paddingHorizontal='px-3' paddingVertical='py-3'>
           <Text weight='font-bold' spacing='mb-4'>Trending</Text>
 
-          {!data.length && !loading ? (
-            <Text size='text-sm'>Tidak ada data</Text>
-          ) : (
-            <ul className='list-outside list-disc ml-4 text-sm grid gap-y-3'>
-              {data.map(data => {
-                return (
-                  <li key={data.id}><Text size='text-sm' weight='font-bold'>{data.title}</Text></li>
-                )
-              })}
-            </ul>
-          )}
+          {renderContentTrending()}
         </Card>
       </div>
     )

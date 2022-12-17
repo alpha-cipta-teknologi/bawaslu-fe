@@ -14,9 +14,14 @@ import Text from '../Text'
 //   }
 // ]
 
-const CustomMenu = ({ menuItems, renderButton, onClickMenuItem }) => {
+const CustomMenu = ({
+  menuItems,
+  renderButton,
+  onClickMenuItem,
+  wrapperClassName
+}) => {
   return (
-    <Menu as='div' className='relative ml-2 sm:ml-3'>
+    <Menu as='div' className={styleHelper.classNames('relative', wrapperClassName)}>
       <div>
         <Menu.Button className='flex rounded-full bg-white text-sm focus:outline-none focus:ring-0'>
           {renderButton && renderButton()}

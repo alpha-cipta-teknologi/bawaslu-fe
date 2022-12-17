@@ -3,7 +3,8 @@ import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import { Button, Input } from 'core/components'
-import { utils } from 'utility'
+import { hooks, toastify, utils, validation } from 'utility'
+import { actions } from 'store'
 
 import { CardPassword } from '../components'
 
@@ -22,8 +23,11 @@ const formResetPasswordInputProps = [
 
 const ResetPasswordPage = () => {
   const history = useHistory()
+  const query = hooks.useQuery()
 
   const lazyLoad = useSelector(state => state.misc).lazyLoad
+
+  const resetPassword = hooks.useCustomDispatch(actions.auth.resetPassword)
 
   const [formResetPassword, setFormResetPassword] = useState({
     password: '',
@@ -41,8 +45,19 @@ const ResetPasswordPage = () => {
     } else {
       setShowErrorInput(false)
 
+      const validationPassMatch = validation.passwordMatch(formResetPassword.password, formResetPassword.confirm_password)
+
+      if (!validationPassMatch) {
+        toastify.error('Password dan konfirmasi password tidak sesuai')
+
+        return
+      }
+
       // handle reset password dispatch
-      history.push('/reset-password/success')
+      resetPassword({
+        confirm_hash: query?.get('confirm_hash') || '',
+        password: formResetPassword.password
+      }, () => history.push('/reset-password/success'))
     }
   }
 

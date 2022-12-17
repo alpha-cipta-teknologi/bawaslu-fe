@@ -5,7 +5,7 @@ import { convertNodeToElement } from 'react-html-parser'
 import { EllipsisVerticalIcon, HeartIcon } from '@heroicons/react/24/outline'
 import _truncate from 'lodash/truncate'
 
-import { hooks, momentHelper, styleHelper, toastify, utils } from 'utility'
+import { hooks, momentHelper, styleHelper, toastify, utils, screen } from 'utility'
 import { actions } from 'store'
 import { images } from 'constant'
 
@@ -18,6 +18,9 @@ import CustomIcon from '../CustomIcon'
 import TextHTML from '../TextHTML'
 import Menu from '../Menu'
 import EmptyState from '../EmptyState'
+import PopoverSharedButtons from '../PopoverSharedButtons'
+import { apiConfig } from 'configs'
+import Spinner from '../Loader/Spinner'
 
 const menuCardArticle = [
   {
@@ -96,6 +99,7 @@ const ForumArticleList = ({
   const likeForumArticle = hooks.useCustomDispatch(actions.forums.likeForumArticle)
   const commentForumArticle = hooks.useCustomDispatch(actions.forums.commentForumArticle)
   const getDataCommentForumArticle = hooks.useCustomDispatch(actions.forums.getDataCommentForumArticle)
+  const counterViewShare = hooks.useCustomDispatch(actions.forums.counterViewShare)
 
   const forumList = useSelector(state => state.forums).forumList
   const lazyLoad = useSelector(state => state.misc).lazyLoad
@@ -114,6 +118,7 @@ const ForumArticleList = ({
   })
 
   const loadingForumArticle = utils.isLazyLoading(lazyLoad, 'getDataForumArticle')
+  const windowDimensions = hooks.useWindowDimensions()
 
   const lastElementRef = useCallback(node => {
     if (loadingForumArticle) return
@@ -189,18 +194,20 @@ const ForumArticleList = ({
     }
   }
 
-  // const onClickMenuCardComment = (menu, data, dataComment, group) => {
-  //   if (menu.id === 'delete') {
-  //     deleteCommentArticle({
-  //       id: dataComment.id,
-  //       group
-  //     }, () => {
-  //       toastify.success('Berhasil menghapus comment')
+  const onClickMenuCardComment = (menu, dataComment, articleId) => {
+    if (menu.id === 'delete') {
+      deleteCommentArticle({
+        id: dataComment.id,
+        articleid: articleId,
+        group_comment: dataComment.group_comment,
+        reducer: 'forums'
+      }, () => {
+        toastify.success('Berhasil menghapus comment')
 
-  //       handleShowComment(data.id)
-  //     })
-  //   }
-  // }
+        handleShowComment(articleId)
+      })
+    }
+  }
 
   const handleLike = id => {
     if (!utils.isUserLoggedIn()) {
@@ -283,6 +290,59 @@ const ForumArticleList = ({
     setReplyCommentArticle('')
   }
 
+  const handleShare = id => {
+    counterViewShare({
+      id,
+      group: 1,
+      counter: 'share',
+      reducer: 'forums'
+    })
+  }
+
+  const renderPopoverShare = (data, isMobile) => {
+    return (
+      <PopoverSharedButtons
+        onShareWindowClose={() => handleShare(data?.id)}
+        title={data?.title}
+        url={`${apiConfig.baseUrlFE}/forum/${data.slug}`}
+      >
+        <CounterArticle
+          renderIcon={() => <CustomIcon iconName='share' className='w-5 h-5' />}
+          text={`${data?.counter_share}${isMobile ? '' : ' Dibagikan'}`}
+        />
+      </PopoverSharedButtons>
+    )
+  }
+
+  const renderCounter = data => {
+    const isMobile = windowDimensions.width < screen.sm
+
+    return (
+      <div className='flex items-center flex-wrap w-full gap-y-2.5 mt-6 px-3 gap-x-4.5'>
+        <CounterArticle
+          renderIcon={() => (
+            <HeartIcon className={styleHelper.classNames(
+              'w-5 h-5 cursor-pointer',
+              data.like ? 'fill-[#EB5757] stroke-[#EB5757]' : ''
+            )} />
+          )}
+          text={`${data.counter_like}${isMobile ? '' : ' Menyukai'}`}
+          onClick={() => handleLike(data.id)}
+        />
+        <CounterArticle
+          renderIcon={() => (<CustomIcon iconName='comment' className='w-5 h-5 cursor-pointer' />)}
+          text={`${data.counter_comment}${isMobile ? '' : ' Komentar'}`}
+          onClick={() => {
+            handleOpenComment(data.id)
+            handleShowComment(data.id)
+          }}
+        />
+
+        {renderPopoverShare(data, isMobile)}
+      </div>
+    )
+  }
+
   const renderCardArticle = data => {
     const author = data.author
 
@@ -330,32 +390,13 @@ const ForumArticleList = ({
           />
         )}
 
-        <div className='flex flex-row w-full mt-6 px-3 gap-x-4.5'>
-          <CounterArticle
-            renderIcon={() => (
-              <HeartIcon className={styleHelper.classNames(
-                'w-5 h-5 cursor-pointer',
-                data.like ? 'fill-[#EB5757] stroke-[#EB5757]' : ''
-              )} />
-            )}
-            text={`${data.counter_like} Menyukai`}
-            onClick={() => handleLike(data.id)}
-          />
-          <CounterArticle
-            renderIcon={() => (<CustomIcon iconName='comment' className='w-5 h-5 cursor-pointer' />)}
-            text={`${data.counter_comment} Komentar`}
-            onClick={() => {
-              handleOpenComment(data.id)
-              handleShowComment(data.id)
-            }}
-          />
-          <CounterArticle
-            renderIcon={() => <CustomIcon iconName='share' className='w-5 h-5' />}
-            text={`${data.counter_share} Dibagikan`}
-          />
-        </div>
+        {renderCounter(data)}
       </Card>
     )
+  }
+
+  const isPossibleDeleteComment = createdById => {
+    return utils.isUserLoggedIn() && createdById === userdata?.resource_id
   }
 
   const renderCommentSection = data => {
@@ -366,7 +407,7 @@ const ForumArticleList = ({
     return (
       <div className={styleHelper.classNames('grid gap-y-4', isArticleComment ? 'mt-4' : '')}>
         {isArticleComment &&
-          <Card cardClassName='bg-[#F6F9FB]' contentClassName='flex flex-row justify-around items-center' paddingVertical='p-3' paddingHorizontal='p-3'>
+          <Card cardClassName='bg-[#F6F9FB]' contentClassName='flex flex-row justify-around items-center' paddingVertical='py-3' paddingHorizontal='px-3'>
             <div className='flex-shrink-0 bg-gray-200 h-8 w-8 rounded-full'>
               <img
                 className='h-8 w-8 rounded-full'
@@ -399,7 +440,7 @@ const ForumArticleList = ({
           const isReplyComment = data.id === openCommentSection?.articleid && dt.id === openCommentSection?.commentid
 
           return (
-            <Card contentClassName='flex flex-row justify-around' paddingVertical='p-3' paddingHorizontal='p-3' border='border border-grey-light-2' key={dt.id}>
+            <Card contentClassName='flex flex-row justify-around' paddingVertical='py-3' paddingHorizontal='px-3' border='border border-grey-light-2' key={dt.id}>
               <div className='flex-shrink-0 mr-2.5 bg-gray-200 h-11 w-11 rounded-full'>
                 <img
                   className='h-11 w-11 rounded-full'
@@ -417,7 +458,7 @@ const ForumArticleList = ({
                     cursor='cursor-pointer'
                   >{dt.author.full_name}</Text>
 
-                  <div className='flex flex-row gap-x-2.5'>
+                  <div className='flex items-center gap-x-2.5'>
                     <Text
                       size='text-xxs'
                       color='text-grey-base'
@@ -425,13 +466,13 @@ const ForumArticleList = ({
                       cursor='cursor-pointer'
                     >{`${momentHelper.formatDateFull(dt.created_date)} ${momentHelper.formatTime(dt.created_date)}`}</Text>
 
-                    {/* {utils.isUserLoggedIn() && (
+                    {isPossibleDeleteComment(dt.created_by) && (
                       <Menu
                         renderButton={() => <EllipsisVerticalIcon className='w-4 h-4' />}
                         menuItems={menuCardArticle}
-                        onClickMenuItem={menu => onClickMenuCardComment(menu, data, dt, 1)}
+                        onClickMenuItem={menu => onClickMenuCardComment(menu, dt, data.id)}
                       />
-                    )} */}
+                    )}
                   </div>
                 </div>
                 <Text size='text-sm' className='mb-1'>
@@ -445,7 +486,7 @@ const ForumArticleList = ({
                 </div>
 
                 {isReplyComment &&
-                  <Card cardClassName='mb-2 bg-[#F6F9FB] md:ml-2 md:mr-2' contentClassName='flex flex-row justify-around items-center' paddingVertical='p-3' paddingHorizontal='p-3'>
+                  <Card cardClassName='mb-2 bg-[#F6F9FB] md:ml-2 md:mr-2' contentClassName='flex flex-row justify-around items-center' paddingVertical='py-3' paddingHorizontal='px-0'>
                     <Input
                       containerClassName='flex-auto mr-4'
                       borderColor='border-grey-light-1'
@@ -470,7 +511,7 @@ const ForumArticleList = ({
 
                 {dt.reply_comment.map(rdt => {
                   return (
-                    <Card cardClassName='mb-2 md:ml-2 md:mr-2' contentClassName='flex flex-row justify-around' paddingVertical='p-3' paddingHorizontal='p-3' border='border-0' key={rdt.id}>
+                    <Card cardClassName='mb-2 md:ml-2 md:mr-2' contentClassName='flex flex-row justify-around' paddingVertical='py-3' paddingHorizontal='px-0' border='border-0' key={rdt.id}>
                       <div className='flex-shrink-0 mr-2.5 bg-gray-200 h-8 w-8 rounded-full'>
                         <img
                           className='h-8 w-8 rounded-full'
@@ -487,12 +528,23 @@ const ForumArticleList = ({
                             lineClamp='line-clamp-1'
                             cursor='cursor-pointer'
                           >{rdt.author.full_name}</Text>
-                          <Text
-                            size='text-xxs'
-                            color='text-grey-base'
-                            lineClamp='line-clamp-1'
-                            cursor='cursor-pointer'
-                          >{`${momentHelper.formatDateFull(rdt.created_date)} ${momentHelper.formatTime(rdt.created_date)}`}</Text>
+
+                          <div className='flex items-center gap-x-2.5'>
+                            <Text
+                              size='text-xxs'
+                              color='text-grey-base'
+                              lineClamp='line-clamp-1'
+                              cursor='cursor-pointer'
+                            >{`${momentHelper.formatDateFull(rdt.created_date)} ${momentHelper.formatTime(rdt.created_date)}`}</Text>
+
+                            {isPossibleDeleteComment(rdt.created_by) && (
+                              <Menu
+                                renderButton={() => <EllipsisVerticalIcon className='w-4 h-4' />}
+                                menuItems={menuCardArticle}
+                                onClickMenuItem={menu => onClickMenuCardComment(menu, rdt, data.id)}
+                              />
+                            )}
+                          </div>
                         </div>
                         <Text size='text-sm' className='mb-1'>
                           {rdt.comment}
@@ -515,25 +567,44 @@ const ForumArticleList = ({
     )
   }
 
+  const renderSpinner = () => {
+    return (
+      <div className='w-full my-12.5 flex justify-center items-center'>
+        <Spinner sizing='w-7.5 h-7.5' />
+      </div>
+    )
+  }
+
   const renderForumArticles = () => {
     if ((loadingForumArticle && !isMounted) || forumList?.data?.length) {
       return (
         <div className={styleHelper.classNames('grid gap-y-4', wrapperListClassName)}>
-          {forumList?.data?.map((data, i) => {
-            const isLastElement = forumList?.data?.length === i + 1
+          {!isMounted || (loadingForumArticle && page === 1)
+            ? renderSpinner()
+            : (
+              <>
+                {forumList?.data?.map((data, i) => {
+                  const isLastElement = forumList?.data?.length === i + 1
 
-            return isLastElement ? (
-              <div key={i} ref={lastElementRef}>
-                {renderCardArticle(data)}
-                {renderCommentSection(data)}
-              </div>
-            ) : (
-              <div key={i}>
-                {renderCardArticle(data)}
-                {renderCommentSection(data)}
-              </div>
-            )
-          })}
+                  return isLastElement ? (
+                    <div key={i} ref={lastElementRef}>
+                      {renderCardArticle(data)}
+                      {renderCommentSection(data)}
+                    </div>
+                  ) : (
+                    <div key={i}>
+                      {renderCardArticle(data)}
+                      {renderCommentSection(data)}
+                    </div>
+                  )
+                })}
+              </>
+            )}
+
+          {loadingForumArticle
+            && isMounted
+            && page > 1
+            && renderSpinner()}
         </div>
       )
     }

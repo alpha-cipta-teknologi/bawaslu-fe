@@ -39,6 +39,7 @@ const MenuProfile = () => {
     <Menu
       menuItems={userNavigation}
       onClickMenuItem={onClickMenuItem}
+      wrapperClassName='ml-2 sm:ml-3'
       renderButton={() => (
         <>
           <span className='sr-only'>Open user menu</span>

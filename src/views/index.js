@@ -1,6 +1,7 @@
 import LoginPage from './auth/login'
 import RegisterPage from './auth/register'
 import ForgotPasswordPage from './auth/forgot-password'
+import ForgotPasswordSuccessPage from './auth/forgot-password/success'
 import ResetPasswordPage from './auth/reset-password'
 import ResetPasswordSuccessPage from './auth/reset-password/success'
 import AccountVerificationPage from './auth/account-verification'
@@ -20,6 +21,7 @@ export {
   LoginPage,
   RegisterPage,
   ForgotPasswordPage,
+  ForgotPasswordSuccessPage,
   ResetPasswordPage,
   ResetPasswordSuccessPage,
   OtpPage,

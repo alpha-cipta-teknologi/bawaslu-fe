@@ -8,6 +8,10 @@ export default {
     path: '/forum/article',
     method: 'GET'
   },
+  getDataTrendingForumArticle: {
+    path: '/fe/trending-article',
+    method: 'GET'
+  },
   createForumArticle: {
     path: '/forum/article',
     method: 'POST',
@@ -29,10 +33,10 @@ export default {
     path: `/forum/article/${id}`,
     method: 'DELETE'
   }),
-  deleteCommentArticle: {
-    path: '/forum/comment',
+  deleteCommentArticle: commentId => ({
+    path: `/forum/comment/${commentId}`,
     method: 'DELETE'
-  },
+  }),
   getDataBawasluUpdate: {
     path: '/fe/bawaslu-update',
     method: 'GET'

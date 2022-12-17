@@ -5,6 +5,7 @@ import { lazyLoadStart, lazyLoadEnd } from 'store/actions/misc'
 // ** Import action types
 import {
   GET_DATA_FORUM_ARTICLE,
+  GET_DATA_TRENDING_FORUM_ARTICLE,
   GET_DATA_COMMENT_FORUM_ARTICLE,
   UPDATE_COUNTER
 } from '../actionTypes'
@@ -90,6 +91,37 @@ export const getDataForumArticleAuth = (queryParams, callback = null) => {
   )
 }
 
+export const getDataTrendingForumArticle = (callback = null) => {
+  return api.request(
+    endpoints.getDataTrendingForumArticle,
+    null,
+    (response, dispatch, success) => {
+      if (success) {
+        const data = response?.data || []
+
+        dispatch({
+          type: GET_DATA_TRENDING_FORUM_ARTICLE,
+          data
+        })
+
+        if (callback) callback(success, data)
+      }
+    },
+    (response, dispatch) => {
+      if (response.code === 404) {
+        dispatch({
+          type: GET_DATA_TRENDING_FORUM_ARTICLE,
+          data: []
+        })
+      }
+
+      if (callback) callback(false, [])
+    },
+    dispatch => dispatch(lazyLoadStart('getDataTrendingForumArticle')),
+    dispatch => dispatch(lazyLoadEnd('getDataTrendingForumArticle'))
+  )
+}
+
 // ** Create Forum Article
 export const createForumArticle = (formForum, callback = null) => {
   return api.request(
@@ -154,6 +186,7 @@ export const commentForumArticle = (payload, callback = null) => {
             data: {
               id: payload.articleid,
               type: 'comment',
+              actionType: 'add',
               reducer: payload.reducer
             }
           })
@@ -249,17 +282,61 @@ export const deleteForumArticle = (id, callback = null) => {
 }
 
 // ** Delete Comment Article
-export const deleteCommentArticle = (formDelete, callback = null) => {
+export const deleteCommentArticle = (payload, callback = null) => {
   return api.request(
-    endpoints.deleteCommentArticle,
-    formDelete,
+    endpoints.deleteCommentArticle(payload.id),
+    null,
     (response, dispatch, success) => {
       if (success) {
+        if (payload.group_comment === 1) {
+          dispatch({
+            type: UPDATE_COUNTER,
+            data: {
+              id: payload.articleid,
+              type: 'comment',
+              actionType: 'remove',
+              reducer: payload.reducer
+            }
+          })
+        }
+
         if (callback) callback()
       }
     },
     null,
     dispatch => dispatch(lazyLoadStart('deleteCommentArticle')),
     dispatch => dispatch(lazyLoadEnd('deleteCommentArticle'))
+  )
+}
+
+export const counterViewShare = (payload, callback = null) => {
+  const formCounter = {
+    id: payload.id,
+    group: payload.group,
+    counter: payload.counter
+  }
+
+  return api.request(
+    endpoints.counterViewShare,
+    formCounter,
+    (response, dispatch, success) => {
+      if (success) {
+        const { data } = response
+
+        dispatch({
+          type: UPDATE_COUNTER,
+          data: {
+            id: payload.id,
+            type: payload.counter,
+            reducer: payload.reducer
+          }
+        })
+
+        if (callback) callback(data)
+      }
+    },
+    null,
+    dispatch => dispatch(lazyLoadStart('counterViewShare')),
+    dispatch => dispatch(lazyLoadEnd('counterViewShare'))
   )
 }
