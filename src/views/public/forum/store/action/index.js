@@ -154,6 +154,7 @@ export const commentForumArticle = (payload, callback = null) => {
             data: {
               id: payload.articleid,
               type: 'comment',
+              actionType: 'add',
               reducer: payload.reducer
             }
           })
@@ -249,12 +250,24 @@ export const deleteForumArticle = (id, callback = null) => {
 }
 
 // ** Delete Comment Article
-export const deleteCommentArticle = (formDelete, callback = null) => {
+export const deleteCommentArticle = (payload, callback = null) => {
   return api.request(
-    endpoints.deleteCommentArticle,
-    formDelete,
+    endpoints.deleteCommentArticle(payload.id),
+    null,
     (response, dispatch, success) => {
       if (success) {
+        if (payload.group_comment === 1) {
+          dispatch({
+            type: UPDATE_COUNTER,
+            data: {
+              id: payload.articleid,
+              type: 'comment',
+              actionType: 'remove',
+              reducer: payload.reducer
+            }
+          })
+        }
+
         if (callback) callback()
       }
     },

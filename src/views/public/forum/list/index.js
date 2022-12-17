@@ -1,12 +1,10 @@
-import React, { useState, useEffect, Fragment } from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { Text, Card, Button, CustomIcon, Input, ForumArticleList } from 'core/components'
-import { HeartIcon } from '@heroicons/react/24/outline'
+
+import { Text, Card, Button, ForumArticleList } from 'core/components'
 import { hooks, utils, momentHelper } from 'utility'
 import { actions } from 'store'
-import { apiConfig } from 'configs'
-import { images } from 'constant'
 
 const ForumListPage = () => {
 
@@ -265,7 +263,7 @@ const ForumListPage = () => {
             <Text size='text-sm'>Tidak ada data</Text>
           ) : (
             <ul className='list-outside list-disc ml-4 text-sm grid gap-y-3'>
-              {data.map(data => {
+              {data?.slice(0, 10)?.map(data => {
                 return (
                   <li key={data.id}><Text size='text-sm' weight='font-bold'>{data.title}</Text></li>
                 )

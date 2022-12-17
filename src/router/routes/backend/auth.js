@@ -1,5 +1,6 @@
 import {
   ForgotPasswordPage,
+  ForgotPasswordSuccessPage,
   LoginPage,
   OtpPage,
   RegisterPage,
@@ -29,6 +30,13 @@ const AuthRoutes = [
   {
     path: '/forgot-password',
     component: ForgotPasswordPage,
+    meta: {
+      publicRoute: true
+    }
+  },
+  {
+    path: '/forgot-password/success',
+    component: ForgotPasswordSuccessPage,
     meta: {
       publicRoute: true
     }

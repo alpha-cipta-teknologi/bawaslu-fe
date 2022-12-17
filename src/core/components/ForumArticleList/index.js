@@ -189,18 +189,20 @@ const ForumArticleList = ({
     }
   }
 
-  // const onClickMenuCardComment = (menu, data, dataComment, group) => {
-  //   if (menu.id === 'delete') {
-  //     deleteCommentArticle({
-  //       id: dataComment.id,
-  //       group
-  //     }, () => {
-  //       toastify.success('Berhasil menghapus comment')
+  const onClickMenuCardComment = (menu, dataComment, articleId) => {
+    if (menu.id === 'delete') {
+      deleteCommentArticle({
+        id: dataComment.id,
+        articleid: articleId,
+        group_comment: dataComment.group_comment,
+        reducer: 'forums'
+      }, () => {
+        toastify.success('Berhasil menghapus comment')
 
-  //       handleShowComment(data.id)
-  //     })
-  //   }
-  // }
+        handleShowComment(articleId)
+      })
+    }
+  }
 
   const handleLike = id => {
     if (!utils.isUserLoggedIn()) {
@@ -358,6 +360,10 @@ const ForumArticleList = ({
     )
   }
 
+  const isPossibleDeleteComment = createdById => {
+    return utils.isUserLoggedIn() && createdById === userdata?.resource_id
+  }
+
   const renderCommentSection = data => {
     const isArticleComment = data.id === openCommentSection?.articleid
     const loadingButtonComment = utils.isLazyLoading(lazyLoad, 'commentForumArticle')
@@ -366,7 +372,7 @@ const ForumArticleList = ({
     return (
       <div className={styleHelper.classNames('grid gap-y-4', isArticleComment ? 'mt-4' : '')}>
         {isArticleComment &&
-          <Card cardClassName='bg-[#F6F9FB]' contentClassName='flex flex-row justify-around items-center' paddingVertical='p-3' paddingHorizontal='p-3'>
+          <Card cardClassName='bg-[#F6F9FB]' contentClassName='flex flex-row justify-around items-center' paddingVertical='py-3' paddingHorizontal='px-3'>
             <div className='flex-shrink-0 bg-gray-200 h-8 w-8 rounded-full'>
               <img
                 className='h-8 w-8 rounded-full'
@@ -399,7 +405,7 @@ const ForumArticleList = ({
           const isReplyComment = data.id === openCommentSection?.articleid && dt.id === openCommentSection?.commentid
 
           return (
-            <Card contentClassName='flex flex-row justify-around' paddingVertical='p-3' paddingHorizontal='p-3' border='border border-grey-light-2' key={dt.id}>
+            <Card contentClassName='flex flex-row justify-around' paddingVertical='py-3' paddingHorizontal='px-3' border='border border-grey-light-2' key={dt.id}>
               <div className='flex-shrink-0 mr-2.5 bg-gray-200 h-11 w-11 rounded-full'>
                 <img
                   className='h-11 w-11 rounded-full'
@@ -417,7 +423,7 @@ const ForumArticleList = ({
                     cursor='cursor-pointer'
                   >{dt.author.full_name}</Text>
 
-                  <div className='flex flex-row gap-x-2.5'>
+                  <div className='flex items-center gap-x-2.5'>
                     <Text
                       size='text-xxs'
                       color='text-grey-base'
@@ -425,13 +431,13 @@ const ForumArticleList = ({
                       cursor='cursor-pointer'
                     >{`${momentHelper.formatDateFull(dt.created_date)} ${momentHelper.formatTime(dt.created_date)}`}</Text>
 
-                    {/* {utils.isUserLoggedIn() && (
+                    {isPossibleDeleteComment(dt.created_by) && (
                       <Menu
                         renderButton={() => <EllipsisVerticalIcon className='w-4 h-4' />}
                         menuItems={menuCardArticle}
-                        onClickMenuItem={menu => onClickMenuCardComment(menu, data, dt, 1)}
+                        onClickMenuItem={menu => onClickMenuCardComment(menu, dt, data.id)}
                       />
-                    )} */}
+                    )}
                   </div>
                 </div>
                 <Text size='text-sm' className='mb-1'>
@@ -445,7 +451,7 @@ const ForumArticleList = ({
                 </div>
 
                 {isReplyComment &&
-                  <Card cardClassName='mb-2 bg-[#F6F9FB] md:ml-2 md:mr-2' contentClassName='flex flex-row justify-around items-center' paddingVertical='p-3' paddingHorizontal='p-3'>
+                  <Card cardClassName='mb-2 bg-[#F6F9FB] md:ml-2 md:mr-2' contentClassName='flex flex-row justify-around items-center' paddingVertical='py-3' paddingHorizontal='px-0'>
                     <Input
                       containerClassName='flex-auto mr-4'
                       borderColor='border-grey-light-1'
@@ -470,7 +476,7 @@ const ForumArticleList = ({
 
                 {dt.reply_comment.map(rdt => {
                   return (
-                    <Card cardClassName='mb-2 md:ml-2 md:mr-2' contentClassName='flex flex-row justify-around' paddingVertical='p-3' paddingHorizontal='p-3' border='border-0' key={rdt.id}>
+                    <Card cardClassName='mb-2 md:ml-2 md:mr-2' contentClassName='flex flex-row justify-around' paddingVertical='py-3' paddingHorizontal='px-0' border='border-0' key={rdt.id}>
                       <div className='flex-shrink-0 mr-2.5 bg-gray-200 h-8 w-8 rounded-full'>
                         <img
                           className='h-8 w-8 rounded-full'
@@ -487,12 +493,23 @@ const ForumArticleList = ({
                             lineClamp='line-clamp-1'
                             cursor='cursor-pointer'
                           >{rdt.author.full_name}</Text>
-                          <Text
-                            size='text-xxs'
-                            color='text-grey-base'
-                            lineClamp='line-clamp-1'
-                            cursor='cursor-pointer'
-                          >{`${momentHelper.formatDateFull(rdt.created_date)} ${momentHelper.formatTime(rdt.created_date)}`}</Text>
+
+                          <div className='flex items-center gap-x-2.5'>
+                            <Text
+                              size='text-xxs'
+                              color='text-grey-base'
+                              lineClamp='line-clamp-1'
+                              cursor='cursor-pointer'
+                            >{`${momentHelper.formatDateFull(rdt.created_date)} ${momentHelper.formatTime(rdt.created_date)}`}</Text>
+
+                            {isPossibleDeleteComment(rdt.created_by) && (
+                              <Menu
+                                renderButton={() => <EllipsisVerticalIcon className='w-4 h-4' />}
+                                menuItems={menuCardArticle}
+                                onClickMenuItem={menu => onClickMenuCardComment(menu, rdt, data.id)}
+                              />
+                            )}
+                          </div>
                         </div>
                         <Text size='text-sm' className='mb-1'>
                           {rdt.comment}

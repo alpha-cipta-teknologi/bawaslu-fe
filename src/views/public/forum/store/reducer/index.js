@@ -72,7 +72,9 @@ const reducers = (state = initialState, action) => {
                 if (d.id === action.data.id) {
                   return {
                     ...d,
-                    counter_comment: d.counter_comment + 1
+                    counter_comment: action.data.actionType === 'remove'
+                      ? d.counter_comment - 1
+                      : d.counter_comment + 1
                   }
                 }
               }

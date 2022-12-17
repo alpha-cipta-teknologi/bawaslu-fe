@@ -2,6 +2,7 @@ import { ReactComponent as Bell } from 'assets/images/icons/bell.svg'
 import { ReactComponent as Calendar } from 'assets/images/icons/calendar.svg'
 import { ReactComponent as CheckCircle } from 'assets/images/icons/check_circle.svg'
 import { ReactComponent as Document } from 'assets/images/icons/document.svg'
+import { ReactComponent as EmailSent } from 'assets/images/icons/email_sent.svg'
 import { ReactComponent as EmptyData } from 'assets/images/icons/empty_data.svg'
 import { ReactComponent as Lock } from 'assets/images/icons/lock.svg'
 import { ReactComponent as Logout } from 'assets/images/icons/logout.svg'
@@ -27,6 +28,7 @@ export default {
     calendar: Calendar,
     check_circle: CheckCircle,
     document: Document,
+    email_sent: EmailSent,
     empty_data: EmptyData,
     lock: Lock,
     logout: Logout,

@@ -29,10 +29,10 @@ export default {
     path: `/forum/article/${id}`,
     method: 'DELETE'
   }),
-  deleteCommentArticle: {
-    path: '/forum/comment',
+  deleteCommentArticle: commentId => ({
+    path: `/forum/comment/${commentId}`,
     method: 'DELETE'
-  },
+  }),
   getDataBawasluUpdate: {
     path: '/fe/bawaslu-update',
     method: 'GET'
