@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { ChevronDownIcon } from '@heroicons/react/24/solid'
 
@@ -34,6 +34,12 @@ const MenuProfile = () => {
       onCLickLogout()
     }
   }
+
+  useEffect(() => {
+    if (userdata) {
+      utils.connectOneSignal().setExternalUserId(userdata.username)
+    }
+  }, [])
 
   return (
     <Menu

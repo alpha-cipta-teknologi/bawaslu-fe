@@ -4,6 +4,8 @@ import _ from 'lodash'
 import * as momentHelper from './moment'
 import validation from './validation'
 
+let usedOnesignal = null
+
 // ** Checks if an object is empty (returns boolean)
 export const isObjEmpty = obj => Object.keys(obj).length === 0
 
@@ -391,4 +393,12 @@ export const setCountdownTimer = (
       if (update) update(Math.floor(now / 1000))
     }
   }, 100)
+}
+
+export const defineOneSignal = (used) => {
+    usedOnesignal = used
+}
+
+export const connectOneSignal = () => {
+    return usedOnesignal
 }
