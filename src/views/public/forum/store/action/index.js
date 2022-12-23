@@ -241,12 +241,10 @@ export const getDataCommentForumArticle = (queryParams, callback = null) => {
         dispatch({
           type: GET_DATA_COMMENT_FORUM_ARTICLE,
           data: {
-            data: {
-              id: queryParams.id_external,
-              total: 0,
-              values: [],
-              page: queryParams.page
-            }
+            id: queryParams.id_external,
+            total: 0,
+            values: [],
+            page: queryParams.page
           }
         })
 

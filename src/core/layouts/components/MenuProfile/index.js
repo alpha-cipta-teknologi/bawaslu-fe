@@ -37,7 +37,7 @@ const MenuProfile = () => {
 
   useEffect(() => {
     if (userdata) {
-      utils.connectOneSignal().setExternalUserId(userdata.username)
+      utils.connectOneSignal()?.setExternalUserId(userdata.username)
     }
   }, [])
 
