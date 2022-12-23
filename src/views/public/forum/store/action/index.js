@@ -7,7 +7,8 @@ import {
   GET_DATA_FORUM_ARTICLE,
   GET_DATA_TRENDING_FORUM_ARTICLE,
   GET_DATA_COMMENT_FORUM_ARTICLE,
-  UPDATE_COUNTER
+  UPDATE_COUNTER,
+  GET_DATA_FORUM_ARTICLE_DETAIL
 } from '../actionTypes'
 
 /* eslint-disable no-unused-expressions */
@@ -140,6 +141,18 @@ export const createForumArticle = (formForum, callback = null) => {
   )
 }
 
+// ** Save data Forum Article detail
+export const getForumArticleDetail = (data, callback = null) => {
+  return dispatch => {
+    dispatch({
+      type: GET_DATA_FORUM_ARTICLE_DETAIL,
+      data
+    })
+
+    if (callback) callback(data)
+  }
+}
+
 // ** Like Forum Article
 export const likeForumArticle = (payload, callback = null) => {
   const formLike = utils.removeProperties(payload, 'reducer')
@@ -214,7 +227,9 @@ export const getDataCommentForumArticle = (queryParams, callback = null) => {
           type: GET_DATA_COMMENT_FORUM_ARTICLE,
           data: {
             id: queryParams.id_external,
-            data
+            values: data?.values || [],
+            total: data?.total || 0,
+            page: queryParams.page
           }
         })
 
@@ -226,10 +241,11 @@ export const getDataCommentForumArticle = (queryParams, callback = null) => {
         dispatch({
           type: GET_DATA_COMMENT_FORUM_ARTICLE,
           data: {
-            id: queryParams.id_external,
             data: {
+              id: queryParams.id_external,
               total: 0,
-              values: []
+              values: [],
+              page: queryParams.page
             }
           }
         })

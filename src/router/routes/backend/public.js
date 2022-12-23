@@ -2,6 +2,7 @@ import {
   HomePage,
   ForumListPage,
   ForumSavePage,
+  ForumDetailPage,
   BawasluUpdateListPage,
   BawasluUpdateDetailPage,
   GalleryPage
@@ -26,6 +27,14 @@ const PublicRoutes = [
   {
     path: '/forum/create',
     component: ForumSavePage,
+    meta: {
+      publicRoute: true
+    },
+    className: 'bg-grey-lighter-1'
+  },
+  {
+    path: '/forum/:slug',
+    component: ForumDetailPage,
     meta: {
       publicRoute: true
     },

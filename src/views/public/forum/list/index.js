@@ -3,239 +3,30 @@ import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import { Text, Card, Button, ForumArticleList, Spinner } from 'core/components'
-import { hooks, utils, momentHelper } from 'utility'
+import { hooks, utils } from 'utility'
 import { actions } from 'store'
 
 const ForumListPage = () => {
-
   const history = useHistory()
-  const { userdata } = utils.isUserLoggedIn() ? utils.getUserData() : { userdata: null }
 
   // ** Store & Actions
-  const likeForumArticle = hooks.useCustomDispatch(actions.forums.likeForumArticle)
-  const commentForumArticle = hooks.useCustomDispatch(actions.forums.commentForumArticle)
-  const getDataCommentForumArticle = hooks.useCustomDispatch(actions.forums.getDataCommentForumArticle)
   const getDataTrendingForumArticle = hooks.useCustomDispatch(actions.forums.getDataTrendingForumArticle)
+  const getForumArticleDetail = hooks.useCustomDispatch(actions.forums.getForumArticleDetail)
 
   const trendingForumList = useSelector(state => state.forums).trendingForumList
   const lazyLoad = useSelector(state => state.misc).lazyLoad
 
   // ** States
   const [currentPage, setCurrentPage] = useState(1)
-  const [forumArticles, setForumArticle] = useState([])
-  const [commentArticle, setCommentArticle] = useState('')
-  const [replyCommentArticle, setReplyCommentArticle] = useState('')
 
   useEffect(() => {
     getDataTrendingForumArticle()
   }, [])
 
-  // useEffect(() => {
-  //   getDataForumArticle({
-  //     page: currentPage,
-  //     perPage: rowsPerPage,
-  //     ...userdata
-  //       ? { type: 'fe' }
-  //       : {}
-  //   }, async data => {
-  //     let oldForumArticles = forumArticles
-  //     oldForumArticles = oldForumArticles.concat(data)
-  //     setForumArticle(oldForumArticles.map(d => {
-  //       d.comment = {
-  //         values: [],
-  //         total: 0
-  //       }
-  //       return d
-  //     }))
-  //   })
-  // }, [currentPage])
-
-  const handleLike = async id => {
-    let oldForumArticles = forumArticles
-    oldForumArticles = oldForumArticles.map(d => {
-      if (d.id === id) {
-        if (d.like) {
-          d.like = false
-          d.counter_like = d.counter_like - 1
-        } else {
-          d.like = true
-          d.counter_like = d.counter_like + 1
-        }
-
-      }
-      return d
+  const handleGoToDetail = data => {
+    getForumArticleDetail(data, () => {
+      history.push(`/forum/${data.slug}`)
     })
-
-    setForumArticle(oldForumArticles)
-
-    likeForumArticle({
-      group: 1,
-      id
-    })
-  }
-
-  const handleOpenComment = async id => {
-    let oldForumArticles = forumArticles
-    oldForumArticles = oldForumArticles.map(d => {
-
-      if (d.id === id) {
-        if (d.is_comment) {
-          d.is_comment = false
-        } else {
-          d.is_comment = true
-        }
-      } else {
-        d.is_comment = false
-      }
-      return d
-    })
-
-    setForumArticle(oldForumArticles)
-  }
-
-  const handleShowComment = async id => {
-    getDataCommentForumArticle({
-      group: 1,
-      id_external: id,
-      perPage: 1000,
-      page: 1
-    }, async data => {
-      let oldForumArticles = forumArticles
-      oldForumArticles = oldForumArticles.map(d => {
-
-        if (d.id === id) {
-          d.comment = data
-        }
-
-        return d
-      })
-
-      setForumArticle(oldForumArticles)
-    })
-  }
-
-  const handleCommentArticle = async (id) => {
-
-    if (!utils.isUserLoggedIn()) {
-      history.push('/login')
-      return
-    }
-
-    if (commentArticle === '') return
-
-    const author = {
-      full_name: userdata.full_name,
-      username: userdata.username,
-      image_foto: userdata.image_foto
-    }
-
-    let oldForumArticles = forumArticles
-    oldForumArticles = oldForumArticles.map(d => {
-      if (d.id === id) {
-        d.counter_comment = d.counter_comment + 1
-        if (d.comment) {
-          d.comment.values.unshift({
-            id: 0,
-            id_external: id,
-            group_comment: 1,
-            comment: commentArticle,
-            created_date: momentHelper.now(),
-            author,
-            reply_comment: []
-          })
-        }
-      }
-      return d
-    })
-
-    setForumArticle(oldForumArticles)
-
-    commentForumArticle({
-      group: 1,
-      status: 1,
-      comment: commentArticle,
-      id
-    })
-
-    setCommentArticle('')
-  }
-
-  const handleOpenReplyComment = async (articleid, commentid, author = null) => {
-
-    let oldForumArticles = forumArticles
-    oldForumArticles = oldForumArticles.map(d => {
-
-      if (d.id === articleid) {
-        d.comment.values = d.comment.values.map(dt => {
-          if (dt.id === commentid) {
-            if (dt.is_comment) {
-              dt.is_comment = false
-            } else {
-              dt.is_comment = true
-            }
-          } else {
-            dt.is_comment = false
-          }
-          return dt
-        })
-      }
-
-      return d
-    })
-
-    if (author) setReplyCommentArticle(`@${author.username} `)
-    setForumArticle(oldForumArticles)
-  }
-
-  const handleReplyCommentArticle = async (articleid, commentid) => {
-
-    if (!utils.isUserLoggedIn()) {
-      history.push('/login')
-      return
-    }
-
-    if (replyCommentArticle === '') return
-
-    const author = {
-      full_name: userdata.full_name,
-      username: userdata.username,
-      image_foto: userdata.image_foto
-    }
-
-    let oldForumArticles = forumArticles
-    oldForumArticles = oldForumArticles.map(d => {
-
-      if (d.id === articleid) {
-        d.comment.values = d.comment.values.map(dt => {
-          if (dt.id === commentid) {
-            dt.reply_comment.unshift({
-              id: commentid,
-              id_external: commentid,
-              group_comment: 3,
-              comment: replyCommentArticle,
-              created_date: momentHelper.now(),
-              author,
-              reply_comment: []
-            })
-          }
-          return dt
-        })
-      }
-
-      return d
-    })
-
-    setForumArticle(oldForumArticles)
-
-    commentForumArticle({
-      group: commentid === 0 ? 1 : 3,
-      status: 1,
-      comment: replyCommentArticle,
-      id: commentid === 0 ? articleid : commentid
-    })
-
-    setReplyCommentArticle('')
-    handleOpenReplyComment(articleid, commentid)
   }
 
   const renderCardCreatePost = () => {
@@ -268,9 +59,11 @@ const ForumListPage = () => {
 
     return (
       <ul className='list-outside list-disc ml-4 text-sm grid gap-y-3'>
-        {data.map(data => {
+        {data.map(el => {
           return (
-            <li key={data.id}><Text size='text-sm' weight='font-bold'>{data.title}</Text></li>
+            <li key={el.id} onClick={() => handleGoToDetail(el)}>
+              <Text size='text-sm' weight='font-bold' underlineOnHover>{el.title}</Text>
+            </li>
           )
         })}
       </ul>

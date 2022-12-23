@@ -1,6 +1,7 @@
 import AsyncSelect from './AsyncSelect'
 import Button from './Button'
 import Card from './Card'
+import CardArticle from './ForumArticleList/components/CardArticle'
 import CounterArticle from './CounterArticle'
 import CustomIcon from './CustomIcon'
 import Dropdown from './Dropdown'
@@ -35,6 +36,7 @@ export {
   AsyncSelect,
   Button,
   Card,
+  CardArticle,
   CounterArticle,
   CustomIcon,
   Dropdown,
