@@ -31,6 +31,7 @@ import Text from './Text'
 import TextHTML from './TextHTML'
 import Tooltip from './Tooltip'
 import TopLoaderBar from './Loader/TopLoaderBar'
+import VideoPlayer from './VideoPlayer'
 
 export {
   AsyncSelect,
@@ -65,5 +66,6 @@ export {
   Text,
   TextHTML,
   Tooltip,
-  TopLoaderBar
+  TopLoaderBar,
+  VideoPlayer
 }

@@ -319,6 +319,26 @@ export const getYoutubeThumbnail = (url, quality = 'max') => {
   return ''
 }
 
+export const convertVideoUrl = (url) => {
+  if (url) {
+    let videoId, result
+
+    if (result = url.match(/youtube\.com.*(\?v=|\/embed\/)(.{11})/)) {
+      videoId = result.pop()
+    } else if (result = url.match(/youtu.be\/(.{11})/)) {
+      videoId = result.pop()
+    }
+
+    if (videoId) {
+      return `https://www.youtube.com/embed/${videoId}`
+    }
+
+    return url
+  }
+
+  return ''
+}
+
 export const isValueError = (
   value,
   name,
@@ -396,9 +416,9 @@ export const setCountdownTimer = (
 }
 
 export const defineOneSignal = (used) => {
-    usedOnesignal = used
+  usedOnesignal = used
 }
 
 export const connectOneSignal = () => {
-    return usedOnesignal
+  return usedOnesignal
 }
