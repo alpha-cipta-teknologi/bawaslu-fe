@@ -1,6 +1,6 @@
 import { api, utils } from 'utility'
 import { endpoints } from 'constant'
-import { lazyLoadStart, lazyLoadEnd } from 'store/actions/misc'
+import { lazyLoadStart, lazyLoadEnd, setProgressBar } from 'store/actions/misc'
 
 // ** Import action types
 import {
@@ -130,11 +130,11 @@ export const createForumArticle = (formForum, callback = null) => {
     formForum,
     (response, dispatch, success) => {
       if (success) {
-        callback ? callback(success) : null
+        if (callback) callback(success)
       }
     },
     () => {
-      callback ? callback(false) : null
+      if (callback) callback(false)
     },
     dispatch => dispatch(lazyLoadStart('createForumArticle')),
     dispatch => dispatch(lazyLoadEnd('createForumArticle'))
@@ -149,8 +149,49 @@ export const getForumArticleDetail = (data, callback = null) => {
       data
     })
 
-    if (callback) callback(data)
+    if (callback) callback(true, data)
   }
+}
+
+// ** Save data Forum Article detail with Auth
+export const getForumArticleDetailAuth = (data, callback = null) => {
+  return api.request(
+    endpoints.getForumArticleDetailAuth(data.slug),
+    null,
+    (response, dispatch, success) => {
+      if (success) {
+        dispatch({
+          type: GET_DATA_FORUM_ARTICLE_DETAIL,
+          data: response?.data
+        })
+
+        if (callback) callback(success, response?.data)
+      } else {
+        dispatch({
+          type: GET_DATA_FORUM_ARTICLE_DETAIL,
+          data
+        })
+
+        if (callback) callback(success, data)
+      }
+    },
+    (response, dispatch) => {
+      dispatch({
+        type: GET_DATA_FORUM_ARTICLE_DETAIL,
+        data
+      })
+
+      if (callback) callback(false, data)
+    },
+    dispatch => {
+      dispatch(lazyLoadStart('getForumArticleDetailAuth'))
+      dispatch(setProgressBar('start'))
+    },
+    dispatch => {
+      dispatch(lazyLoadEnd('getForumArticleDetailAuth'))
+      dispatch(setProgressBar('end'))
+    }
+  )
 }
 
 // ** Like Forum Article
@@ -175,7 +216,7 @@ export const likeForumArticle = (payload, callback = null) => {
       }
     },
     () => {
-      callback ? callback(false) : null
+      if (callback) callback(false)
     },
     dispatch => dispatch(lazyLoadStart('likeForumArticle')),
     dispatch => dispatch(lazyLoadEnd('likeForumArticle'))
@@ -270,7 +311,7 @@ export const getAllDataCategory = (queryParams, callback = null) => {
       if (success) {
         const { data } = response
 
-        callback ? callback(data) : null
+        if (callback) callback(data)
       }
     },
     null,

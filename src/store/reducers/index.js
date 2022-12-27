@@ -9,6 +9,7 @@ import layout from './layout'
 import navigations from 'navigation/store/reducer'
 import misc from './misc'
 import areas from './area'
+import notifications from './notifications'
 
 // ** Auth
 import auth from './auth'
@@ -29,6 +30,7 @@ const reducers = {
   // ** Misc
   misc,
   areas,
+  notifications,
   // ** Auth
   auth,
   profile,

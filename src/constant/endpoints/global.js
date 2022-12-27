@@ -8,6 +8,10 @@ export default {
     path: '/forum/article',
     method: 'GET'
   },
+  getForumArticleDetailAuth: slug => ({
+    path: `/forum/article/${slug}`,
+    method: 'GET'
+  }),
   getDataTrendingForumArticle: {
     path: '/fe/trending-article',
     method: 'GET'
@@ -76,5 +80,15 @@ export default {
   getDataRegenciesByProvince: provinceId => ({
     path: `/area/regency/${provinceId}`,
     method: 'GET'
+  }),
+
+  // Notification
+  getDataNotification: {
+    path: '/notif',
+    method: 'GET'
+  },
+  readNotification: notifId => ({
+    path: `/notif/${notifId}`,
+    method: 'PUT'
   })
 }

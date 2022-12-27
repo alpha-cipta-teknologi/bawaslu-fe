@@ -70,7 +70,7 @@ const CardArticle = ({
       >
         <CounterArticle
           renderIcon={() => <CustomIcon iconName='share' className='w-5 h-5' />}
-          text={`${data?.counter_share}${isMobile ? '' : ' Dibagikan'}`}
+          text={`${data?.counter_share || 0}${isMobile ? '' : ' Dibagikan'}`}
         />
       </PopoverSharedButtons>
     )
@@ -86,12 +86,12 @@ const CardArticle = ({
               data?.like ? 'fill-[#EB5757] stroke-[#EB5757]' : ''
             )} />
           )}
-          text={`${data?.counter_like}${isMobile ? '' : ' Menyukai'}`}
+          text={`${data?.counter_like || 0}${isMobile ? '' : ' Menyukai'}`}
           onClick={() => handleLike(data?.id)}
         />
         <CounterArticle
           renderIcon={() => (<CustomIcon iconName='comment' className='w-5 h-5 cursor-pointer' />)}
-          text={`${data?.counter_comment}${isMobile ? '' : ' Komentar'}`}
+          text={`${data?.counter_comment || 0}${isMobile ? '' : ' Komentar'}`}
           onClick={onClickComment}
         />
 

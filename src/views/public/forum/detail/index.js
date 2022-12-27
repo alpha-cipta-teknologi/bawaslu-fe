@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { EllipsisVerticalIcon } from '@heroicons/react/24/outline'
 
@@ -21,6 +21,7 @@ const rowsPerPage = 2
 const ForumDetailPage = () => {
   const history = useHistory()
   const location = useLocation()
+  const { slug } = useParams()
   const { userdata } = utils.isUserLoggedIn() ? utils.getUserData() : { userdata: null }
 
   // ** Store & Actions
@@ -29,7 +30,7 @@ const ForumDetailPage = () => {
   const getDataCommentForumArticle = hooks.useCustomDispatch(actions.forums.getDataCommentForumArticle)
   const getDataTrendingForumArticle = hooks.useCustomDispatch(actions.forums.getDataTrendingForumArticle)
   const counterViewShare = hooks.useCustomDispatch(actions.forums.counterViewShare)
-  const getForumArticleDetail = hooks.useCustomDispatch(actions.forums.getForumArticleDetail)
+  const getForumArticleDetail = hooks.useCustomDispatch(utils.isUserLoggedIn() ? actions.forums.getForumArticleDetailAuth : actions.forums.getForumArticleDetail)
 
   const trendingForumList = useSelector(state => state.forums).trendingForumList
   const forumDetail = useSelector(state => state.forums).forumDetail
@@ -61,16 +62,58 @@ const ForumDetailPage = () => {
     }))
   }
 
+  const fetchCommentArticle = id => {
+    getDataCommentForumArticle({
+      group: 1,
+      id_external: id || forumDetail?.id,
+      perPage: rowsPerPage,
+      page
+    }, () => {
+      if (!isMounted) setIsMounted(true)
+      if (refreshing) setRefreshing(false)
+    })
+  }
+
+  useEffect(() => {
+    // todo: minta api u/ get forum article detail without auth
+    const getData = () => {
+      if (!utils.isUserLoggedIn() && forumDetail?.slug !== slug) {
+        history.replace('/forum')
+
+        return
+      }
+
+      if (utils.isUserLoggedIn() && slug !== forumDetail?.slug) {
+        getForumArticleDetail({ slug }, (isSuccess, data) => {
+          if (isSuccess || data?.id) {
+            counterViewShare({
+              id: data?.id,
+              group: 1,
+              counter: 'view',
+              reducer: 'forums'
+            })
+
+            fetchCommentArticle(data?.id)
+          }
+        })
+      } else {
+        counterViewShare({
+          id: forumDetail?.id,
+          group: 1,
+          counter: 'view',
+          reducer: 'forums'
+        })
+      }
+    }
+
+    getData()
+  }, [slug])
+
   useEffect(() => {
     getDataTrendingForumArticle()
+  }, [slug])
 
-    counterViewShare({
-      id: forumDetail?.id,
-      group: 1,
-      counter: 'view',
-      reducer: 'forums'
-    })
-
+  useEffect(() => {
     if (location.state?.isOpenComment && forumDetail?.id) {
       handleOpenComment(forumDetail?.id)
     }
@@ -115,18 +158,6 @@ const ForumDetailPage = () => {
       setHasMoreData(true)
     }
   }, [page, forumDetail?.comment?.total])
-
-  const fetchCommentArticle = () => {
-    getDataCommentForumArticle({
-      group: 1,
-      id_external: forumDetail?.id,
-      perPage: rowsPerPage,
-      page
-    }, () => {
-      if (!isMounted) setIsMounted(true)
-      if (refreshing) setRefreshing(false)
-    })
-  }
 
   useEffect(() => {
     fetchCommentArticle()

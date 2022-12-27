@@ -11,7 +11,7 @@ const ForumListPage = () => {
 
   // ** Store & Actions
   const getDataTrendingForumArticle = hooks.useCustomDispatch(actions.forums.getDataTrendingForumArticle)
-  const getForumArticleDetail = hooks.useCustomDispatch(actions.forums.getForumArticleDetail)
+  const getForumArticleDetail = hooks.useCustomDispatch(utils.isUserLoggedIn() ? actions.forums.getForumArticleDetailAuth : actions.forums.getForumArticleDetail)
 
   const trendingForumList = useSelector(state => state.forums).trendingForumList
   const lazyLoad = useSelector(state => state.misc).lazyLoad
