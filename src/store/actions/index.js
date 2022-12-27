@@ -3,6 +3,8 @@ import * as auth from './auth'
 import * as misc from './misc'
 import * as areas from './area'
 import * as notifications from './notifications'
+import * as communities from './communities'
+import * as topics from './topics'
 
 import * as navigations from 'navigation/store/action'
 
@@ -22,6 +24,8 @@ const actions = {
   misc,
   areas,
   notifications,
+  communities,
+  topics,
   // ** Auth
   auth,
   profile,

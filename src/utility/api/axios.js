@@ -84,11 +84,12 @@ axiosInstance.interceptors.response.use(response => {
   } else {
     const status = error.response.status
     const respData = error.response.data
+    const reqUrl = error?.response?.config?.url || ''
 
     console.log('==== Interceptors Error Response ====', error.response)
 
     if (status === 401 || status === 403) {
-      if (config.url?.includes(endpoints.refreshToken.path)) {
+      if (reqUrl?.includes(endpoints.refreshToken.path)) {
         forceLogout()
 
         return new Promise(() => { })
@@ -125,7 +126,8 @@ axiosInstance.interceptors.response.use(response => {
         }
       }
     } else {
-      if (status !== 404) {
+      // todo: request ke BE perbaiki api /forum/article/:slug
+      if (status !== 404 && !reqUrl.includes('/forum/article')) {
         toastify.error(respData.message)
       }
 

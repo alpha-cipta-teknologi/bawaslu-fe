@@ -347,7 +347,7 @@ export const isValueError = (
   const inputName = (name || '').toLowerCase()
   const labelText = (label || '').toLowerCase()
 
-  if (inputName.includes('password')) return !validation.passwordLength(value)
+  if (inputName.includes('password')) return !validation.password(value)
   if (inputName.includes('email') || labelText.toLowerCase().includes('email')) return !validation.email(value)
   else if (inputName.includes('phone')) return !validation.phone(value)
   else return false
@@ -364,7 +364,7 @@ export const validationErrorText = (
     const inputName = (name || '').toLowerCase()
     const labelText = (label || '').toLowerCase()
 
-    if (inputName.includes('password')) return 'Minimum password adalah 8 karakter'
+    if (inputName.includes('password')) return 'Minimum password terdiri dari 6 karakter, 1 huruf besar dan kecil, 1 angka, serta 1 simbol'
     else if (inputName.includes('email') || labelText.toLowerCase().includes('email')) return 'Format email tidak valid'
     else if (inputName.includes('phone')) return 'Nomor telepon tidak valid'
   }

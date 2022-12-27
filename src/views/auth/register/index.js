@@ -53,6 +53,17 @@ const formRegisterInputProps = [
     label: 'Konfirmasi Kata Sandi',
     name: 'confirm_password',
     type: 'password'
+  },
+  {
+    label: 'Komunitas',
+    name: 'komunitas_id',
+    type: 'async-select'
+  },
+  {
+    label: 'Tema',
+    name: 'tema_id',
+    type: 'async-select',
+    isMulti: true
   }
 ]
 
@@ -68,11 +79,15 @@ const RegisterPage = () => {
   const allProvinces = useSelector(state => state.areas).allProvinces
   const allRegencies = useSelector(state => state.areas).allRegencies
   const dataRegencies = useSelector(state => state.areas).dataRegencies
+  const allCommunities = useSelector(state => state.communities)?.allCommunities
+  const allTopics = useSelector(state => state.topics)?.allTopics
 
   const handleRegister = hooks.useCustomDispatch(actions.auth.handleRegister)
   const getDataProvinces = hooks.useCustomDispatch(actions.areas.getDataProvinces)
   const getDataRegencies = hooks.useCustomDispatch(actions.areas.getDataRegencies)
   const getDataRegenciesByProvince = hooks.useCustomDispatch(actions.areas.getDataRegenciesByProvince)
+  const getAllDataCommunity = hooks.useCustomDispatch(actions.communities.getAllDataCommunity)
+  const getAllDataTopic = hooks.useCustomDispatch(actions.topics.getAllDataTopic)
 
   const [formRegister, setFormRegister] = useState({
     full_name: '',
@@ -83,17 +98,23 @@ const RegisterPage = () => {
     email: '',
     telepon: '',
     password: '',
-    confirm_password: ''
+    confirm_password: '',
+    komunitas_id: initialSelect,
+    tema_id: []
   })
   const [selectedSelect, setSelectedSelect] = useState({
     place_of_birth: initialSelect,
     province_id: initialSelect,
-    regency_id: initialSelect
+    regency_id: initialSelect,
+    komunitas_id: initialSelect,
+    tema_id: []
   })
   const [showErrorInput, setShowErrorInput] = useState(false)
 
   useEffect(() => {
     getDataProvinces()
+    getAllDataCommunity()
+    getAllDataTopic()
   }, [])
 
   useEffect(() => {
@@ -132,7 +153,12 @@ const RegisterPage = () => {
         regency_id: {
           ...selectedSelect.regency_id,
           value: +selectedSelect.regency_id.value
-        }
+        },
+        komunitas_id: {
+          ...selectedSelect.komunitas_id,
+          value: +selectedSelect.komunitas_id.value
+        },
+        tema_id: selectedSelect.tema_id.map(komunitas => +komunitas.value)
       }
 
       // handle register dispatch
@@ -175,6 +201,10 @@ const RegisterPage = () => {
     switch (keyName) {
       case 'place_of_birth':
         return allRegencies || []
+      case 'tema_id':
+        return allTopics || []
+      case 'komunitas_id':
+        return allCommunities || []
       case 'province_id':
         return allProvinces || []
       case 'regency_id':
@@ -188,6 +218,10 @@ const RegisterPage = () => {
     switch (keyName) {
       case 'place_of_birth':
         return utils.isLazyLoading(lazyLoad, 'getDataRegencies')
+      case 'tema_id':
+        return utils.isLazyLoading(lazyLoad, 'getAllDataTopic')
+      case 'komunitas_id':
+        return utils.isLazyLoading(lazyLoad, 'getAllDataCommunity')
       case 'province_id':
         return utils.isLazyLoading(lazyLoad, 'getDataProvinces')
       case 'regency_id':
@@ -200,12 +234,12 @@ const RegisterPage = () => {
       if (keyName === 'place_of_birth') {
         getDataRegencies({
           page: 1,
-          perPage: 10,
+          perPage: 30,
           q: inputValue
         }, data => {
           resolve(data || [])
         })
-      } else if (keyName === 'province_id' || keyName === 'regency_id') {
+      } else if (['province_id', 'regency_id', 'tema_id', 'komunitas_id'].includes(keyName)) {
         resolve(utils.filterSelectData(inputValue, defaultOptions(keyName)))
       }
     })
@@ -222,9 +256,9 @@ const RegisterPage = () => {
           value={selectedSelect[keyName]}
           onChange={value => onChangeSelect(value, keyName)}
           defaultOptions={defaultOptions(keyName)}
-          // placeholder={ inputProps.placeholder }
           loading={loadingSelect(keyName)}
           loadOptions={inputValue => promiseSelect(inputValue, keyName)}
+          isMulti={inputProps.isMulti}
         />
       )
     }
@@ -244,7 +278,11 @@ const RegisterPage = () => {
   }
 
   const renderFormRegister = () => {
-    const disabled = utils.isEmptyForm(formRegister)
+    const disabled = utils.isEmptyForm({
+      ...formRegister,
+      komunitas_id: selectedSelect.komunitas_id.value,
+      place_of_birth: selectedSelect.place_of_birth.value
+    })
     const loading = utils.isLazyLoading(lazyLoad, 'register')
 
     return (
