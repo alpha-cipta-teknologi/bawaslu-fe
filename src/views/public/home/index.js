@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import ReactPlayer from 'react-player'
 
-import { Button, CustomIcon, Text, Skeleton } from 'core/components'
+import { Button, Text, Skeleton, VideoPlayer } from 'core/components'
 import { hooks, utils } from 'utility'
 import { actions } from 'store'
 
@@ -13,19 +12,19 @@ const HomePage = () => {
   const content = useSelector(state => state.home).content
   const lazyLoad = useSelector(state => state.misc).lazyLoad
 
-  const [playingVideo, setPlayingVideo] = useState(false)
+  // const [playingVideo, setPlayingVideo] = useState(false)
 
   useEffect(() => {
     getDataContentHome()
   }, [])
 
-  const renderPlayIcon = () => {
-    return (
-      <div className='w-12 h-12 sm:w-15 sm:h-15 rounded-full bg-black-default relative'>
-        <CustomIcon iconName='play_button' className='w-15 h-15 sm:w-20 sm:h-20 absolute-center' />
-      </div>
-    )
-  }
+  // const renderPlayIcon = () => {
+  //   return (
+  //     <div className='w-12 h-12 sm:w-15 sm:h-15 rounded-full bg-black-default relative'>
+  //       <CustomIcon iconName='play_button' className='w-15 h-15 sm:w-20 sm:h-20 absolute-center' />
+  //     </div>
+  //   )
+  // }
 
   const renderContent = () => {
     const loadingContent = utils.isLazyLoading(lazyLoad, 'getDataContentHome') || false
@@ -59,15 +58,15 @@ const HomePage = () => {
         </Skeleton>
 
         <div className='w-full px-6 md:px-8 lg:px-12 my-12'>
-          <div className='w-full h-full max-h-[542px] aspect-w-16 aspect-h-9 rounded-xl'>
+          <div>
             <Skeleton
               loading={loadingContent}
               avatar={{
-                sizing: 'w-full h-full',
+                sizing: 'w-full h-full max-h-[542px] aspect-w-16 aspect-h-9',
                 shape: 'rounded-xl'
               }}
             >
-              {videoUrl
+              {/* {videoUrl
                 ? (
                   <ReactPlayer
                     url={videoUrl}
@@ -83,6 +82,16 @@ const HomePage = () => {
                     onClickPreview={() => setPlayingVideo(true)}
                     light={utils.getYoutubeThumbnail(videoUrl)}
                     controls
+                  />
+                )
+                : null} */}
+
+              {videoUrl
+                ? (
+                  <VideoPlayer
+                    videoUrl={utils.convertVideoUrl(videoUrl)}
+                    thumbnailImg={utils.getImageAPI(content?.path_image)}
+                    wrapperClassName='w-full h-full max-h-[542px] aspect-w-16 aspect-h-9'
                   />
                 )
                 : null}
