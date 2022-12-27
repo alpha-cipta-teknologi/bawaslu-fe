@@ -12,6 +12,7 @@ import NotAuthorizedPage from './misc/NotAuthorized'
 import ProfilePage from './private/profile'
 import ForumListPage from './public/forum/list'
 import ForumSavePage from './public/forum/save'
+import ForumDetailPage from './public/forum/detail'
 import HomePage from './public/home'
 import BawasluUpdateListPage from './public/bawaslu_update/list'
 import BawasluUpdateDetailPage from './public/bawaslu_update/detail'
@@ -32,6 +33,7 @@ export {
   ProfilePage,
   ForumListPage,
   ForumSavePage,
+  ForumDetailPage,
   HomePage,
   BawasluUpdateListPage,
   BawasluUpdateDetailPage,

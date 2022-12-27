@@ -11,11 +11,11 @@ import './index.css'
 const App = () => {
 
   useEffect(() => {
-    OneSignal.init({ 
+    OneSignal.init({
       appId: process.env.REACT_APP_ONESIGNAL_APPID
+    }).then(() => {
+      utils.defineOneSignal(OneSignal)
     })
-
-    utils.defineOneSignal(OneSignal)
   })
 
   return <Router history={history} />

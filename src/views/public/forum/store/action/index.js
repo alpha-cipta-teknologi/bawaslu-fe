@@ -1,13 +1,14 @@
 import { api, utils } from 'utility'
 import { endpoints } from 'constant'
-import { lazyLoadStart, lazyLoadEnd } from 'store/actions/misc'
+import { lazyLoadStart, lazyLoadEnd, setProgressBar } from 'store/actions/misc'
 
 // ** Import action types
 import {
   GET_DATA_FORUM_ARTICLE,
   GET_DATA_TRENDING_FORUM_ARTICLE,
   GET_DATA_COMMENT_FORUM_ARTICLE,
-  UPDATE_COUNTER
+  UPDATE_COUNTER,
+  GET_DATA_FORUM_ARTICLE_DETAIL
 } from '../actionTypes'
 
 /* eslint-disable no-unused-expressions */
@@ -129,14 +130,67 @@ export const createForumArticle = (formForum, callback = null) => {
     formForum,
     (response, dispatch, success) => {
       if (success) {
-        callback ? callback(success) : null
+        if (callback) callback(success)
       }
     },
     () => {
-      callback ? callback(false) : null
+      if (callback) callback(false)
     },
     dispatch => dispatch(lazyLoadStart('createForumArticle')),
     dispatch => dispatch(lazyLoadEnd('createForumArticle'))
+  )
+}
+
+// ** Save data Forum Article detail
+export const getForumArticleDetail = (data, callback = null) => {
+  return dispatch => {
+    dispatch({
+      type: GET_DATA_FORUM_ARTICLE_DETAIL,
+      data
+    })
+
+    if (callback) callback(true, data)
+  }
+}
+
+// ** Save data Forum Article detail with Auth
+export const getForumArticleDetailAuth = (data, callback = null) => {
+  return api.request(
+    endpoints.getForumArticleDetailAuth(data.slug),
+    null,
+    (response, dispatch, success) => {
+      if (success) {
+        dispatch({
+          type: GET_DATA_FORUM_ARTICLE_DETAIL,
+          data: response?.data
+        })
+
+        if (callback) callback(success, response?.data)
+      } else {
+        dispatch({
+          type: GET_DATA_FORUM_ARTICLE_DETAIL,
+          data
+        })
+
+        if (callback) callback(success, data)
+      }
+    },
+    (response, dispatch) => {
+      dispatch({
+        type: GET_DATA_FORUM_ARTICLE_DETAIL,
+        data
+      })
+
+      if (callback) callback(false, data)
+    },
+    dispatch => {
+      dispatch(lazyLoadStart('getForumArticleDetailAuth'))
+      dispatch(setProgressBar('start'))
+    },
+    dispatch => {
+      dispatch(lazyLoadEnd('getForumArticleDetailAuth'))
+      dispatch(setProgressBar('end'))
+    }
   )
 }
 
@@ -162,7 +216,7 @@ export const likeForumArticle = (payload, callback = null) => {
       }
     },
     () => {
-      callback ? callback(false) : null
+      if (callback) callback(false)
     },
     dispatch => dispatch(lazyLoadStart('likeForumArticle')),
     dispatch => dispatch(lazyLoadEnd('likeForumArticle'))
@@ -214,7 +268,9 @@ export const getDataCommentForumArticle = (queryParams, callback = null) => {
           type: GET_DATA_COMMENT_FORUM_ARTICLE,
           data: {
             id: queryParams.id_external,
-            data
+            values: data?.values || [],
+            total: data?.total || 0,
+            page: queryParams.page
           }
         })
 
@@ -227,10 +283,9 @@ export const getDataCommentForumArticle = (queryParams, callback = null) => {
           type: GET_DATA_COMMENT_FORUM_ARTICLE,
           data: {
             id: queryParams.id_external,
-            data: {
-              total: 0,
-              values: []
-            }
+            total: 0,
+            values: [],
+            page: queryParams.page
           }
         })
 
@@ -256,7 +311,7 @@ export const getAllDataCategory = (queryParams, callback = null) => {
       if (success) {
         const { data } = response
 
-        callback ? callback(data) : null
+        if (callback) callback(data)
       }
     },
     null,

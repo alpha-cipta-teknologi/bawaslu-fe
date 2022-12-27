@@ -3,11 +3,10 @@ import { endpoints } from 'constant'
 import {
   lazyLoadStart,
   lazyLoadEnd,
-  setProgress
+  setProgressBar
 } from 'store/actions/misc'
 
 // ** Import action types
-import { UPDATE_COUNTER } from 'views/public/forum/store/actionTypes'
 import {
   GET_DATA_BAWASLU_UPDATE,
   GET_BAWASLU_UPDATE_DETAIL
@@ -69,18 +68,18 @@ export const getBawasluUpdateDetail = (payload, callback = null) => {
           data
         })
 
-        dispatch(setProgress('end'))
+        dispatch(setProgressBar('end'))
 
-        callback ? callback(data) : null // eslint-disable-line no-unused-expressions
+        if (callback) callback(data)
       }
     },
     null,
     dispatch => {
-      dispatch(setProgress('start'))
+      dispatch(setProgressBar('start'))
       dispatch(lazyLoadStart('getBawasluUpdateDetail'))
     },
     dispatch => {
-      dispatch(setProgress('end'))
+      dispatch(setProgressBar('end'))
       dispatch(lazyLoadEnd('getBawasluUpdateDetail'))
     }
   )

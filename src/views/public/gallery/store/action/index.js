@@ -1,10 +1,6 @@
 import { api } from 'utility'
 import { endpoints } from 'constant'
-import {
-  lazyLoadStart,
-  lazyLoadEnd,
-  setProgress
-} from 'store/actions/misc'
+import { lazyLoadStart, lazyLoadEnd } from 'store/actions/misc'
 
 // ** Import action types
 import {
@@ -30,7 +26,7 @@ export const getDataGallery = (queryParams, callback = null) => {
             }
           })
 
-          callback ? callback(values) : null
+          if (callback) callback(values)
         }
       },
       null,

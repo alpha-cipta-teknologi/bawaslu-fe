@@ -1,19 +1,22 @@
 // ** Redux Imports
 import { combineReducers } from 'redux'
 import { connectRouter } from 'connected-react-router'
+import { persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
 
 // ** Reducers Imports
 import layout from './layout'
 import navigations from 'navigation/store/reducer'
 import misc from './misc'
 import areas from './area'
+import notifications from './notifications'
 
 // ** Auth
 import auth from './auth'
 import profile from 'views/private/profile/store/reducer'
 
 // ** Global FE
-import forums from 'views/public/forum/store/reducer'
+import forumsReducer from 'views/public/forum/store/reducer'
 import bawasluupdates from 'views/public/bawaslu_update/store/reducer'
 import gallerys from 'views/public/gallery/store/reducer'
 import home from 'views/public/home/store/reducer'
@@ -27,18 +30,26 @@ const reducers = {
   // ** Misc
   misc,
   areas,
+  notifications,
   // ** Auth
   auth,
   profile,
   // ** Global FE
-  forums,
+  // forums,
   bawasluupdates,
   gallerys,
   home
 }
 
+const forumsPersistConfig = {
+  key: 'forums',
+  storage,
+  blacklist: ['forumList', 'trendingForumList']
+}
+
 const rootReducer = combineReducers({
   router: connectRouter(history),
+  forums: persistReducer(forumsPersistConfig, forumsReducer),
   ...reducers
 })
 
