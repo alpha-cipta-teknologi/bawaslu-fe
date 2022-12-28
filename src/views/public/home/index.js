@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
-import { Button, Text, Skeleton, VideoPlayer } from 'core/components'
+import { Button, Text, Skeleton, VideoPlayer, TextHTML } from 'core/components'
 import { hooks, utils } from 'utility'
 import { actions } from 'store'
 
@@ -26,9 +26,36 @@ const HomePage = () => {
   //   )
   // }
 
+  const transformDescription = (node, nodeIdx) => {
+    if (node.type === 'tag' && (['p', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(node.name))) {
+      if (node.attribs?.style) {
+        node.attribs.style = `${node.attribs?.style || ''}; font-family: "Montserrat" !important;`
+      }
+    }
+
+    if (node.type === 'tag' && node.name === 'p' && nodeIdx === 0) {
+      return (
+        <Text
+          key={nodeIdx}
+          type='span'
+          size='text-lg'
+          lineHeight='leading-[30px]'
+        >
+          {node.children.map((child, childIdx) => {
+            if (child.attribs?.style) {
+              child.attribs.style = `${child.attribs?.style || ''}; font-family: "Montserrat" !important;`
+            }
+
+            return convertNodeToElement(child, childIdx, transformDescription)
+          })}
+        </Text>
+      )
+    }
+  }
+
   const renderContent = () => {
     const loadingContent = utils.isLazyLoading(lazyLoad, 'getDataContentHome') || false
-    const videoUrl = content?.link_url || content?.path_video
+    const videoUrl = content?.link_url || utils.getImageAPI(content?.path_video)
 
     return (
       <div className='flex flex-col items-center justify-center'>
@@ -46,15 +73,23 @@ const HomePage = () => {
           className='mt-4'
         >
           {content?.description ? (
-            <Text
-              size='text-lg'
-              align='text-center'
-              spacing='mt-4'
-              lineHeight='leading-[30px]'
-            >
-              {content?.description}
-            </Text>
-          ) : null}
+            <div className='mt-4'>
+              <TextHTML
+                htmlString={content?.description}
+                size='text-lg'
+                lineHeight='leading-[30px]'
+                options={{ transform: transformDescription }}
+              />
+            </div>
+            // <Text
+            //   size='text-lg'
+            //   align='text-center'
+            //   spacing='mt-4'
+            //   lineHeight='leading-[30px]'
+            // >
+            //   {content?.description}
+            // </Text>
+          ) : <></>}
         </Skeleton>
 
         <div className='w-full px-6 md:px-8 lg:px-12 my-12'>
@@ -94,7 +129,7 @@ const HomePage = () => {
                     wrapperClassName='w-full h-full max-h-[542px] aspect-w-16 aspect-h-9'
                   />
                 )
-                : null}
+                : <></>}
             </Skeleton>
           </div>
         </div>

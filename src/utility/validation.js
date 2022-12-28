@@ -18,8 +18,10 @@ export default {
     return !!(phone.length > 9 && phone.length < 20 && re.test(phone))
   },
 
-  passwordLength: (password) => {
-    return !(password.length < 6)
+  password: (password) => {
+    const reInvalid = /^(.{0,5}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*)$/
+
+    return !(reInvalid.test(password))
   },
 
   passwordMatch: (password, confirmPassword) => {

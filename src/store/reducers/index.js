@@ -10,6 +10,8 @@ import navigations from 'navigation/store/reducer'
 import misc from './misc'
 import areas from './area'
 import notifications from './notifications'
+import communities from './communities'
+import topics from './topics'
 
 // ** Auth
 import auth from './auth'
@@ -31,6 +33,8 @@ const reducers = {
   misc,
   areas,
   notifications,
+  communities,
+  topics,
   // ** Auth
   auth,
   profile,

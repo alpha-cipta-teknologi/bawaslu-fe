@@ -167,29 +167,38 @@ const AsyncSelect = ({
   }
 
   const renderSelectContainer = open => {
-    if (isMulti) {
-      const containerMultiSelectClassNames = styleHelper.classNames(
-        'block w-full border rounded-2lg',
-        padding,
-        open
-          ? 'focus:ring-0 focus:border-blue-midnight'
-          : 'focus:ring-0 focus:border-drcGrey-soft border-drcGrey-soft',
-        disabled
-          ? 'bg-drcGrey-soft bg-opacity-50'
-          : 'bg-white cursor-pointer',
-        'custom-scrollbar-secondary'
-      )
+    const containerSelectClassNames = styleHelper.classNames(
+      'block w-full border rounded relative',
+      open
+        ? 'border-blue-midnight'
+        : borderColor,
+      disabled
+        ? 'bg-grey-light-5 bg-opacity-50'
+        : open
+          ? 'bg-white'
+          : bgColor
+    )
 
+    if (isMulti) {
       return (
         <>
-          <span className={containerMultiSelectClassNames}>
-            <div className='flex flex-wrap gap-2 max-h-12 overflow-y-auto custom-scrollbar-secondary'>
+          <span className={containerSelectClassNames}>
+            <div className={labelClassNames}>
+              {typeof label === 'string'
+                ? <Combobox.Label>{label}</Combobox.Label>
+                : label()}
+            </div>
+
+            <div className={styleHelper.classNames(
+              'flex flex-wrap gap-2 overflow-y-auto custom-scrollbar-secondary',
+              padding
+            )}>
               {value?.map((option, index) => {
                 return (
-                  <span key={index} className='inline-flex z-10 rounded-full items-center py-0.5 pl-2.5 pr-1 text-sm font-medium bg-blue-midnight bg-opacity-10 text-blue-midnight text-opacity-70'>
+                  <span key={index} className='inline-flex z-10 rounded-xl items-center py-0.5 pl-2.5 pr-1 text-sm font-medium bg-blue-midnight bg-opacity-10 text-blue-midnight text-opacity-70'>
                     {option.label}
                     <span
-                      className='flex-shrink-0 ml-0.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-blue-midnight text-opacity-40 hover:bg-blue-midnight hover:bg-opacity-20 hover:text-blue-midnight hover:text-opacity-50 focus:outline-none'
+                      className='flex-shrink-0 ml-0.5 h-4 w-4 rounded-xl inline-flex items-center justify-center text-blue-midnight text-opacity-40 hover:bg-blue-midnight hover:bg-opacity-20 hover:text-blue-midnight hover:text-opacity-50 focus:outline-none'
                       onClick={() => handleSelect(option)}
                     >
                       <span className='sr-only'>Remove option</span>
@@ -217,17 +226,7 @@ const AsyncSelect = ({
     }
 
     return (
-      <div className={styleHelper.classNames(
-        'block w-full border rounded relative',
-        open
-          ? 'border-blue-midnight'
-          : borderColor,
-        disabled
-          ? 'bg-grey-light-5 bg-opacity-50'
-          : open
-            ? 'bg-white'
-            : bgColor
-      )}>
+      <div className={containerSelectClassNames}>
         <div className={labelClassNames}>
           {typeof label === 'string'
             ? <Combobox.Label>{label}</Combobox.Label>

@@ -90,5 +90,17 @@ export default {
   readNotification: notifId => ({
     path: `/notif/${notifId}`,
     method: 'PUT'
-  })
+  }),
+
+  // Komunitas
+  getAllDataCommunity: {
+    path: '/reff/komunitas/all-data',
+    method: 'GET'
+  },
+
+  // Tema
+  getAllDataTopic: {
+    path: '/reff/tema/all-data',
+    method: 'GET'
+  }
 }
