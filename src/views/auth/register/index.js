@@ -25,12 +25,12 @@ const formRegisterInputProps = [
     type: 'async-select'
   },
   {
-    label: 'Provinsi',
+    label: 'Provinsi Domisili',
     name: 'province_id',
     type: 'async-select'
   },
   {
-    label: 'Kabupaten/Kota',
+    label: 'Kabupaten/Kota Domisili',
     name: 'regency_id',
     type: 'async-select'
   },
