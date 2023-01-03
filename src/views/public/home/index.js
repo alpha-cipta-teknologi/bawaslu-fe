@@ -12,19 +12,9 @@ const HomePage = () => {
   const content = useSelector(state => state.home).content
   const lazyLoad = useSelector(state => state.misc).lazyLoad
 
-  // const [playingVideo, setPlayingVideo] = useState(false)
-
   useEffect(() => {
     getDataContentHome()
   }, [])
-
-  // const renderPlayIcon = () => {
-  //   return (
-  //     <div className='w-12 h-12 sm:w-15 sm:h-15 rounded-full bg-black-default relative'>
-  //       <CustomIcon iconName='play_button' className='w-15 h-15 sm:w-20 sm:h-20 absolute-center' />
-  //     </div>
-  //   )
-  // }
 
   const transformDescription = (node, nodeIdx) => {
     if (node.type === 'tag' && (['p', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(node.name))) {
@@ -101,26 +91,6 @@ const HomePage = () => {
                 shape: 'rounded-xl'
               }}
             >
-              {/* {videoUrl
-                ? (
-                  <ReactPlayer
-                    url={videoUrl}
-                    playing={playingVideo}
-                    volume={1}
-                    width='100%'
-                    height='100%'
-                    style={{
-                      borderRadius: 12,
-                      overflow: 'hidden'
-                    }}
-                    playIcon={renderPlayIcon()}
-                    onClickPreview={() => setPlayingVideo(true)}
-                    light={utils.getYoutubeThumbnail(videoUrl)}
-                    controls
-                  />
-                )
-                : null} */}
-
               {videoUrl
                 ? (
                   <VideoPlayer
