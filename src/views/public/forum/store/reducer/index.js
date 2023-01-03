@@ -67,6 +67,18 @@ const initialState = {
     comment: {
       values: [],
       total: 0
+    },
+    komunitas: {
+      id: 0,
+      komunitas_name: '',
+      type: 0,
+      icon_image: ''
+    },
+    tema: {
+      id: 0,
+      tema_name: '',
+      type: 0,
+      icon_image: null
     }
   }
 }

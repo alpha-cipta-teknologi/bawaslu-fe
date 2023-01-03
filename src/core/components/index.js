@@ -2,6 +2,7 @@ import AsyncSelect from './AsyncSelect'
 import Button from './Button'
 import Card from './Card'
 import CardArticle from './ForumArticleList/components/CardArticle'
+import CommunityList from './CommunityList'
 import CounterArticle from './CounterArticle'
 import CustomIcon from './CustomIcon'
 import Dropdown from './Dropdown'
@@ -31,6 +32,7 @@ import Text from './Text'
 import TextHTML from './TextHTML'
 import Tooltip from './Tooltip'
 import TopLoaderBar from './Loader/TopLoaderBar'
+import UploadFile from './UploadFile'
 import VideoPlayer from './VideoPlayer'
 
 export {
@@ -38,6 +40,7 @@ export {
   Button,
   Card,
   CardArticle,
+  CommunityList,
   CounterArticle,
   CustomIcon,
   Dropdown,
@@ -67,5 +70,6 @@ export {
   TextHTML,
   Tooltip,
   TopLoaderBar,
+  UploadFile,
   VideoPlayer
 }

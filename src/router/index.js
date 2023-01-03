@@ -200,16 +200,22 @@ const Router = ({ history }) => {
             exact
             path='/not-authorized'
             render={() => (
-              <Layouts.HeaderLayout>
-                <NotAuthorized />
-              </Layouts.HeaderLayout>
+              <Suspense fallback={<></>}>
+                <Layouts.HeaderLayout>
+                  <NotAuthorized />
+                </Layouts.HeaderLayout>
+              </Suspense>
             )}
           />
 
           {ResolveRoutes()}
 
           {/* NotFound Error page */}
-          <Route path='*' component={ErrorNotFound} />
+          <Route path='*' render={() => (
+            <Suspense fallback={<></>}>
+              <ErrorNotFound />
+            </Suspense>
+          )} />
         </Switch>
       </HistoryWrapper>
     </AppRouter>

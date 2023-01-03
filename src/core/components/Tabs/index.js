@@ -13,7 +13,8 @@ const Tabs = ({
   spacingText = 'pb-3 px-1',
   fontWeight = 'font-bold',
   keyName = 'name',
-  itemClassName
+  itemClassName,
+  textColor
 }) => {
   const onClickTab = tab => {
     setSelectedTab(tab[keyName])
@@ -40,7 +41,7 @@ const Tabs = ({
               <Text
                 weight={fontWeight}
                 align='text-center'
-                color={selectedTab === tab[keyName] ? 'text-primary' : 'text-grey-base'}
+                color={selectedTab === tab[keyName] ? 'text-primary' : textColor}
                 spacing={spacingText}
                 whiteSpace='whitespace-nowrap'
                 cursor='cursor-pointer'

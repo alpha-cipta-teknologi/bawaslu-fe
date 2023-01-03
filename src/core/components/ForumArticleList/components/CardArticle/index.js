@@ -70,7 +70,7 @@ const CardArticle = ({
       >
         <CounterArticle
           renderIcon={() => <CustomIcon iconName='share' className='w-5 h-5' />}
-          text={`${data?.counter_share || 0}${isMobile ? '' : ' Dibagikan'}`}
+          text={`${utils.getNumberUnit(data?.counter_share || 0)}${isMobile ? '' : ' Dibagikan'}`}
         />
       </PopoverSharedButtons>
     )
@@ -86,12 +86,12 @@ const CardArticle = ({
               data?.like ? 'fill-[#EB5757] stroke-[#EB5757]' : ''
             )} />
           )}
-          text={`${data?.counter_like || 0}${isMobile ? '' : ' Menyukai'}`}
+          text={`${utils.getNumberUnit(data?.counter_like || 0)}${isMobile ? '' : ' Menyukai'}`}
           onClick={() => handleLike(data?.id)}
         />
         <CounterArticle
           renderIcon={() => (<CustomIcon iconName='comment' className='w-5 h-5 cursor-pointer' />)}
-          text={`${data?.counter_comment || 0}${isMobile ? '' : ' Komentar'}`}
+          text={`${utils.getNumberUnit(data?.counter_comment || 0)}${isMobile ? '' : ' Komentar'}`}
           onClick={onClickComment}
         />
 
@@ -107,7 +107,7 @@ const CardArticle = ({
       <Card paddingHorizontal='px-0' paddingVertical='py-4'>
         <div className='flex flex-col'>
           <div className='px-3 gap-y-1.5 flex flex-col'>
-            <div className='flex justify-between'>
+            <div className='flex justify-between pb-4.5'>
               <div className='flex'>
                 <div className='mr-4 flex-shrink-0 self-center'>
                   <img

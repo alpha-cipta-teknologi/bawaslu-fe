@@ -60,7 +60,7 @@ const Footer = () => {
   }
 
   return (
-    <footer className='relative py-10 bg-white border-t border-grey-light-2'>
+    <footer className='py-10 bg-white border-t border-grey-light-2'>
       <div className='flex flex-col md:flex-row width-container w-full'>
         <div className='w-full flex flex-col items-center md:items-start gap-y-3.5 md:gap-y-0'>
           <Logo />

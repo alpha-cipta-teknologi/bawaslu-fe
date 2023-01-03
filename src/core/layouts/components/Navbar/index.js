@@ -4,26 +4,43 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { Disclosure } from '@headlessui/react'
 import * as HeroIcon from '@heroicons/react/24/outline'
 
-import { layoutHelper, styleHelper, utils } from 'utility'
+import { hooks, styleHelper, utils } from 'utility'
+import { actions } from 'store'
 
 import { Button, Logo, Text } from '../../../components'
 
 import MenuProfile from '../MenuProfile'
 import MenuNotification from '../MenuNotification'
 
-const { isUserLoggedIn } = utils
-
-const Navbar = ({ navigations, routerProps }) => {
+const Navbar = ({ navigations }) => {
   const history = useHistory()
   const location = useLocation()
   const currentURL = location.pathname
 
-  const onClickNavigation = (navLink) => {
-    history.push(navLink)
+  const getAllDataCommunity = hooks.useCustomDispatch(actions.communities.getAllDataCommunity)
+
+  const { userdata } = utils.isUserLoggedIn() ? utils.getUserData() : { userdata: null }
+
+  const onClickNavigation = nav => {
+    if (nav.title === 'Forum') {
+      if (userdata?.komunitas_id) {
+        history.push(`/forum/channel/${userdata?.komunitas_id}`)
+
+        return
+      }
+
+      getAllDataCommunity(data => {
+        if (data && data?.length) {
+          history.push(`/forum/channel/${data[0]?.value || 1}`)
+        }
+      })
+    } else {
+      history.push(nav.navLink)
+    }
   }
 
   const renderAuthMenu = () => {
-    if (isUserLoggedIn()) {
+    if (utils.isUserLoggedIn()) {
       return (
         <>
           <MenuNotification />
@@ -96,7 +113,7 @@ const Navbar = ({ navigations, routerProps }) => {
                         color={isLinkActive ? 'text-primary' : 'text-black-primary'}
                         weight={isLinkActive ? 'font-bold' : 'font-normal'}
                         cursor='cursor-pointer'
-                        onClick={() => onClickNavigation(nav.navLink)}
+                        onClick={() => onClickNavigation(nav)}
                       >{nav.title}</Text>
                     )
                   })}
@@ -110,7 +127,7 @@ const Navbar = ({ navigations, routerProps }) => {
           <Disclosure.Panel className='md:hidden'>
             <div className='space-y-1 pt-2 pb-4'>
               {navigations.map((nav, index) => {
-                const isLinkActive = layoutHelper.isNavLinkActive(nav.navLink, currentURL, routerProps)
+                const isLinkActive = currentURL.includes(nav.navLink)
 
                 return (
                   <Disclosure.Button
@@ -120,7 +137,7 @@ const Navbar = ({ navigations, routerProps }) => {
                       isLinkActive ? 'border-primary bg-primary bg-opacity-10' : 'border-transparent hover:border-gray-300 hover:bg-gray-50',
                       'block border-l-4 py-2 pl-3 pr-4'
                     )}
-                    onClick={() => onClickNavigation(nav.navLink)}
+                    onClick={() => onClickNavigation(nav)}
                   >
                     <Text
                       color={isLinkActive ? 'text-primary' : 'text-black-primary'}

@@ -11,6 +11,7 @@ import ErrorPage from './misc/Error'
 import NotAuthorizedPage from './misc/NotAuthorized'
 import ProfilePage from './private/profile'
 import ForumListPage from './public/forum/list'
+import ForumListChannelPage from './public/forum/channel'
 import ForumSavePage from './public/forum/save'
 import ForumDetailPage from './public/forum/detail'
 import HomePage from './public/home'
@@ -32,6 +33,7 @@ export {
   NotAuthorizedPage,
   ProfilePage,
   ForumListPage,
+  ForumListChannelPage,
   ForumSavePage,
   ForumDetailPage,
   HomePage,

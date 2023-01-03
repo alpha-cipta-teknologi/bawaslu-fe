@@ -11,7 +11,8 @@ export const getAllDataCommunity = (callback = null) => {
       if (success) {
         const data = response?.data?.map(community => ({
           label: community.komunitas_name,
-          value: `${community.id}`
+          value: `${community.id}`,
+          ...community
         })) || []
 
         dispatch({

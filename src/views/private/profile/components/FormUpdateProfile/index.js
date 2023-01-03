@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux'
 import { Text, CustomIcon, Input, Button } from 'core/components'
 import { hooks, toastify, utils, validation } from 'utility'
 import { actions } from 'store'
-import { apiConfig } from 'configs'
 
 const formProfileInputProps = [
   {
