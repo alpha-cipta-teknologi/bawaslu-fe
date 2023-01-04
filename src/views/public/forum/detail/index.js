@@ -1,12 +1,16 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { EllipsisVerticalIcon } from '@heroicons/react/24/outline'
 
-import { Text, Card, CardArticle, Button, Spinner, Input, CustomIcon, Menu } from 'core/components'
+import { Text, Card, CardArticle, Button, Input, CustomIcon, Menu } from 'core/components'
 import { hooks, momentHelper, styleHelper, toastify, utils, screen } from 'utility'
 import { actions } from 'store'
 import { images } from 'constant'
+
+import { CardTrending, CardCreatePost } from '../components'
+
+const CommunityList = lazy(() => import('core/components/CommunityList'))
 
 const menuCardArticle = [
   {
@@ -30,9 +34,10 @@ const ForumDetailPage = () => {
   const getDataCommentForumArticle = hooks.useCustomDispatch(actions.forums.getDataCommentForumArticle)
   const getDataTrendingForumArticle = hooks.useCustomDispatch(actions.forums.getDataTrendingForumArticle)
   const counterViewShare = hooks.useCustomDispatch(actions.forums.counterViewShare)
+  const getAllDataCommunity = hooks.useCustomDispatch(actions.communities.getAllDataCommunity)
   const getForumArticleDetail = hooks.useCustomDispatch(utils.isUserLoggedIn() ? actions.forums.getForumArticleDetailAuth : actions.forums.getForumArticleDetail)
 
-  const trendingForumList = useSelector(state => state.forums).trendingForumList
+  const allCommunities = useSelector(state => state.communities)?.allCommunities
   const forumDetail = useSelector(state => state.forums).forumDetail
   const lazyLoad = useSelector(state => state.misc).lazyLoad
 
@@ -78,7 +83,15 @@ const ForumDetailPage = () => {
     // todo: minta api u/ get forum article detail without auth
     const getData = () => {
       if (!utils.isUserLoggedIn() && forumDetail?.slug !== slug) {
-        history.replace('/forum')
+        if (allCommunities?.length) {
+          history.push(`/forum/channel/${allCommunities[0]?.value || 1}`)
+        } else {
+          getAllDataCommunity(data => {
+            if (data && data?.length) {
+              history.push(`/forum/channel/${data[0]?.value || 1}`)
+            }
+          })
+        }
 
         return
       }
@@ -111,6 +124,7 @@ const ForumDetailPage = () => {
 
   useEffect(() => {
     getDataTrendingForumArticle()
+    getAllDataCommunity()
   }, [slug])
 
   useEffect(() => {
@@ -126,15 +140,6 @@ const ForumDetailPage = () => {
       history.push(`/forum/${data.slug}`)
     })
   }
-
-  // const handleShowComment = async id => {
-  //   getDataCommentForumArticle({
-  //     group: 1,
-  //     id_external: id,
-  //     perPage: 1000,
-  //     page: 1
-  //   })
-  // }
 
   const lastElementRef = useCallback(node => {
     if (loadingComment) return
@@ -250,59 +255,6 @@ const ForumDetailPage = () => {
     })
 
     setReplyCommentArticle('')
-  }
-
-  const renderCardCreatePost = () => {
-    return (
-      <Card cardClassName='w-full' paddingHorizontal='px-3' paddingVertical='py-3'>
-        <Text weight='font-bold' spacing='mb-4'>Buat Thread</Text>
-        <Button.ButtonPrimary
-          href={`${!utils.isUserLoggedIn() ? '/login' : '/forum/create'}`}
-          spacing='py-2.5 px-5'
-          fontSize='text-base'
-          sizing='w-full'
-        >
-          Buat
-        </Button.ButtonPrimary>
-      </Card>
-    )
-  }
-
-  const renderContentTrending = () => {
-    const data = trendingForumList || []
-    const loading = utils.isLazyLoading(lazyLoad, 'getDataTrendingForumArticle')
-
-    if (loading) {
-      return <Spinner sizing='w-7.5 h-7.5' />
-    }
-
-    if (!data?.length && !loading) {
-      return <Text size='text-sm'>Tidak ada data</Text>
-    }
-
-    return (
-      <ul className='list-outside list-disc ml-4 text-sm grid gap-y-3'>
-        {data?.map(el => {
-          return (
-            <li key={el?.id} onClick={() => handleGoToDetail(el)}>
-              <Text size='text-sm' weight='font-bold' underlineOnHover>{el?.title}</Text>
-            </li>
-          )
-        })}
-      </ul>
-    )
-  }
-
-  const renderCardTrending = () => {
-    return (
-      <div className='w-full lg:col-span-3'>
-        <Card paddingHorizontal='px-3' paddingVertical='py-3'>
-          <Text weight='font-bold' spacing='mb-4'>Trending</Text>
-
-          {renderContentTrending()}
-        </Card>
-      </div>
-    )
   }
 
   const renderCardArticle = () => {
@@ -510,25 +462,65 @@ const ForumDetailPage = () => {
     )
   }
 
+  const renderCommunityList = (cardClassName, cardStyle) => {
+    return (
+      <Suspense fallback={<></>}>
+        <CommunityList
+          channelId={forumDetail?.komunitas?.id ? +forumDetail?.komunitas?.id : undefined}
+          cardClassName={cardClassName}
+          cardStyle={cardStyle}
+        />
+      </Suspense>
+    )
+  }
+
+  const renderStickyCommunityList = () => {
+    const isMobile = windowDimensions.width < screen.lg
+
+    return (
+      <div className='lg:sticky lg:top-[90px]'>
+        {renderCommunityList('overflow-y-auto custom-scrollbar', { maxHeight: isMobile ? 500 : 'calc(100vh - 110px)' })}
+      </div>
+    )
+  }
+
+  const renderCardCreatePost = (isBottomSheet = false) => {
+    const channelId = forumDetail?.komunitas?.id ? +forumDetail?.komunitas?.id : undefined
+
+    return (
+      <CardCreatePost channelId={channelId} isBottomSheet={isBottomSheet} />
+    )
+  }
+
   return (
-    <div className='py-6 md:py-11'>
-      <div className='grid lg:grid-cols-12 flex-col w-full md:flex-row gap-5'>
-        <div className='w-full flex lg:hidden'>
-          {renderCardCreatePost()}
-        </div>
+    <>
+      <div className='py-6 md:py-11'>
 
-        {renderCardTrending(forumDetail)}
+        <div className='grid lg:grid-cols-12 flex-col w-full md:flex-row gap-5'>
+          <CardTrending onClick={handleGoToDetail} wrapperClassName='hidden lg:block' />
 
-        <div className='flex flex-col w-full lg:col-span-6'>
-          {renderCardArticle()}
-          {renderCommentSection()}
-        </div>
+          <div className='flex flex-col w-full lg:col-span-6'>
+            {renderCardArticle()}
+            {renderCommentSection()}
+          </div>
 
-        <div className='w-full hidden lg:block lg:col-span-3'>
-          {renderCardCreatePost()}
+          <div className='w-full hidden lg:flex lg:flex-col gap-5 lg:col-span-3'>
+            {renderCardCreatePost()}
+
+            {renderStickyCommunityList()}
+          </div>
+
+          <div className='w-full flex lg:hidden flex-col gap-5'>
+            <CardTrending onClick={handleGoToDetail} />
+
+            {renderStickyCommunityList()}
+          </div>
+
         </div>
       </div>
-    </div>
+
+      {renderCardCreatePost(true)}
+    </>
   )
 }
 

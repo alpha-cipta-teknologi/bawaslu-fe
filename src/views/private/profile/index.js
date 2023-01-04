@@ -150,6 +150,7 @@ const ProfilePage = () => {
               setSelectedTab={setSelectedMenuId}
               keyName='id'
               wrapperClassName='space-x-8 justify-start overflow-x-auto no-scrollbar'
+              textColor='text-grey-base'
               onClick={tab => onClickMenuProfile(tab.id || '')}
             />
           </div>

@@ -17,7 +17,8 @@ const ForumArticleList = ({
   setPage,
   rowsPerPage = 10,
   emptyStateTitle = 'Tidak ada data',
-  wrapperListClassName
+  wrapperListClassName,
+  paramsList = {}
 }) => {
   const history = useHistory()
   const { userdata } = utils.isUserLoggedIn() ? utils.getUserData() : { userdata: null }
@@ -70,7 +71,8 @@ const ForumArticleList = ({
       perPage: rowsPerPage,
       ...userdata && !withActionCard
         ? { type: 'fe' }
-        : {}
+        : {},
+      ...paramsList
     }, () => {
       if (!isMounted) setIsMounted(true)
       if (refreshing) setRefreshing(false)

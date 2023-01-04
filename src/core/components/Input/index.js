@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { ClockIcon, EyeIcon, EyeSlashIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
+import { ClockIcon, EyeIcon, EyeSlashIcon, MagnifyingGlassIcon, CloudArrowUpIcon } from '@heroicons/react/24/outline'
 
 import { styleHelper, utils } from 'utility'
 
@@ -41,6 +41,7 @@ const Input = ({
   setShowError,
   children,
   borderColor = 'border-grey-lighter-2',
+  acceptFile,
   ...rest
 }) => {
   const inputRef = useRef(null)
@@ -55,15 +56,15 @@ const Input = ({
     labelClassName,
     'pt-3 px-3.5'
   )
-  // const placeholderResponsiveSize = setResponsivePlaceholderTextSize(textSize)
+  const placeholderResponsiveSize = setResponsivePlaceholderTextSize(textSize)
 
   const inputClassNames = styleHelper.classNames(
     'font-primary font-normal text-blue-navy',
     setResponsiveTextSize(textSize),
     'focus:ring-0 outline-0 border-0 block w-full px-3.5 rounded',
     label ? 'pb-3 pt-0.5' : 'py-3',
-    // 'placeholder:text-drcGrey-base placeholder:font-primary placeholder:font-normal',
-    // ...placeholderResponsiveSize,
+    'placeholder:text-grey-light-7 placeholder:font-primary placeholder:font-normal',
+    ...placeholderResponsiveSize,
     label ? spacing : '',
     inputClassName,
     disabled
@@ -298,28 +299,35 @@ const Input = ({
           <div className='relative'>
             <label htmlFor={id} className='cursor-pointer'>
               <div
-                className={styleHelper.classNames('flex justify-center px-6 py-7 bg-[#FAFAFA] rounded-2lg', spacing)}
+                className='flex justify-center px-6 py-7 rounded'
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
               >
                 <div className='space-y-1.5 text-center'>
                   <div className='flex items-center justify-center'>
-                    <span className='relative font-bold text-xs font-primary text-[#1D1D1D] hover:underline underline-offset-1 hover:text-opacity-80'>{placeholder}</span>
                     <input
                       id={id}
                       name={name}
                       type='file'
                       className='sr-only'
                       onChange={onChangeFile}
+                      accept={acceptFile}
                       {...rest}
                     />
                   </div>
-                  <Text
-                    size='text-xs'
-                    weight='font-normal'
-                    color='text-[#A0A0A0]'
-                    align='text-center'
-                  >(Max Size File Upload 2 MB)</Text>
+                  <span className='flex flex-col justify-center items-center gap-2'>
+                    <CloudArrowUpIcon className='w-6 h-6 text-[#4F4F4F]' />
+
+                    <Text
+                      type='span'
+                      color='text-[#4F4F4F]'
+                      size={textSize}
+                    >Drag gambar, atau{' '}
+                      <Text size={textSize} type='span' color='text-blue-600' className='underline underline-offset-1 decoration-blue-600'>
+                        browse
+                      </Text>
+                    </Text>
+                  </span>
                 </div>
               </div>
             </label>
@@ -363,7 +371,7 @@ const Input = ({
               : borderColor,
             disabled
               ? 'bg-grey-light-5 bg-opacity-50'
-              : focus
+              : focus && type !== 'file-dropzone'
                 ? 'bg-white'
                 : bgColor
           )}>

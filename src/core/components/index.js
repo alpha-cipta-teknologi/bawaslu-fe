@@ -2,6 +2,7 @@ import AsyncSelect from './AsyncSelect'
 import Button from './Button'
 import Card from './Card'
 import CardArticle from './ForumArticleList/components/CardArticle'
+import CommunityList from './CommunityList'
 import CounterArticle from './CounterArticle'
 import CustomIcon from './CustomIcon'
 import Dropdown from './Dropdown'
@@ -16,6 +17,7 @@ import Logo from './Logo'
 import Menu from './Menu'
 import Modal from './Modal'
 import ModalLoader from './ModalLoader'
+import ModalImage from './ModalImage'
 import OtpInput from './OtpInput'
 import PopoverSharedButtons from './PopoverSharedButtons'
 import ScrollUp from './ScrollUp'
@@ -31,6 +33,7 @@ import Text from './Text'
 import TextHTML from './TextHTML'
 import Tooltip from './Tooltip'
 import TopLoaderBar from './Loader/TopLoaderBar'
+import UploadFile from './UploadFile'
 import VideoPlayer from './VideoPlayer'
 
 export {
@@ -38,6 +41,7 @@ export {
   Button,
   Card,
   CardArticle,
+  CommunityList,
   CounterArticle,
   CustomIcon,
   Dropdown,
@@ -52,6 +56,7 @@ export {
   Menu,
   Modal,
   ModalLoader,
+  ModalImage,
   OtpInput,
   PopoverSharedButtons,
   ScrollUp,
@@ -67,5 +72,6 @@ export {
   TextHTML,
   Tooltip,
   TopLoaderBar,
+  UploadFile,
   VideoPlayer
 }

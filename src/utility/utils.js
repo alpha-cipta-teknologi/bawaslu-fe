@@ -422,3 +422,17 @@ export const defineOneSignal = (used) => {
 export const connectOneSignal = () => {
   return usedOnesignal
 }
+
+export const roundDown = (num, decimals = 0) => {
+  return (Math.floor(num * Math.pow(10, decimals)) / Math.pow(10, decimals))
+}
+
+export const getNumberUnit = (num, round = 1) => {
+  const unit = Math.floor(Math.round(num / 1.0e+1).toLocaleString().replaceAll(',', '').length),
+    wunit = ['k', 'jt', 'M', 'T', 'Kuadriliun', 'Quintillion'][Math.floor(unit / 3) - 1],
+    funit = Math.abs(Number(num)) / Number('1.0e+' + (unit - unit % 3)) // eslint-disable-line no-mixed-operators, prefer-template
+
+  return wunit
+    ? `${roundDown(funit, round).toString()}${wunit}`
+    : roundDown(num, round).toString()
+}

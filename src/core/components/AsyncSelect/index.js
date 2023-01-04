@@ -13,6 +13,7 @@ import { styleHelper, hooks } from 'utility'
 import Spinner from '../Loader/Spinner'
 import PortalSelect from '../PortalSelect'
 import Text, { setResponsiveTextSize } from '../Text'
+import { setResponsivePlaceholderTextSize } from '../Input'
 
 const AsyncSelect = ({
   loadOptions: propsLoadOptions,
@@ -76,11 +77,13 @@ const AsyncSelect = ({
     }
   }, [debouncedQuery])
 
+  const placeholderResponsiveSize = setResponsivePlaceholderTextSize(textSize)
+
   const inputClassNames = (open) => styleHelper.classNames(
     'font-primary font-normal text-blue-navy',
     setResponsiveTextSize(textSize),
-    // 'placeholder:text-drcGrey-base placeholder:font-primary placeholder:font-normal',
-    // ...placeholderResponsiveSize,
+    'placeholder:text-grey-light-7 placeholder:font-primary placeholder:font-normal',
+    ...placeholderResponsiveSize,
     inputClassName,
     isMulti ? 'max-w-[50%] w-full truncate' : 'block w-full rounded',
     isMulti ? 'p-0' : padding,
@@ -95,13 +98,6 @@ const AsyncSelect = ({
         ? 'bg-white'
         : bgColor,
     isMulti ? '' : 'custom-scrollbar-secondary'
-  )
-
-  const labelClassNames = styleHelper.classNames(
-    'block font-primary text-blue-navy',
-    setResponsiveTextSize(labelSize),
-    labelClassName,
-    'pt-3 px-3.5'
   )
 
   const onChangeQuery = event => {
@@ -179,15 +175,22 @@ const AsyncSelect = ({
           : bgColor
     )
 
+    const labelClassNames = styleHelper.classNames(
+      'block font-primary text-blue-navy',
+      setResponsiveTextSize(labelSize),
+      labelClassName,
+      'pt-3 px-3.5'
+    )
+
     if (isMulti) {
       return (
         <>
           <span className={containerSelectClassNames}>
-            <div className={labelClassNames}>
-              {typeof label === 'string'
-                ? <Combobox.Label>{label}</Combobox.Label>
-                : label()}
-            </div>
+            {label && (
+              <div className={labelClassNames}>
+                <Combobox.Label>{label}</Combobox.Label>
+              </div>
+            )}
 
             <div className={styleHelper.classNames(
               'flex flex-wrap gap-2 overflow-y-auto custom-scrollbar-secondary',
@@ -227,11 +230,11 @@ const AsyncSelect = ({
 
     return (
       <div className={containerSelectClassNames}>
-        <div className={labelClassNames}>
-          {typeof label === 'string'
-            ? <Combobox.Label>{label}</Combobox.Label>
-            : label()}
-        </div>
+        {label && (
+          <div className={labelClassNames}>
+            <Combobox.Label>{label}</Combobox.Label>
+          </div>
+        )}
 
         <Combobox.Input
           ref={inputRef}

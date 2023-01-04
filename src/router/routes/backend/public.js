@@ -1,6 +1,7 @@
 import {
   HomePage,
   ForumListPage,
+  ForumListChannelPage,
   ForumSavePage,
   ForumDetailPage,
   BawasluUpdateListPage,
@@ -27,6 +28,14 @@ const PublicRoutes = [
   {
     path: '/forum/create',
     component: ForumSavePage,
+    meta: {
+      publicRoute: true
+    },
+    className: 'bg-grey-lighter-1'
+  },
+  {
+    path: '/forum/channel/:channelid',
+    component: ForumListChannelPage,
     meta: {
       publicRoute: true
     },

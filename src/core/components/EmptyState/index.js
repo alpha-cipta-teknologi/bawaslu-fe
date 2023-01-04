@@ -14,7 +14,7 @@ const EmptyState = ({
 
       {title && (
         <div className='mt-5 mb-3.5'>
-          <Text weight='font-extrabold' align='text-center'>{title}</Text>
+          <Text weight='font-bold' align='text-center'>{title}</Text>
         </div>
       )}
 

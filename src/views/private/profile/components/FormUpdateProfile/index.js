@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
-import { Text, CustomIcon, Input, Button } from 'core/components'
+import { Text, CustomIcon, Input, Button, AsyncSelect } from 'core/components'
 import { hooks, toastify, utils, validation } from 'utility'
 import { actions } from 'store'
-import { apiConfig } from 'configs'
 
 const formProfileInputProps = [
   {
@@ -25,8 +24,24 @@ const formProfileInputProps = [
     label: 'Nomor Telepon',
     name: 'telepon',
     type: 'text'
+  },
+  {
+    label: 'Komunitas',
+    name: 'komunitas_id',
+    type: 'async-select'
+  },
+  {
+    label: 'Tema',
+    name: 'tema_id',
+    type: 'async-select',
+    isMulti: true
   }
 ]
+
+const initialSelect = {
+  value: '',
+  label: ''
+}
 
 const InputUploadProfile = ({ children, value, onChangeFile }) => {
   return (
@@ -46,9 +61,13 @@ const FormUpdateProfile = ({
 }) => {
   const getDataProfile = hooks.useCustomDispatch(actions.profile.getDataProfile)
   const updateProfile = hooks.useCustomDispatch(actions.profile.updateProfile)
+  const getAllDataCommunity = hooks.useCustomDispatch(actions.communities.getAllDataCommunity)
+  const getAllDataTopic = hooks.useCustomDispatch(actions.topics.getAllDataTopic)
 
   const profile = useSelector(state => state.profile).profile
   const lazyLoad = useSelector(state => state.misc).lazyLoad
+  const allCommunities = useSelector(state => state.communities)?.allCommunities
+  const allTopics = useSelector(state => state.topics)?.allTopics
 
   const [formProfile, setFormProfile] = useState({
     full_name: '',
@@ -58,6 +77,10 @@ const FormUpdateProfile = ({
   })
   const [profilePicture, setProfilePicture] = useState(profile?.image_foto || '')
   const [isChangeProfilePicture, setIsChangeProfilePicture] = useState(false)
+  const [selectedSelect, setSelectedSelect] = useState({
+    komunitas_id: initialSelect,
+    tema_id: []
+  })
 
   const fetchProfileData = () => {
     getDataProfile(userdata.resource_id, data => {
@@ -68,26 +91,49 @@ const FormUpdateProfile = ({
         telepon: data.telepon,
         image_foto: data.image_foto
       }))
+
+      if (data.komunitas_id || data.tema_id?.length) {
+        setSelectedSelect(prevData => ({
+          ...prevData,
+          komunitas_id: {
+            label: data.komunitas?.komunitas_name || '',
+            value: `${data.komunitas?.id}` || ''
+          },
+          tema_id: data.tema?.map(temaEl => ({
+            label: temaEl.tema_name || '',
+            value: `${temaEl?.id}` || ''
+          }))
+        }))
+      }
     })
   }
 
   useEffect(() => {
     if (userdata && userdata?.resource_id && selectedMenuId === 'profile') {
       fetchProfileData()
+      getAllDataCommunity()
+      getAllDataTopic()
     }
   }, [selectedMenuId, userdata?.resource_id])
 
   const onSaveUpdateProfile = () => {
+    const requestBody = {
+      id: userdata?.resource_id,
+      full_name: formProfile.full_name,
+      email: formProfile.email,
+      telepon: formProfile.telepon,
+      komunitas_id: JSON.stringify({
+        ...selectedSelect.komunitas_id,
+        value: +selectedSelect.komunitas_id.value
+      }),
+      tema_id: JSON.stringify(selectedSelect.tema_id.map(komunitas => +komunitas.value)),
+      ...isChangeProfilePicture
+        ? { image_foto: formProfile.image_foto }
+        : {}
+    }
+
     updateProfile(
-      {
-        id: userdata?.resource_id,
-        full_name: formProfile.full_name,
-        email: formProfile.email,
-        telepon: formProfile.telepon,
-        ...isChangeProfilePicture
-          ? { image_foto: formProfile.image_foto }
-          : {}
-      },
+      requestBody,
       () => {
         toastify.success('Ubah profil berhasil')
 
@@ -160,6 +206,39 @@ const FormUpdateProfile = ({
     }
   }, [])
 
+  const onChangeSelect = useCallback((option, keyName) => {
+    setSelectedSelect(prevSelect => ({
+      ...prevSelect,
+      [keyName]: option
+    }))
+  }, [])
+
+  const defaultOptions = (keyName) => {
+    switch (keyName) {
+      case 'tema_id':
+        return allTopics || []
+      case 'komunitas_id':
+        return allCommunities || []
+      default:
+        return []
+    }
+  }
+
+  const loadingSelect = (keyName) => {
+    switch (keyName) {
+      case 'tema_id':
+        return utils.isLazyLoading(lazyLoad, 'getAllDataTopic')
+      case 'komunitas_id':
+        return utils.isLazyLoading(lazyLoad, 'getAllDataCommunity')
+    }
+  }
+
+  const promiseSelect = (inputValue, keyName) => {
+    return new Promise((resolve) => {
+      resolve(utils.filterSelectData(inputValue, defaultOptions(keyName)))
+    })
+  }
+
   const renderInput = (inputProps) => {
     const keyName = inputProps.name || ''
     const value = formProfile[keyName]
@@ -185,6 +264,21 @@ const FormUpdateProfile = ({
             )}
           </span>
         </InputUploadProfile>
+      )
+    }
+
+    if (inputProps.type === 'async-select') {
+      return (
+        <AsyncSelect
+          key={keyName}
+          label={inputProps.label}
+          value={selectedSelect[keyName]}
+          onChange={value => onChangeSelect(value, keyName)}
+          defaultOptions={defaultOptions(keyName)}
+          loading={loadingSelect(keyName)}
+          loadOptions={inputValue => promiseSelect(inputValue, keyName)}
+          isMulti={inputProps.isMulti}
+        />
       )
     }
 

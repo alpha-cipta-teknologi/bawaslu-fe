@@ -28,9 +28,9 @@ const ScrollUp = ({ showUnder = 300 }) => {
 
   return (
     <div className={styleHelper.classNames(
-      'z-40',
+      'z-[99]',
       showGoTop
-        ? 'fixed bottom-[5%] right-10 bg-black w-9 h-9 cursor-pointer items-center justify-center flex rounded-full shadow-md border border-grey-light-2 hover:scale-110 transition ease-linear delay-[0s] duration-[0.2s]'
+        ? 'fixed bottom-[5%] right-10 bg-white w-9 h-9 cursor-pointer items-center justify-center flex rounded-full shadow-md border border-grey-light-2 hover:scale-110 transition ease-linear delay-[0s] duration-[0.2s]'
         : 'hidden'
     )} onClick={handleScrollUp}>
       <ChevronUpIcon className='text-primary w-5 h-5' />

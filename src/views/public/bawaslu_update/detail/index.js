@@ -280,7 +280,7 @@ const BawasluUpdateDetailPage = () => {
       >
         <CounterArticle
           renderIcon={() => <CustomIcon iconName='share' className='w-5 h-5' />}
-          text={`${bawasluDetail.counter_share || 0}${isMobile ? '' : ' Dibagikan'}`}
+          text={`${utils.getNumberUnit(bawasluDetail.counter_share || 0)}${isMobile ? '' : ' Dibagikan'}`}
         />
       </PopoverSharedButtons>
     )
@@ -293,7 +293,7 @@ const BawasluUpdateDetailPage = () => {
       <div className='items-center flex flex-wrap w-full my-4 gap-y-2.5 gap-x-4'>
         <CounterArticle
           renderIcon={() => <EyeIcon className='w-5 h-5' />}
-          text={`${bawasluDetail.counter_view || 0}${isMobile ? '' : ' Melihat'}`}
+          text={`${utils.getNumberUnit(bawasluDetail.counter_view || 0)}${isMobile ? '' : ' Melihat'}`}
         />
 
         <CounterArticle
@@ -303,12 +303,12 @@ const BawasluUpdateDetailPage = () => {
               bawasluDetail.like ? 'fill-[#EB5757] stroke-[#EB5757]' : ''
             )} />
           )}
-          text={`${bawasluDetail.counter_like || 0}${isMobile ? '' : ' Menyukai'}`}
+          text={`${utils.getNumberUnit(bawasluDetail.counter_like || 0)}${isMobile ? '' : ' Menyukai'}`}
           onClick={() => handleLike(bawasluDetail.id)}
         />
         <CounterArticle
           renderIcon={() => (<CustomIcon iconName='comment' className='w-5 h-5 cursor-pointer' />)}
-          text={`${bawasluDetail.counter_comment || 0}${isMobile ? '' : ' Komentar'}`}
+          text={`${utils.getNumberUnit(bawasluDetail.counter_comment || 0)}${isMobile ? '' : ' Komentar'}`}
           onClick={() => onClickScrollDown('comment-section')}
         />
 

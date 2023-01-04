@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, Suspense, lazy } from 'react'
 import { useHistory } from 'react-router-dom'
 import { EllipsisVerticalIcon, HeartIcon } from '@heroicons/react/24/outline'
 
@@ -15,6 +15,8 @@ import Menu from '../../../Menu'
 import PopoverSharedButtons from '../../../PopoverSharedButtons'
 
 import TextArticle from '../TextArticle'
+
+const ModalImage = lazy(() => import('../../../ModalImage'))
 
 const menuCardArticle = [
   {
@@ -38,6 +40,8 @@ const CardArticle = ({
   // ** Store & Actions
   const likeForumArticle = hooks.useCustomDispatch(actions.forums.likeForumArticle)
   const counterViewShare = hooks.useCustomDispatch(actions.forums.counterViewShare)
+
+  const [openModalImage, setOpenModalImage] = useState(false)
 
   const handleLike = id => {
     if (!utils.isUserLoggedIn()) {
@@ -70,7 +74,7 @@ const CardArticle = ({
       >
         <CounterArticle
           renderIcon={() => <CustomIcon iconName='share' className='w-5 h-5' />}
-          text={`${data?.counter_share || 0}${isMobile ? '' : ' Dibagikan'}`}
+          text={`${utils.getNumberUnit(data?.counter_share || 0)}${isMobile ? '' : ' Dibagikan'}`}
         />
       </PopoverSharedButtons>
     )
@@ -86,12 +90,12 @@ const CardArticle = ({
               data?.like ? 'fill-[#EB5757] stroke-[#EB5757]' : ''
             )} />
           )}
-          text={`${data?.counter_like || 0}${isMobile ? '' : ' Menyukai'}`}
+          text={`${utils.getNumberUnit(data?.counter_like || 0)}${isMobile ? '' : ' Menyukai'}`}
           onClick={() => handleLike(data?.id)}
         />
         <CounterArticle
           renderIcon={() => (<CustomIcon iconName='comment' className='w-5 h-5 cursor-pointer' />)}
-          text={`${data?.counter_comment || 0}${isMobile ? '' : ' Komentar'}`}
+          text={`${utils.getNumberUnit(data?.counter_comment || 0)}${isMobile ? '' : ' Komentar'}`}
           onClick={onClickComment}
         />
 
@@ -107,7 +111,7 @@ const CardArticle = ({
       <Card paddingHorizontal='px-0' paddingVertical='py-4'>
         <div className='flex flex-col'>
           <div className='px-3 gap-y-1.5 flex flex-col'>
-            <div className='flex justify-between'>
+            <div className='flex justify-between pb-4.5'>
               <div className='flex'>
                 <div className='mr-4 flex-shrink-0 self-center'>
                   <img
@@ -148,7 +152,8 @@ const CardArticle = ({
             <img
               alt={data?.title}
               src={utils.getImageAPI(data?.path_image)}
-              className='w-full h-full max-h-80 mt-1.5 object-cover'
+              className='w-full h-full max-h-80 mt-1.5 object-cover cursor-pointer hover:ring-1 hover:ring-secondary'
+              onClick={() => setOpenModalImage(true)}
             />
           )}
 
@@ -158,7 +163,22 @@ const CardArticle = ({
     )
   }
 
-  return renderCardArticle()
+  return (
+    <>
+      {renderCardArticle()}
+
+      {data?.path_image && (
+        <Suspense fallback={<></>}>
+          <ModalImage
+            src={utils.getImageAPI(data?.path_image)}
+            open={openModalImage}
+            setOpen={setOpenModalImage}
+            alt={data?.title}
+          />
+        </Suspense>
+      )}
+    </>
+  )
 }
 
 export default CardArticle

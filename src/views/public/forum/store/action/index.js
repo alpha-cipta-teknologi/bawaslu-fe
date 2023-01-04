@@ -129,9 +129,7 @@ export const createForumArticle = (formForum, callback = null) => {
     endpoints.createForumArticle,
     formForum,
     (response, dispatch, success) => {
-      if (success) {
-        if (callback) callback(success)
-      }
+      if (callback) callback(success)
     },
     () => {
       if (callback) callback(false)
