@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, Suspense, lazy } from 'react'
 import { useHistory } from 'react-router-dom'
 import { EllipsisVerticalIcon, HeartIcon } from '@heroicons/react/24/outline'
 
@@ -15,6 +15,8 @@ import Menu from '../../../Menu'
 import PopoverSharedButtons from '../../../PopoverSharedButtons'
 
 import TextArticle from '../TextArticle'
+
+const ModalImage = lazy(() => import('../../../ModalImage'))
 
 const menuCardArticle = [
   {
@@ -38,6 +40,8 @@ const CardArticle = ({
   // ** Store & Actions
   const likeForumArticle = hooks.useCustomDispatch(actions.forums.likeForumArticle)
   const counterViewShare = hooks.useCustomDispatch(actions.forums.counterViewShare)
+
+  const [openModalImage, setOpenModalImage] = useState(false)
 
   const handleLike = id => {
     if (!utils.isUserLoggedIn()) {
@@ -148,7 +152,8 @@ const CardArticle = ({
             <img
               alt={data?.title}
               src={utils.getImageAPI(data?.path_image)}
-              className='w-full h-full max-h-80 mt-1.5 object-cover'
+              className='w-full h-full max-h-80 mt-1.5 object-cover cursor-pointer hover:ring-1 hover:ring-secondary'
+              onClick={() => setOpenModalImage(true)}
             />
           )}
 
@@ -158,7 +163,22 @@ const CardArticle = ({
     )
   }
 
-  return renderCardArticle()
+  return (
+    <>
+      {renderCardArticle()}
+
+      {data?.path_image && (
+        <Suspense fallback={<></>}>
+          <ModalImage
+            src={utils.getImageAPI(data?.path_image)}
+            open={openModalImage}
+            setOpen={setOpenModalImage}
+            alt={data?.title}
+          />
+        </Suspense>
+      )}
+    </>
+  )
 }
 
 export default CardArticle

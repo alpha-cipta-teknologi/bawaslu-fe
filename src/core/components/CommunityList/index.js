@@ -27,6 +27,7 @@ const CommunityList = ({
 
   const onClickCommunity = useCallback(community => {
     setSelectedCommunityId(+community.value)
+    console.log(community)
 
     history.push(`/forum/channel/${community.value}`)
   }, [])
@@ -131,7 +132,8 @@ const CommunityList = ({
           <Tabs
             tabs={allCommunities?.map(community => ({
               id: +community.value,
-              name: community.label
+              name: community.label,
+              ...community
             }))}
             selectedTab={selectedCommunityId}
             setSelectedTab={setSelectedCommunityId}

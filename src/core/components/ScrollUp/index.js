@@ -28,7 +28,7 @@ const ScrollUp = ({ showUnder = 300 }) => {
 
   return (
     <div className={styleHelper.classNames(
-      'z-[999]',
+      'z-[99]',
       showGoTop
         ? 'fixed bottom-[5%] right-10 bg-white w-9 h-9 cursor-pointer items-center justify-center flex rounded-full shadow-md border border-grey-light-2 hover:scale-110 transition ease-linear delay-[0s] duration-[0.2s]'
         : 'hidden'
