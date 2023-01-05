@@ -115,3 +115,32 @@ export const accountVerification = (confirmHash, callback = null) => {
     dispatch => dispatch(lazyLoadEnd('accountVerification'))
   )
 }
+
+export const handleLoginSSO = (formLogin, callback = null) => {
+  return api.request(
+    endpoints.loginSSO,
+    formLogin,
+    (response, dispatch, success) => {
+      if (success) {
+        const data = response.data
+
+        dispatch({
+          type: 'LOGIN',
+          data,
+          config: authConfig,
+          [authConfig.storageTokenKeyName]: data[authConfig.storageTokenKeyName],
+          [authConfig.storageRefreshTokenKeyName]: data[authConfig.storageRefreshTokenKeyName]
+        })
+
+        // // ** Add to user, accessToken & refreshToken to localStorage
+        localStorageHelper.setToken(data.access_token, data.refresh_token)
+        localStorageHelper.setItem('userData', data)
+
+        if (callback) callback(data)
+      }
+    },
+    null,
+    dispatch => dispatch(lazyLoadStart('loginSSO')),
+    dispatch => dispatch(lazyLoadEnd('loginSSO'))
+  )
+}
