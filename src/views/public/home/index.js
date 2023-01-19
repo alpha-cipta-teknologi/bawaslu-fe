@@ -23,25 +23,13 @@ const HomePage = () => {
   useEffect(() => {
 
     /*eslint-disable */
-    let req = new XMLHttpRequest()
-    req.open("GET", document.location, false)
-    req.send(null)
-    let headers = req.getAllResponseHeaders().toLowerCase()
-    
-    headers = headers.split(/\n|\r|\r\n/g).reduce(function(a, b) {
-      if (b.length) {
-        var [key, value] = b.split(": ")
-        a[key] = value
-      }
-      return a
-    }, {})
-    
+    let myHeaders = new Headers()
 
-    const headerAuth = headers['Authorization'] ?? headers['authorization'] ?? ''
-    const headerRefresh = headers['X-APP-REFRESH-TOKEN'] ?? headers['x-app-refresh-token'] ?? ''
+    const headerAuth = myHeaders.get('Authorization')
+    const headerRefresh = myHeaders.get('X-APP-REFRESH-TOKEN')
 
     if (headerAuth) {
-      var myHeaders = new Headers()
+      
       myHeaders.append("Content-Type", "application/json")
 
       var raw = JSON.stringify({
