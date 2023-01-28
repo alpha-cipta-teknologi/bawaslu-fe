@@ -9,7 +9,7 @@ export default {
   },
   refreshToken: {
     path: '/auth/refresh-token',
-    method: 'GET'
+    method: 'POST'
   },
   accountVerification: {
     path: '/auth/verify',
@@ -32,5 +32,9 @@ export default {
     path: `/app/resource/${id}`,
     method: 'PUT',
     type: 'form-data'
-  })
+  }),
+  loginSSO: {
+    path: '/auth/login-sso',
+    method: 'POST'
+  }
 }
