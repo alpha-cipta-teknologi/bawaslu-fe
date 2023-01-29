@@ -115,7 +115,15 @@ const CardArticle = ({
   const onChangeRadio = useCallback(e => setActiveRadioReport(e.target.id), [])
 
   const renderRadioReportType = () => {
-    const reportOptions = ['Politisasi SARA', 'Disinformasi', 'Kampanye Hitam', 'Ujaran Kebencian'].map(option => ({
+    const reportOptions = [
+      'Spam',
+      'Politisasi SARA',
+      'Disinformasi',
+      'Kampanye Hitam',
+      'Ujaran Kebencian',
+      'Pelecehan',
+      'Kekerasan, Hal Lain'
+    ].map(option => ({
       id: option,
       title: option
     }))
