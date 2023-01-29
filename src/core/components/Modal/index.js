@@ -1,5 +1,5 @@
 import React, { Fragment, useRef } from 'react'
-import PropTypes from 'prop-types'
+import propTypes from 'prop-types'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 
@@ -18,13 +18,14 @@ const Modal = ({
   backgroundOverlay = true,
   footer,
   closeButton = true,
-  onCloseButton,
+  onCloseModal,
   children
 }) => {
   const completeButtonRef = useRef(null)
 
-  const onCloseModal = (open) => {
+  const onCloseModalDefault = (open) => {
     setOpen && setOpen(open)
+    if (onCloseModal) onCloseModal(open)
   }
 
   return (
@@ -33,7 +34,7 @@ const Modal = ({
         as='div'
         initialFocus={completeButtonRef}
         className='fixed z-[999] inset-0 overflow-y-auto'
-        onClose={onCloseModal}
+        onClose={onCloseModalDefault}
       >
         <div className={styleHelper.classNames('flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0', withSlideOvers ? 'pl-[70px]' : '')}>
           <Transition.Child
@@ -73,8 +74,7 @@ const Modal = ({
                     type='button'
                     className='bg-transparent cursor-pointer rounded-md text-gray-400 hover:text-hydeGreen-primary outline-none'
                     onClick={() => {
-                      onCloseModal(false)
-                      onCloseButton ? onCloseButton() : null
+                      onCloseModalDefault(false)
                     }}
                   >
                     <span className='sr-only'>Close</span>
@@ -112,18 +112,18 @@ const Modal = ({
 }
 
 Modal.propTypes = {
-  open: PropTypes.bool.isRequired,
-  setOpen: PropTypes.func,
-  padding: PropTypes.string,
-  title: PropTypes.node,
-  footer: PropTypes.node,
-  width: PropTypes.string,
-  className: PropTypes.string,
-  withSlideOvers: PropTypes.bool,
-  backgroundOverlay: PropTypes.bool,
-  closeButton: PropTypes.bool,
-  onCloseButton: PropTypes.func,
-  children: PropTypes.node
+  open: propTypes.bool.isRequired,
+  setOpen: propTypes.func,
+  padding: propTypes.string,
+  title: propTypes.node,
+  footer: propTypes.node,
+  width: propTypes.string,
+  className: propTypes.string,
+  withSlideOvers: propTypes.bool,
+  backgroundOverlay: propTypes.bool,
+  closeButton: propTypes.bool,
+  onCloseModal: propTypes.func,
+  children: propTypes.node
 }
 
 export default Modal

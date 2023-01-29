@@ -393,3 +393,19 @@ export const counterViewShare = (payload, callback = null) => {
     dispatch => dispatch(lazyLoadEnd('counterViewShare'))
   )
 }
+
+// ** Report article (laporkan artikel)
+export const reportArticle = (data, callback = null) => {
+  return api.request(
+    endpoints.reportArticle,
+    data,
+    (response, dispatch, success) => {
+      if (callback) callback(success)
+    },
+    () => {
+      if (callback) callback(false)
+    },
+    dispatch => dispatch(lazyLoadStart('reportArticle')),
+    dispatch => dispatch(lazyLoadEnd('reportArticle'))
+  )
+}

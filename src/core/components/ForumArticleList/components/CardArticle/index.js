@@ -1,5 +1,6 @@
-import React, { useState, Suspense, lazy } from 'react'
+import React, { useState, Suspense, lazy, useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import { EllipsisVerticalIcon, HeartIcon } from '@heroicons/react/24/outline'
 
 import { hooks, momentHelper, styleHelper, utils } from 'utility'
@@ -13,10 +14,13 @@ import Text from '../../../Text'
 import CustomIcon from '../../../CustomIcon'
 import Menu from '../../../Menu'
 import PopoverSharedButtons from '../../../PopoverSharedButtons'
+import RadioGroup from '../../../RadioGroup'
+import ButtonPrimary from '../../../Button/ButtonPrimary'
 
 import TextArticle from '../TextArticle'
 
 const ModalImage = lazy(() => import('../../../ModalImage'))
+const Modal = lazy(() => import('../../../Modal'))
 
 const menuCardArticle = [
   {
@@ -40,8 +44,14 @@ const CardArticle = ({
   // ** Store & Actions
   const likeForumArticle = hooks.useCustomDispatch(actions.forums.likeForumArticle)
   const counterViewShare = hooks.useCustomDispatch(actions.forums.counterViewShare)
+  const reportArticle = hooks.useCustomDispatch(actions.forums.reportArticle)
+
+  const lazyLoad = useSelector(state => state.misc).lazyLoad
 
   const [openModalImage, setOpenModalImage] = useState(false)
+  const [openModalReport, setOpenModalReport] = useState(false)
+  const [activeRadioReport, setActiveRadioReport] = useState('')
+  const [showSuccessReport, setShowSuccessReport] = useState(false)
 
   const handleLike = id => {
     if (!utils.isUserLoggedIn()) {
@@ -63,6 +73,107 @@ const CardArticle = ({
       counter: 'share',
       reducer: 'forums'
     })
+  }
+
+  const onSubmitReport = () => {
+    const requestBody = {
+      article_id: {
+        value: data?.id || 0,
+        label: data?.title || ''
+      },
+      jenis_laporan: 'jenis laporan' // todo: ganti jenis laporan
+    }
+
+    reportArticle(requestBody, isSuccess => {
+      if (isSuccess) setShowSuccessReport(true)
+    })
+  }
+
+  const handleReport = () => {
+    if (!utils.isUserLoggedIn()) {
+      history.push('/login')
+      return
+    }
+
+    setOpenModalReport(true)
+  }
+
+  const onResetReport = () => {
+    setTimeout(() => {
+      setActiveRadioReport('')
+
+      setShowSuccessReport(false)
+    }, 400)
+  }
+
+  const onCloseModalReport = useCallback(() => {
+    setOpenModalReport(false)
+
+    onResetReport()
+  }, [])
+
+  const onChangeRadio = useCallback(e => setActiveRadioReport(e.target.id), [])
+
+  const renderRadioReportType = () => {
+    const reportOptions = ['Politisasi SARA', 'Disinformasi', 'Kampanye Hitam', 'Ujaran Kebencian'].map(option => ({
+      id: option,
+      title: option
+    }))
+
+    return (
+      <RadioGroup
+        direction='vertical'
+        textSize='text-base'
+        border='focus:ring-0 focus:outline-none focus:ring-transparent border checked:!border-primary border-black-primary border-2'
+        accentColor='text-white'
+        value={activeRadioReport}
+        onChange={onChangeRadio}
+        spacing='m-0'
+        options={reportOptions}
+        inverse
+      />
+    )
+  }
+
+  const renderModalReport = () => {
+    const loadingSubmitReport = utils.isLazyLoading(lazyLoad, 'reportArticle')
+
+    return (
+      <Modal
+        open={openModalReport}
+        setOpen={setOpenModalReport}
+        padding='p-6'
+        width='w-full max-w-sm'
+        closeButton={false}
+        onCloseModal={onResetReport}
+      >
+        <div className='flex flex-col gap-7'>
+          <Text size='text-2xl' weight='font-bold'>Laporkan Thread Ini</Text>
+
+          <div>
+            {showSuccessReport
+              ? <Text>Laporan Anda sudah dikirim ke admin Bawaslu dan akan segera ditindak lanjuti, Terimakasih</Text>
+              : (
+                <>
+                  <Text spacing='mb-4.5'>Alasan Pelaporan</Text>
+
+                  {renderRadioReportType()}
+                </>
+              )}
+          </div>
+
+          <div className='w-full'>
+            <ButtonPrimary
+              sizing='w-full'
+              fontSize='text-base'
+              spacing='py-[9px] px-4'
+              onClick={showSuccessReport ? onCloseModalReport : onSubmitReport}
+              loading={loadingSubmitReport}
+            >{showSuccessReport ? 'Tutup' : 'Laporkan'}</ButtonPrimary>
+          </div>
+        </div>
+      </Modal>
+    )
   }
 
   const renderPopoverShare = (data, isMobile) => {
@@ -111,7 +222,7 @@ const CardArticle = ({
       <Card paddingHorizontal='px-0' paddingVertical='py-4'>
         <div className='flex flex-col'>
           <div className='px-3 gap-y-1.5 flex flex-col'>
-            <div className='flex justify-between pb-4.5'>
+            <div className='flex justify-between items-start pb-4.5'>
               <div className='flex'>
                 <div className='mr-4 flex-shrink-0 self-center'>
                   <img
@@ -130,13 +241,26 @@ const CardArticle = ({
                 </div>
               </div>
 
-              {withActionCard && (
-                <Menu
-                  renderButton={() => <EllipsisVerticalIcon className='w-5 h-5' />}
-                  menuItems={menuCardArticle}
-                  onClickMenuItem={menu => onClickMenuCardArticle(menu, data)}
-                />
-              )}
+              {withActionCard
+                ? (
+                  <Menu
+                    renderButton={() => <EllipsisVerticalIcon className='w-5 h-5' />}
+                    menuItems={menuCardArticle}
+                    onClickMenuItem={menu => onClickMenuCardArticle(menu, data)}
+                  />
+                )
+                : (
+                  <div className='flex items-center gap-1.5 cursor-pointer' onClick={handleReport}>
+                    <CustomIcon iconName='flag_outline' />
+
+                    <Text
+                      size='text-xs'
+                      weight='font-medium'
+                      className='italic'
+                      cursor='cursor-pointer'
+                    >Laporkan</Text>
+                  </div>
+                )}
             </div>
 
             <Text weight='font-bold'>{data?.title}</Text>
@@ -177,6 +301,10 @@ const CardArticle = ({
           />
         </Suspense>
       )}
+
+      <Suspense fallback={<></>}>
+        {renderModalReport()}
+      </Suspense>
     </>
   )
 }

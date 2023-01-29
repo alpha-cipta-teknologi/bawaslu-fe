@@ -5,6 +5,7 @@ import { ReactComponent as Document } from 'assets/images/icons/document.svg'
 import { ReactComponent as EmailSent } from 'assets/images/icons/email_sent.svg'
 import { ReactComponent as EmptyData } from 'assets/images/icons/empty_data.svg'
 import { ReactComponent as Facebook } from 'assets/images/icons/facebook.svg'
+import { ReactComponent as FlagOutline } from 'assets/images/icons/flag_outline.svg'
 import { ReactComponent as Lock } from 'assets/images/icons/lock.svg'
 import { ReactComponent as Logout } from 'assets/images/icons/logout.svg'
 import { ReactComponent as Logout_2 } from 'assets/images/icons/logout_2.svg'
@@ -36,6 +37,7 @@ export default {
     email_sent: EmailSent,
     empty_data: EmptyData,
     facebook: Facebook,
+    flag_outline: FlagOutline,
     lock: Lock,
     logout: Logout,
     logout_2: Logout_2,
