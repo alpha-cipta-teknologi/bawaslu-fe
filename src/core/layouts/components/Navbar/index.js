@@ -59,7 +59,7 @@ const Navbar = ({ navigations }) => {
   }
 
   return (
-    <Disclosure as='nav' className='bg-white shadow sticky top-0 z-[60]'>
+    <Disclosure as='nav' className={styleHelper.classNames('sticky top-0 z-[60]', currentURL === '/home' ? 'bg-[#fcf8f3]' : 'bg-white border-b border-grey-lighter-2')}>
       {({ open }) => (
         <>
           <div className='width-container'>
@@ -76,15 +76,15 @@ const Navbar = ({ navigations }) => {
                 </Disclosure.Button>
               </div>
               <div className='flex flex-1 items-center justify-center md:items-stretch md:justify-start'>
-                <div className='flex flex-shrink-0 items-center lg:space-x-4'>
+                <div className='flex flex-shrink-0 items-center lg:gap-x-4'>
                   <Logo
                     imageClassName='block md:hidden'
-                    sizing='h-12 w-auto'
+                    sizing='h-10 sm:h-11 w-auto'
                     direction='vertical'
                   />
                   <Logo imageClassName='hidden md:block' />
 
-                  <div className='2lg:flex flex-col hidden'>
+                  <div className='3lg:flex flex-col hidden'>
                     <Text
                       theme='font-secondary'
                       weight='font-bold'
@@ -92,17 +92,17 @@ const Navbar = ({ navigations }) => {
                       size='text-sm'
                     >Komunitas Digital Pengawasan Partisipatif
                     </Text>
-                    <Text
+                    {/* <Text
                       theme='font-secondary'
                       type='span'
                       size='text-sm'
                       className='-mt-1'
-                    >“Jarimu Awasi Pemilu”</Text>
+                    >“Jarimu Awasi Pemilu”</Text> */}
                   </div>
                 </div>
               </div>
-              <div className='absolute inset-y-0 right-0 flex items-center md:static md:inset-auto md:ml-6 md:pr-0'>
-                <div className='hidden md:mr-[26px] md:flex md:items-center md:space-x-3 lg:space-x-5 2xl:space-x-7 h-full'>
+              <div className='absolute inset-y-0 right-0 flex items-center md:static md:inset-auto md:pl-6 md:pr-0'>
+                <div className='hidden md:mr-6 md:flex md:items-center md:gap-x-3 lg:gap-x-5 2xl:gap-x-7 h-full'>
                   {navigations.map((nav, index) => {
                     const isLinkActive = currentURL?.includes(nav.navLink)
 

@@ -65,7 +65,8 @@ module.exports = {
         '15': '3.75rem'
       },
       screens: {
-        '2lg': '1100px'
+        '2lg': '1100px',
+        '3lg': '1200px'
       },
       borderRadius: {
         '2sm': '3px'

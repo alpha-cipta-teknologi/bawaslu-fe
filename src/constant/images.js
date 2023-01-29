@@ -24,10 +24,18 @@ import { ReactComponent as Whatsapp } from 'assets/images/icons/whatsapp.svg'
 export default {
   logo_bawaslu: require('assets/images/logo/logo.png'),
   logo_bawaslu_2: require('assets/images/logo/logo_2.jpg'),
+  logo_bawaslu_3: require('assets/images/logo/logo_3.png'),
+  logo_bawaslu_large: require('assets/images/logo/logo_large.png'),
   logo_google: require('assets/images/logo/google.png'),
   logo_facebook: require('assets/images/logo/facebook.png'),
   empty_state: {
     profile: require('assets/images/empty_state/profile_none.png')
+  },
+  illu: {
+    mascot: require('assets/images/illu/mascot.png'),
+    dots: require('assets/images/illu/dots.png'),
+    waves: require('assets/images/illu/waves.png'),
+    circles: require('assets/images/illu/circles.png')
   },
   icons: {
     bell: Bell,

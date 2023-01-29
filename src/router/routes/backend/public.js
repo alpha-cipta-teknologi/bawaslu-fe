@@ -15,7 +15,8 @@ const PublicRoutes = [
     component: HomePage,
     meta: {
       publicRoute: true
-    }
+    },
+    className: '!max-w-full !px-0'
   },
   {
     path: '/forum',

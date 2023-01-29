@@ -27,7 +27,7 @@ const Logo = ({
       return (
         <img
           alt='Bawaslu'
-          src={direction === 'horizontal' ? images.logo_bawaslu : images.logo_bawaslu_2}
+          src={direction === 'horizontal' ? images.logo_bawaslu : images.logo_bawaslu_3}
           className={styleHelper.classNames(sizing, imageClassName)}
         />
       )

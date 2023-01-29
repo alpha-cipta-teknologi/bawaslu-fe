@@ -20,7 +20,7 @@ const LayoutWrapper = ({
         ? `animate__animated animate__${transition}`
         : ''
     )}>
-      <div className='width-container' style={{ minHeight: 'calc(100vh - 80px)' }}>
+      <div className={styleHelper.classNames(wrapperClass, 'width-container')} style={{ minHeight: 'calc(100vh - 80px)' }}>
         {children}
       </div>
     </div>

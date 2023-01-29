@@ -23,7 +23,7 @@ const CustomMenu = ({
   return (
     <Menu as='div' className={styleHelper.classNames('relative', wrapperClassName)}>
       <div>
-        <Menu.Button className='flex rounded-full bg-white text-sm focus:outline-none focus:ring-0'>
+        <Menu.Button className='flex text-sm focus:outline-none focus:ring-0'>
           {renderButton && renderButton()}
         </Menu.Button>
       </div>
