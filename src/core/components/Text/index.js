@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import PropTypes from 'prop-types'
+import propTypes from 'prop-types'
 
 import { styleHelper } from 'utility'
 
@@ -126,6 +126,15 @@ const Text = ({
       {...restProps}
     >{children || text}</span>
   )
+  const label = (
+    <label
+      id={id}
+      style={style}
+      className={textClassName}
+      onClick={onClick}
+      {...restProps}
+    >{children || text}</label>
+  )
 
   const render = () => {
     switch (type) {
@@ -133,6 +142,7 @@ const Text = ({
       case 'h2': return h2
       case 'h3': return h3
       case 'span': return span
+      case 'label': return label
       default: return p
     }
   }
@@ -151,17 +161,17 @@ const Text = ({
 export default Text
 
 Text.propTypes = {
-  children: PropTypes.node,
-  text: PropTypes.string,
-  style: PropTypes.object,
-  className: PropTypes.string,
-  size: PropTypes.string,
-  weight: PropTypes.string,
-  spacing: PropTypes.string,
-  color: PropTypes.string,
-  decoration: PropTypes.string,
-  lineHeight: PropTypes.string,
-  lineClamp: PropTypes.oneOf([
+  children: propTypes.node,
+  text: propTypes.string,
+  style: propTypes.object,
+  className: propTypes.string,
+  size: propTypes.string,
+  weight: propTypes.string,
+  spacing: propTypes.string,
+  color: propTypes.string,
+  decoration: propTypes.string,
+  lineHeight: propTypes.string,
+  lineClamp: propTypes.oneOf([
     'line-clamp-1',
     'line-clamp-2',
     'line-clamp-3',
@@ -170,15 +180,15 @@ Text.propTypes = {
     'line-clamp-6',
     'line-clamp-none'
   ]),
-  whiteSpace: PropTypes.oneOf([
+  whiteSpace: propTypes.oneOf([
     'whitespace-normal',
     'whitespace-nowrap',
     'whitespace-pre',
     'whitespace-pre-line',
     'whitespace-pre-wrap'
   ]),
-  align: PropTypes.string,
-  opacity: PropTypes.oneOf([
+  align: propTypes.string,
+  opacity: propTypes.oneOf([
     'opacity-0',
     'opacity-5',
     'opacity-10',
@@ -195,12 +205,12 @@ Text.propTypes = {
     'opacity-95',
     'opacity-100'
   ]),
-  type: PropTypes.oneOf(['h1', 'h2', 'h3', 'p', 'span']),
-  underlineOnHover: PropTypes.bool,
-  cursor: PropTypes.string,
-  href: PropTypes.string,
-  responsiveSize: PropTypes.bool,
-  onClick: PropTypes.func,
-  id: PropTypes.string,
-  theme: PropTypes.string
+  type: propTypes.oneOf(['h1', 'h2', 'h3', 'p', 'span', 'label']),
+  underlineOnHover: propTypes.bool,
+  cursor: propTypes.string,
+  href: propTypes.string,
+  responsiveSize: propTypes.bool,
+  onClick: propTypes.func,
+  id: propTypes.string,
+  theme: propTypes.string
 }
