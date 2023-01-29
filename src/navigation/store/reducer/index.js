@@ -54,11 +54,21 @@ const initialState = {
       menu_icon: '',
       module_name: 'profile',
       type_menu: '',
-      seq_number: 3,
+      seq_number: 4,
       parent_id: 0,
       status: '',
       auth: true
     }
+    // {
+    //   menu_id: 6,
+    //   menu_name: 'Pengaduan',
+    //   menu_icon: '',
+    //   module_name: 'pengaduan',
+    //   type_menu: '',
+    //   seq_number: 5,
+    //   parent_id: 0,
+    //   status: ''
+    // }
   ]
 }
 

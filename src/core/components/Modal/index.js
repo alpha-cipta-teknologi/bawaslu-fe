@@ -19,9 +19,29 @@ const Modal = ({
   footer,
   closeButton = true,
   onCloseModal,
-  children
+  children,
+  closeButtonType = 'inside' // opsi: inside/outside
 }) => {
   const completeButtonRef = useRef(null)
+
+  const renderCloseIconOutside = () => {
+    if (closeButton && closeButtonType === 'outside') {
+      return (
+        <div className='fixed top-5 sm:top-12.5 right-5 sm:right-15 flex z-[102]'>
+          <button
+            type='button'
+            className='text-white focus:outline-none ring-[3px] ring-white rounded-full cursor-pointer'
+            onClick={() => setOpen && setOpen(false)}
+          >
+            <span className='sr-only'>Close panel</span>
+            <XMarkIcon className='h-7 sm:h-8 w-7 sm:w-8 cursor-pointer' aria-hidden='true' />
+          </button>
+        </div>
+      )
+    }
+
+    return null
+  }
 
   const onCloseModalDefault = (open) => {
     setOpen && setOpen(open)
@@ -54,6 +74,8 @@ const Modal = ({
             &#8203;
           </span>
 
+          {renderCloseIconOutside()}
+
           <Transition.Child
             as={Fragment}
             enter='ease-out duration-300'
@@ -68,7 +90,7 @@ const Modal = ({
               width,
               className
             )}>
-              {closeButton ? (
+              {closeButton && closeButtonType === 'inside' ? (
                 <div className='block absolute top-0 right-0 z-30 p-4'>
                   <button
                     type='button'
