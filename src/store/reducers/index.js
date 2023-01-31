@@ -12,6 +12,7 @@ import areas from './area'
 import notifications from './notifications'
 import communities from './communities'
 import topics from './topics'
+import params from './params'
 
 // ** Auth
 import auth from './auth'
@@ -35,6 +36,7 @@ const reducers = {
   notifications,
   communities,
   topics,
+  params,
   // ** Auth
   auth,
   profile,

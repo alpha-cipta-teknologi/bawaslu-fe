@@ -1,6 +1,6 @@
 export default {
   getParamGlobalDetail: {
-    path: '/param_global/detail',
+    path: '/app/param-global/all-data',
     method: 'GET'
   }
 }

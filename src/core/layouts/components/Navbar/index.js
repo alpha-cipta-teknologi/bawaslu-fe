@@ -64,7 +64,7 @@ const Navbar = ({ navigations }) => {
         <>
           <div className='width-container'>
             <div className='relative flex h-20 justify-between'>
-              <div className='absolute inset-y-0 left-0 flex items-center md:hidden'>
+              <div className='absolute inset-y-0 left-0 flex items-center lg:hidden'>
                 {/* Mobile menu button */}
                 <Disclosure.Button className='inline-flex items-center justify-center rounded-md text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-0'>
                   <span className='sr-only'>Open main menu</span>
@@ -75,14 +75,14 @@ const Navbar = ({ navigations }) => {
                   )}
                 </Disclosure.Button>
               </div>
-              <div className='flex flex-1 items-center justify-center md:items-stretch md:justify-start'>
+              <div className='flex flex-1 items-center justify-center lg:items-stretch lg:justify-start'>
                 <div className='flex flex-shrink-0 items-center lg:gap-x-4'>
                   <Logo
-                    imageClassName='block md:hidden'
+                    imageClassName='block lg:hidden'
                     sizing='h-10 sm:h-11 w-auto'
                     direction='vertical'
                   />
-                  <Logo imageClassName='hidden md:block' />
+                  <Logo imageClassName='hidden lg:block' />
 
                   <div className='3lg:flex flex-col hidden'>
                     <Text
@@ -101,8 +101,8 @@ const Navbar = ({ navigations }) => {
                   </div>
                 </div>
               </div>
-              <div className='absolute inset-y-0 right-0 flex items-center md:static md:inset-auto md:pl-6 md:pr-0'>
-                <div className='hidden md:mr-6 md:flex md:items-center md:gap-x-3 lg:gap-x-5 2xl:gap-x-7 h-full'>
+              <div className='absolute inset-y-0 right-0 flex items-center lg:static lg:inset-auto lg:pl-6 lg:pr-0'>
+                <div className='hidden lg:mr-6 lg:flex lg:items-center lg:gap-x-3 lg:gap-x-5 2xl:gap-x-7 h-full'>
                   {navigations.map((nav, index) => {
                     const isLinkActive = currentURL?.includes(nav.navLink)
 
@@ -124,7 +124,7 @@ const Navbar = ({ navigations }) => {
             </div>
           </div>
 
-          <Disclosure.Panel className='md:hidden'>
+          <Disclosure.Panel className='lg:hidden'>
             <div className='space-y-1 pt-2 pb-4'>
               {navigations.map((nav, index) => {
                 const isLinkActive = currentURL.includes(nav.navLink)

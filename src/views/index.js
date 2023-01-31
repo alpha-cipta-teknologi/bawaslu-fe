@@ -18,6 +18,7 @@ import HomePage from './public/home'
 import BawasluUpdateListPage from './public/bawaslu_update/list'
 import BawasluUpdateDetailPage from './public/bawaslu_update/detail'
 import GalleryPage from './public/gallery'
+import ComplaintPage from './public/aduan'
 
 export {
   LoginPage,
@@ -39,5 +40,6 @@ export {
   HomePage,
   BawasluUpdateListPage,
   BawasluUpdateDetailPage,
-  GalleryPage
+  GalleryPage,
+  ComplaintPage
 }

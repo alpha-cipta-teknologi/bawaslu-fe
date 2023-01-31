@@ -1,4 +1,5 @@
 import {
+  ComplaintPage,
   HomePage,
   ForumListPage,
   ForumListChannelPage,
@@ -70,6 +71,14 @@ const PublicRoutes = [
     meta: {
       publicRoute: true
     }
+  },
+  {
+    path: '/pengaduan',
+    component: ComplaintPage,
+    meta: {
+      publicRoute: true
+    },
+    className: 'bg-grey-lighter-1'
   }
 ]
 
