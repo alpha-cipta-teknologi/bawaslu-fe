@@ -43,7 +43,8 @@ export const getDataRegencies = (queryParams, callback = null) => {
       if (success) {
         const data = response?.data?.values?.map(regency => ({
           label: regency.name,
-          value: `${regency.id}`
+          value: `${regency.id}`,
+          area_province_id: regency.area_province_id
         })) || []
 
         dispatch({

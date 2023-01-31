@@ -45,8 +45,10 @@ const CardArticle = ({
   const likeForumArticle = hooks.useCustomDispatch(actions.forums.likeForumArticle)
   const counterViewShare = hooks.useCustomDispatch(actions.forums.counterViewShare)
   const reportArticle = hooks.useCustomDispatch(actions.forums.reportArticle)
+  const getReportArticleCategories = hooks.useCustomDispatch(actions.params.getReportArticleCategories)
 
   const lazyLoad = useSelector(state => state.misc).lazyLoad
+  const reportArticleCategories = useSelector(state => state.params).reportArticleCategories
 
   const [openModalImage, setOpenModalImage] = useState(false)
   const [openModalReport, setOpenModalReport] = useState(false)
@@ -95,6 +97,7 @@ const CardArticle = ({
       return
     }
 
+    getReportArticleCategories()
     setOpenModalReport(true)
   }
 
@@ -115,18 +118,11 @@ const CardArticle = ({
   const onChangeRadio = useCallback(e => setActiveRadioReport(e.target.id), [])
 
   const renderRadioReportType = () => {
-    const reportOptions = [
-      'Spam',
-      'Politisasi SARA',
-      'Disinformasi',
-      'Kampanye Hitam',
-      'Ujaran Kebencian',
-      'Pelecehan',
-      'Kekerasan, Hal Lain'
-    ].map(option => ({
-      id: option,
-      title: option
+    const reportOptions = reportArticleCategories.map(option => ({
+      id: `${option.value}`,
+      title: option.label
     }))
+    const loading = utils.isLazyLoading(lazyLoad, 'getComplaintCategories')
 
     return (
       <RadioGroup
@@ -138,6 +134,7 @@ const CardArticle = ({
         onChange={onChangeRadio}
         spacing='m-0'
         options={reportOptions}
+        loading={loading}
         inverse
       />
     )
@@ -145,6 +142,9 @@ const CardArticle = ({
 
   const renderModalReport = () => {
     const loadingSubmitReport = utils.isLazyLoading(lazyLoad, 'reportArticle')
+    const disabledButton = showSuccessReport
+      ? false
+      : !activeRadioReport
 
     return (
       <Modal
@@ -177,6 +177,7 @@ const CardArticle = ({
               spacing='py-[9px] px-4'
               onClick={showSuccessReport ? onCloseModalReport : onSubmitReport}
               loading={loadingSubmitReport}
+              disabled={disabledButton}
             >{showSuccessReport ? 'Tutup' : 'Laporkan'}</ButtonPrimary>
           </div>
         </div>

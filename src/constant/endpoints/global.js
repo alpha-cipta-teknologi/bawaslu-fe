@@ -41,10 +41,6 @@ export default {
     path: `/forum/comment/${commentId}`,
     method: 'DELETE'
   }),
-  reportArticle: {
-    path: '/report/article',
-    method: 'POST'
-  },
   getDataBawasluUpdate: {
     path: '/fe/bawaslu-update',
     method: 'GET'

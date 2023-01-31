@@ -5,6 +5,7 @@ import * as areas from './area'
 import * as notifications from './notifications'
 import * as communities from './communities'
 import * as topics from './topics'
+import * as params from './params'
 
 import * as navigations from 'navigation/store/action'
 
@@ -13,6 +14,7 @@ import * as forums from 'views/public/forum/store/action'
 import * as bawasluupdates from 'views/public/bawaslu_update/store/action'
 import * as gallerys from 'views/public/gallery/store/action'
 import * as home from 'views/public/home/store/action'
+import * as complaint from 'views/public/aduan/store/action'
 
 import * as profile from 'views/private/profile/store/action'
 
@@ -26,6 +28,7 @@ const actions = {
   notifications,
   communities,
   topics,
+  params,
   // ** Auth
   auth,
   profile,
@@ -33,7 +36,8 @@ const actions = {
   forums,
   bawasluupdates,
   gallerys,
-  home
+  home,
+  complaint
 }
 
 export default actions
