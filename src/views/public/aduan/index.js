@@ -113,14 +113,14 @@ const ComplaintPage = () => {
       title: formComplaint.title,
       link_berita: formComplaint.link_berita,
       description: draftToHtml(convertToRaw(formComplaint.description.getCurrentContent())),
-      province_id: JSON.stringify({
+      province_id: {
         ...selectedSelect.province_id,
         value: +selectedSelect.province_id.value
-      }),
-      regencies_id: JSON.stringify({
+      },
+      regencies_id: {
         label: selectedSelect.regencies_id.label,
         value: +selectedSelect.regencies_id.value
-      }),
+      },
       jenis_aduan: selectedSelect.jenis_aduan.label
     }
 

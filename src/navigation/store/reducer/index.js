@@ -50,17 +50,6 @@ const initialState = {
     },
     {
       menu_id: 5,
-      menu_name: 'Profil',
-      menu_icon: '',
-      module_name: 'profile',
-      type_menu: '',
-      seq_number: 4,
-      parent_id: 0,
-      status: '',
-      auth: true
-    },
-    {
-      menu_id: 6,
       menu_name: 'Pengaduan',
       menu_icon: '',
       module_name: 'pengaduan',
@@ -69,6 +58,17 @@ const initialState = {
       parent_id: 0,
       status: '',
       auth: false
+    },
+    {
+      menu_id: 6,
+      menu_name: 'Profil',
+      menu_icon: '',
+      module_name: 'profile',
+      type_menu: '',
+      seq_number: 4,
+      parent_id: 0,
+      status: '',
+      auth: true
     }
   ]
 }

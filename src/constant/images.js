@@ -34,6 +34,7 @@ export default {
   illu: {
     mascot: require('assets/images/illu/mascot.png'),
     dots: require('assets/images/illu/dots.png'),
+    wave: require('assets/images/illu/wave.png'),
     waves: require('assets/images/illu/waves.png'),
     circles: require('assets/images/illu/circles.png')
   },

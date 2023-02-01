@@ -154,7 +154,7 @@ const CommunityList = ({
         >
           <div className={styleHelper.classNames('relative', cardClassName)} style={cardStyle}>
             <div className='flex flex-col p-3'>
-              <Text weight='font-bold'>Komunitas</Text>
+              <Text weight='font-bold'>Forum Komunitas</Text>
 
               {renderCommunitiesData()}
             </div>
