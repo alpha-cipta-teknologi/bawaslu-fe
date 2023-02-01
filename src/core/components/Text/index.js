@@ -10,6 +10,8 @@ export const setResponsiveTextSize = (size) => {
       return 'text-2xl sm:text-3xl md:text-5.5xl'
     case 'text-5xl':
       return 'text-2xl sm:text-3xl md:text-5xl'
+    case 'text-4.75xl':
+      return 'text-2xl sm:text-3xl md:text-4.75xl'
     case 'text-4.5xl':
       return 'text-2xl sm:text-3xl md:text-4.5xl'
     case 'text-3.5xl':

@@ -168,7 +168,7 @@ const HomePage = () => {
   const renderTagline = () => {
     if (content?.header) {
       return (
-        <div className='mt-20 md:mt-[200px] lg:mt-60'>
+        <div className='mt-28 lg:mt-40 mb-10'>
           <div className='relative width-container lg:bg-white bg-[#FC7600] bg-opacity-5 lg:bg-opacity-100'>
             <img
               alt=''
@@ -183,15 +183,15 @@ const HomePage = () => {
             />
 
             <div className='lg:px-7.5'>
-              <div className='lg:bg-[#FC7600] lg:bg-opacity-5 py-10 lg:py-20 md:px-8 lg:px-15 flex flex-col gap-7.5 items-center justify-center'>
+              <div className='lg:bg-[#FC7600] lg:bg-opacity-5 py-6 lg:py-15 md:px-6 lg:px-10 flex flex-col gap-7.5 items-center justify-center'>
                 <img
                   alt='bawaslu'
                   src={images.logo_bawaslu_large}
-                  className='lg:h-[100px] h-16 md:h-20 w-auto object-contain'
+                  className='h-16 md:h-20 w-auto object-contain'
                 />
 
                 <Text
-                  size='text-5xl'
+                  size='text-4.75xl'
                   weight='font-bold'
                   align='text-center'
                 >{content?.header}</Text>
@@ -219,13 +219,23 @@ const HomePage = () => {
 
   const renderMascotSection = () => {
     return (
-      <div className='mt-20 md:mt-28 lg:mt-[185px] pb-20'>
+      <div className='pt-15'>
         <div className='width-container relative'>
-          <img
-            alt=''
-            src={images.illu.waves}
-            className='absolute -z-0 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-auto'
-          />
+          <div className='absolute -z-0 left-1/2 -translate-x-1/2 top-0 w-full'>
+            <div className='relative'>
+              {Array.from(Array(5).keys()).map(index => {
+                return (
+                  <img
+                    key={index}
+                    alt=''
+                    src={images.illu.wave}
+                    className='w-full h-auto absolute left-0'
+                    style={{ top: index * 50 }}
+                  />
+                )
+              })}
+            </div>
+          </div>
 
           <div className='flex items-center justify-center px-8 sm:px-0'>
             <img
@@ -245,62 +255,66 @@ const HomePage = () => {
 
     return (
       <>
-        <div className='bg-[#fcf8f3]'>
-          <div className='width-container flex flex-col lg:grid lg:grid-cols-2 lg:items-center gap-12 pt-10 md:pt-20 lg:pt-32 pb-20 lg:pb-44'>
-            <Skeleton
-              loading={loadingContent}
-              paragraph={{ rows: 6 }}
-              className='mt-4'
-            >
-              <div className='flex flex-col gap-6'>
-                <Text size='text-5.5xl' weight='font-bold'>{content?.title || 'Jarimu Awasi Pemilu'}</Text>
-
-                <Text size='text-xl' lineHeight='leading-[30px]'>
-                  {content?.sort_description}
-                </Text>
-
-                <div>
-                  <Button.ButtonPrimary
-                    fontSize='text-xl'
-                    spacing='py-3 px-7.5'
-                    onClick={onShowModalDesc}
-                  >Pelajari Lebih Lanjut</Button.ButtonPrimary>
-                </div>
-              </div>
-            </Skeleton>
-
-            <div className='w-full'>
-              <div>
+        <div className='flex flex-col'>
+          <div className='bg-[#fcf8f3]'>
+            <div className='width-container flex flex-col lg:grid lg:grid-cols-7 lg:items-center gap-12 pt-10 pb-14'>
+              <div className='lg:col-span-4'>
                 <Skeleton
                   loading={loadingContent}
-                  avatar={{
-                    sizing: 'w-full h-full max-h-[348px] aspect-w-16 aspect-h-9',
-                    shape: 'rounded-xl'
-                  }}
+                  paragraph={{ rows: 6 }}
+                  className='mt-4'
                 >
-                  {videoUrl
-                    ? (
-                      <div className='relative'>
-                        <VideoPlayer
-                          videoUrl={utils.convertVideoUrl(videoUrl)}
-                          wrapperClassName='w-full h-full max-h-[348px] aspect-w-16 aspect-h-9 z-[1]'
-                        />
+                  <div className='flex flex-col gap-6'>
+                    <Text size='text-5xl' weight='font-bold'>{content?.title || 'Jarimu Awasi Pemilu'}</Text>
 
-                        <img
-                          alt=''
-                          src={images.illu.dots}
-                          className='absolute -bottom-10 lg:block hidden -z-0 right-4 w-[205px] h-[195px]'
-                        />
-                      </div>
-                    )
-                    : <></>}
+                    <Text lineHeight='leading-[30px]'>
+                      {content?.sort_description}
+                    </Text>
+
+                    <div>
+                      <Button.ButtonPrimary
+                        fontSize='text-base'
+                        spacing='py-3 px-7.5'
+                        onClick={onShowModalDesc}
+                      >Pelajari Lebih Lanjut</Button.ButtonPrimary>
+                    </div>
+                  </div>
                 </Skeleton>
+              </div>
+
+              <div className='w-full lg:col-span-3'>
+                <div>
+                  <Skeleton
+                    loading={loadingContent}
+                    avatar={{
+                      sizing: 'w-full h-full max-h-[348px] aspect-w-16 aspect-h-9',
+                      shape: 'rounded-xl'
+                    }}
+                  >
+                    {videoUrl
+                      ? (
+                        <div className='relative'>
+                          <VideoPlayer
+                            videoUrl={utils.convertVideoUrl(videoUrl)}
+                            wrapperClassName='w-full h-full max-h-[348px] aspect-w-16 aspect-h-9 z-[1]'
+                          />
+
+                          <img
+                            alt=''
+                            src={images.illu.dots}
+                            className='absolute -bottom-10 lg:block hidden -z-0 right-4 w-[205px] h-[195px]'
+                          />
+                        </div>
+                      )
+                      : <></>}
+                  </Skeleton>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {renderMascotSection()}
+          {renderMascotSection()}
+        </div>
 
         {renderTagline()}
       </>
