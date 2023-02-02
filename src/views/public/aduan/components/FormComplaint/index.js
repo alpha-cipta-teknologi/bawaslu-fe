@@ -86,14 +86,9 @@ const FormComplaint = () => {
 
   const reportComplaint = hooks.useCustomDispatch(actions.complaint.reportComplaint)
   const getDataRegencies = hooks.useCustomDispatch(actions.areas.getDataRegencies)
-  const getComplaintCategories = hooks.useCustomDispatch(actions.params.getComplaintCategories)
 
   const [formComplaint, setFormComplaint] = useState(initStateForm)
   const [selectedSelect, setSelectedSelect] = useState(initStateSelect)
-
-  useEffect(() => {
-    getComplaintCategories()
-  }, [])
 
   const onSubmit = event => {
     event.preventDefault()

@@ -100,7 +100,7 @@ const FormUpdateProfile = ({
             value: `${data.komunitas?.id}` || ''
           },
           tema_id: data.tema?.map(temaEl => ({
-            label: temaEl.tema_name || '',
+            label: temaEl?.tema_name || '',
             value: `${temaEl?.id}` || ''
           }))
         }))
