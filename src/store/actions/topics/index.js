@@ -10,7 +10,7 @@ export const getAllDataTopic = (callback = null) => {
     (response, dispatch, success) => {
       if (success) {
         const data = response?.data?.map(topic => ({
-          label: topic.tema_name,
+          label: topic?.tema_name,
           value: `${topic.id}`
         })) || []
 

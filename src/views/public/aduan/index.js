@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import { Tabs } from 'core/components'
-import { utils } from 'utility'
+import { hooks, utils } from 'utility'
+import { actions } from 'store'
 
 import { FormComplaint, HistoryComplaint } from './components'
 
@@ -13,12 +14,18 @@ const ComplaintPage = () => {
 
   const [selectedTab, setSelectedTab] = useState(tabs[0].name)
 
+  const getComplaintCategories = hooks.useCustomDispatch(actions.params.getComplaintCategories)
+
   const { userdata } = utils.isUserLoggedIn() ? utils.getUserData() : { userdata: null }
 
   useEffect(() => {
     if (!userdata) {
       history.push('/login')
+
+      return
     }
+
+    getComplaintCategories()
   }, [])
 
   const renderContent = () => {
