@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import _truncate from 'lodash/truncate'
 
 import { Card, Tabs, Text, CustomIcon, ForumArticleList } from 'core/components'
 import { hooks, styleHelper, utils } from 'utility'

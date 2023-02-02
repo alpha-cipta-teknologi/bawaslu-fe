@@ -23,6 +23,8 @@ import forumsReducer from 'views/public/forum/store/reducer'
 import bawasluupdates from 'views/public/bawaslu_update/store/reducer'
 import gallerys from 'views/public/gallery/store/reducer'
 import home from 'views/public/home/store/reducer'
+import complaint from 'views/public/aduan/store/reducer'
+import factcheck from 'views/public/factcheck/store/reducer'
 
 import { history } from '../../history'
 
@@ -44,7 +46,9 @@ const reducers = {
   // forums,
   bawasluupdates,
   gallerys,
-  home
+  home,
+  complaint,
+  factcheck
 }
 
 const forumsPersistConfig = {

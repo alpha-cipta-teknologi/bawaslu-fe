@@ -219,7 +219,7 @@ const HomePage = () => {
 
   const renderMascotSection = () => {
     return (
-      <div className='pt-15'>
+      <div className='py-15'>
         <div className='width-container relative'>
           <div className='absolute -z-0 left-1/2 -translate-x-1/2 top-0 w-full'>
             <div className='relative'>

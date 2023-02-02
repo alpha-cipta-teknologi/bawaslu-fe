@@ -6,5 +6,9 @@ export default {
   reportComplaint: {
     path: '/report/complaint',
     method: 'POST'
+  },
+  getHistoryReportComplaint: {
+    path: '/fe/history-complaint',
+    method: 'GET'
   }
 }

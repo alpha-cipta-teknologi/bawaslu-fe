@@ -57,7 +57,8 @@ module.exports = {
         }
       },
       boxShadow: {
-        '2md': '0px 4px 24px rgba(51, 51, 51, 0.12)'
+        '2md': '0px 4px 24px rgba(51, 51, 51, 0.12)',
+        'card': '4px 8px 20px rgba(0, 0, 0, 0.1)'
       },
       spacing: {
         '4.5': '1.125rem',
@@ -67,6 +68,7 @@ module.exports = {
         '15': '3.75rem'
       },
       screens: {
+        's': '360px',
         '2lg': '1100px',
         '3lg': '1200px'
       },

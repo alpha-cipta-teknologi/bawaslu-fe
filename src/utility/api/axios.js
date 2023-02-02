@@ -86,8 +86,6 @@ axiosInstance.interceptors.response.use(response => {
     const respData = error.response.data
     const reqUrl = error?.response?.config?.url || ''
 
-    console.log('==== Interceptors Error Response ====', error.response)
-
     if (status === 401 || status === 403) {
       if (reqUrl?.includes(endpoints.refreshToken.path)) {
         forceLogout()

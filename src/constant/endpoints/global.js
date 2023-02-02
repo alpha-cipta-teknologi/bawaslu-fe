@@ -102,5 +102,11 @@ export default {
   getAllDataTopic: {
     path: '/reff/tema/all-data',
     method: 'GET'
+  },
+
+  // Hasil cek fakta
+  getDataFactCheck: {
+    path: '/fe/factcheck',
+    method: 'GET'
   }
 }

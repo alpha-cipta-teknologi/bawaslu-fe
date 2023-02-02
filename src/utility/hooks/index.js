@@ -8,6 +8,7 @@ import useRouterTransition from './useRouterTransition'
 import useWindowDimensions from './useWindowDimensions'
 import useStateCallback from './useStateCallback'
 import useQuery from './useQuery'
+import useIsTruncated from './useIsTruncated'
 
 export {
   useBrowserBackStack,
@@ -19,5 +20,6 @@ export {
   useRouterTransition,
   useWindowDimensions,
   useStateCallback,
-  useQuery
+  useQuery,
+  useIsTruncated
 }

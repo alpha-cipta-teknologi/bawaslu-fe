@@ -17,7 +17,7 @@ const Tabs = ({
   textColor
 }) => {
   const onClickTab = tab => {
-    setSelectedTab(tab[keyName])
+    if (setSelectedTab) setSelectedTab(tab[keyName])
 
     if (onClick) onClick(tab)
   }

@@ -38,7 +38,7 @@ const TextArticle = ({
   }
 
   return (
-    <span>
+    <span className='break-words'>
       <TextHTML
         htmlString={isTruncate ? _truncate(text || '', { length }) : text}
         size='text-sm'

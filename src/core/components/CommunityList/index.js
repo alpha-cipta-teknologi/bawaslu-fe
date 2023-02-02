@@ -27,7 +27,6 @@ const CommunityList = ({
 
   const onClickCommunity = useCallback(community => {
     setSelectedCommunityId(+community.value)
-    console.log(community)
 
     history.push(`/forum/channel/${community.value}`)
   }, [])

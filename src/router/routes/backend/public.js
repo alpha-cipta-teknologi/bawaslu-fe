@@ -7,7 +7,8 @@ import {
   ForumDetailPage,
   BawasluUpdateListPage,
   BawasluUpdateDetailPage,
-  GalleryPage
+  GalleryPage,
+  FactCheckPage
 } from 'views'
 
 const PublicRoutes = [
@@ -79,6 +80,13 @@ const PublicRoutes = [
       publicRoute: true
     },
     className: 'bg-grey-lighter-1'
+  },
+  {
+    path: '/cek-fakta',
+    component: FactCheckPage,
+    meta: {
+      publicRoute: true
+    }
   }
 ]
 
