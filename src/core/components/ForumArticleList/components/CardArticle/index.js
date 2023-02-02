@@ -83,7 +83,7 @@ const CardArticle = ({
         value: data?.id || 0,
         label: data?.title || ''
       },
-      jenis_laporan: 'jenis laporan' // todo: ganti jenis laporan
+      jenis_laporan: activeRadioReport
     }
 
     reportArticle(requestBody, isSuccess => {
@@ -119,7 +119,7 @@ const CardArticle = ({
 
   const renderRadioReportType = () => {
     const reportOptions = reportArticleCategories.map(option => ({
-      id: `${option.value}`,
+      id: option.label,
       title: option.label
     }))
     const loading = utils.isLazyLoading(lazyLoad, 'getComplaintCategories')
@@ -272,7 +272,11 @@ const CardArticle = ({
                 )}
             </div>
 
-            <Text weight='font-bold'>{data?.title}</Text>
+            <Text
+              weight='font-bold'
+              className='break-words'
+              style={{ wordBreak: 'break-word' }}
+            >{data?.title}</Text>
 
             <TextArticle
               text={data?.description || ''}
@@ -282,12 +286,14 @@ const CardArticle = ({
           </div>
 
           {data?.path_image && (
-            <img
-              alt={data?.title}
-              src={utils.getImageAPI(data?.path_image)}
-              className='w-full h-full max-h-80 mt-1.5 object-cover cursor-pointer hover:ring-1 hover:ring-secondary'
-              onClick={() => setOpenModalImage(true)}
-            />
+            <div>
+              <img
+                alt={data?.title}
+                src={utils.getImageAPI(data?.path_image)}
+                className='w-full h-full max-h-80 mt-1.5 object-cover cursor-pointer hover:ring-1 hover:ring-secondary'
+                onClick={() => setOpenModalImage(true)}
+              />
+            </div>
           )}
 
           {renderCounter(data)}

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { ChevronDownIcon } from '@heroicons/react/24/solid'
+import { UserCircleIcon } from '@heroicons/react/24/outline'
 
 import { images } from 'constant'
 import { hooks, utils } from 'utility'
@@ -9,6 +10,11 @@ import { actions } from 'store'
 import { CustomIcon, Menu } from '../../../components'
 
 const userNavigation = [
+  {
+    id: 'profil',
+    name: 'Lihat Profil',
+    icon: () => <UserCircleIcon className='w-4.5 h-4.5' />
+  },
   {
     id: 'logout',
     name: 'Keluar',
@@ -30,8 +36,12 @@ const MenuProfile = () => {
   }
 
   const onClickMenuItem = (nav) => {
-    if (nav.id === 'logout') {
+    const navId = nav.id
+
+    if (navId === 'logout') {
       onCLickLogout()
+    } else if (navId === 'profil') {
+      history.push(`/${navId}`)
     }
   }
 

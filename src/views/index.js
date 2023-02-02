@@ -19,6 +19,7 @@ import BawasluUpdateListPage from './public/bawaslu_update/list'
 import BawasluUpdateDetailPage from './public/bawaslu_update/detail'
 import GalleryPage from './public/gallery'
 import ComplaintPage from './public/aduan'
+import FactCheckPage from './public/factcheck'
 
 export {
   LoginPage,
@@ -41,5 +42,6 @@ export {
   BawasluUpdateListPage,
   BawasluUpdateDetailPage,
   GalleryPage,
-  ComplaintPage
+  ComplaintPage,
+  FactCheckPage
 }

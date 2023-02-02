@@ -60,6 +60,7 @@ const Text = ({
   responsiveSize = true,
   id,
   theme = 'font-primary',
+  textRef,
   ...restProps
 }) => {
   const fontStyle = [
@@ -91,6 +92,7 @@ const Text = ({
       style={style}
       className={textClassName}
       onClick={onClick}
+      ref={textRef}
       {...restProps}
     >{children || text}</h1>
   )
@@ -100,6 +102,7 @@ const Text = ({
       style={style}
       className={textClassName}
       onClick={onClick}
+      ref={textRef}
       {...restProps}
     >{children || text}</h2>
   )
@@ -109,6 +112,7 @@ const Text = ({
       style={style}
       className={textClassName}
       onClick={onClick}
+      ref={textRef}
       {...restProps}
     >{children || text}</h3>
   )
@@ -118,6 +122,7 @@ const Text = ({
       style={style}
       className={textClassName}
       onClick={onClick}
+      ref={textRef}
       {...restProps}
     >{children || text}</p>
   )
@@ -127,6 +132,7 @@ const Text = ({
       style={style}
       className={textClassName}
       onClick={onClick}
+      ref={textRef}
       {...restProps}
     >{children || text}</span>
   )
@@ -136,6 +142,7 @@ const Text = ({
       style={style}
       className={textClassName}
       onClick={onClick}
+      ref={textRef}
       {...restProps}
     >{children || text}</label>
   )

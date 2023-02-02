@@ -2,6 +2,8 @@ import { endpoints } from 'constant'
 import { api } from 'utility'
 import { lazyLoadEnd, lazyLoadStart } from 'store/actions/misc'
 
+import { GET_HISTORY_REPORT_COMPLAINT } from '../actionTypes'
+
 // ** Report complaint (pengaduan)
 export const reportComplaint = (data, callback = null) => {
   return api.request(
@@ -15,5 +17,32 @@ export const reportComplaint = (data, callback = null) => {
     },
     dispatch => dispatch(lazyLoadStart('reportComplaint')),
     dispatch => dispatch(lazyLoadEnd('reportComplaint'))
+  )
+}
+
+// ** Get data on page or row change
+export const getHistoryReportComplaint = (queryParams, callback = null) => {
+  return api.request(
+    endpoints.getHistoryReportComplaint,
+    queryParams,
+    (response, dispatch, success) => {
+      if (success) {
+        const { data: { values, total } } = response
+
+        dispatch({
+          type: GET_HISTORY_REPORT_COMPLAINT,
+          data: {
+            page: queryParams.page,
+            data: values && values.length ? values : [],
+            total
+          }
+        })
+
+        if (callback) callback(values)
+      }
+    },
+    null,
+    dispatch => dispatch(lazyLoadStart('getHistoryReportComplaint')),
+    dispatch => dispatch(lazyLoadEnd('getHistoryReportComplaint'))
   )
 }

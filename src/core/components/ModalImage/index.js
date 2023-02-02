@@ -9,15 +9,20 @@ const ModalImage = ({
   open,
   setOpen,
   onClickArrow,
-  isMulti
+  isMulti,
+  placementContent = 'bottom' // top | bottom
 }) => {
+  const onCloseModalDefault = (open) => {
+    if (setOpen) setOpen(open)
+  }
+
   const renderCloseIcon = () => {
     return (
       <div className='fixed top-5 sm:top-12.5 right-5 sm:right-15 flex z-[102]'>
         <button
           type='button'
           className='text-white focus:outline-none ring-[3px] ring-white rounded-full cursor-pointer'
-          onClick={() => setOpen && setOpen(false)}
+          onClick={() => onCloseModalDefault(false)}
         >
           <span className='sr-only'>Close panel</span>
           <XMarkIcon className='h-7 sm:h-8 w-7 sm:w-8 cursor-pointer' aria-hidden='true' />
@@ -28,7 +33,7 @@ const ModalImage = ({
 
   return (
     <Transition.Root show={open || false} as={Fragment}>
-      <Dialog as='div' className='relative z-[100]' onClose={() => null}>
+      <Dialog as='div' className='relative z-[100]' onClose={isMulti ? () => null : onCloseModalDefault}>
         <Transition.Child
           as={Fragment}
           enter='ease-out duration-300'
@@ -82,6 +87,14 @@ const ModalImage = ({
             >
               <Dialog.Panel className='relative pointer-events-auto'>
                 <div className='transform overflow-hidden rounded-lg bg-white shadow-xl transition-all sm:my-20 sm:w-full sm:max-w-sm lg:max-w-3xl'>
+                  {content
+                    && placementContent === 'top'
+                    && (
+                      <>
+                        {content}
+                      </>
+                    )}
+
                   {src && (
                     <img
                       src={src}
@@ -90,11 +103,13 @@ const ModalImage = ({
                     />
                   )}
 
-                  {content && (
-                    <>
-                      {content}
-                    </>
-                  )}
+                  {content
+                    && placementContent === 'bottom'
+                    && (
+                      <>
+                        {content}
+                      </>
+                    )}
                 </div>
               </Dialog.Panel>
             </Transition.Child>

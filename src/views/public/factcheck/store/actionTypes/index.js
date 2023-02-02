@@ -1,0 +1,1 @@
+export const GET_DATA_FACT_CHECK = 'GET_DATA_FACT_CHECK'

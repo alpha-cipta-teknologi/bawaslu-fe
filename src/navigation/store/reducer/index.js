@@ -54,18 +54,18 @@ const initialState = {
       menu_icon: '',
       module_name: 'pengaduan',
       type_menu: '',
-      seq_number: 5,
+      seq_number: 4,
       parent_id: 0,
       status: '',
       auth: false
     },
     {
       menu_id: 6,
-      menu_name: 'Profil',
+      menu_name: 'Cek Fakta',
       menu_icon: '',
-      module_name: 'profile',
+      module_name: 'cek-fakta',
       type_menu: '',
-      seq_number: 4,
+      seq_number: 5,
       parent_id: 0,
       status: '',
       auth: true

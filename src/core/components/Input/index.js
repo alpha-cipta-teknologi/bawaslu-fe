@@ -181,7 +181,7 @@ const Input = ({
             {renderInput()}
 
             <div className='absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none'>
-              <MagnifyingGlassIcon className='text-gray-400' />
+              <MagnifyingGlassIcon className='text-gray-400 w-5 h-5' />
             </div>
           </div>
         )

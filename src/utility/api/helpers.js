@@ -52,8 +52,6 @@ export const axiosRequest = async (endpoint, body) => {
         // Request made and server responded
         const result = await error.response?.data
 
-        console.log('==== ERR ====', result)
-
         const dataError = {
           code: error.response.status,
           stat_code: result?.stat_code,

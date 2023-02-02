@@ -2,7 +2,7 @@ import { ProfilePage } from 'views'
 
 const PrivateRoutes = [
   {
-    path: '/profile',
+    path: '/profil',
     component: ProfilePage
   }
 ]

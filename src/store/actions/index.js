@@ -15,6 +15,7 @@ import * as bawasluupdates from 'views/public/bawaslu_update/store/action'
 import * as gallerys from 'views/public/gallery/store/action'
 import * as home from 'views/public/home/store/action'
 import * as complaint from 'views/public/aduan/store/action'
+import * as factcheck from 'views/public/factcheck/store/action'
 
 import * as profile from 'views/private/profile/store/action'
 
@@ -37,7 +38,8 @@ const actions = {
   bawasluupdates,
   gallerys,
   home,
-  complaint
+  complaint,
+  factcheck
 }
 
 export default actions
