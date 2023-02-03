@@ -68,7 +68,7 @@ const initialState = {
       seq_number: 5,
       parent_id: 0,
       status: '',
-      auth: true
+      auth: false
     }
   ]
 }

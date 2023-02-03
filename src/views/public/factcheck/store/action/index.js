@@ -16,16 +16,31 @@ export const getDataFactCheck = (queryParams, callback = null) => {
         dispatch({
           type: GET_DATA_FACT_CHECK,
           data: {
-            page: queryParams.page,
+            page: queryParams.page || 1,
             data: values && values.length ? values : [],
             total
           }
         })
 
-        if (callback) callback(values)
+        if (callback) callback(success, values)
+      } else {
+        if (callback) callback(success, [])
       }
     },
-    null,
+    (response, dispatch) => {
+      if (response.code === 404) {
+        dispatch({
+          type: GET_DATA_FACT_CHECK,
+          data: {
+            data: [],
+            total: 0,
+            page: queryParams.page || 1
+          }
+        })
+      }
+
+      if (callback) callback(false, [])
+    },
     dispatch => dispatch(lazyLoadStart('getDataFactCheck')),
     dispatch => dispatch(lazyLoadEnd('getDataFactCheck'))
   )
