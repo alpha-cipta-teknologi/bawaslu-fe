@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
 import { images } from 'constant'
 import { styleHelper } from 'utility'
@@ -25,11 +26,13 @@ const Logo = ({
   const renderLogo = () => {
     if (type === 'image') {
       return (
-        <img
-          alt='Bawaslu'
-          src={direction === 'horizontal' ? images.logo_bawaslu : images.logo_bawaslu_3}
-          className={styleHelper.classNames(sizing, imageClassName)}
-        />
+        <Link to='/home'>
+          <img
+            alt='Bawaslu'
+            src={direction === 'horizontal' ? images.logo_bawaslu : images.logo_bawaslu_3}
+            className={styleHelper.classNames(sizing, imageClassName)}
+          />
+        </Link>
       )
     }
 

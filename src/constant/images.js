@@ -1,4 +1,5 @@
 import { ReactComponent as Bell } from 'assets/images/icons/bell.svg'
+import { ReactComponent as BellRed } from 'assets/images/icons/bell_red.svg'
 import { ReactComponent as Calendar } from 'assets/images/icons/calendar.svg'
 import { ReactComponent as CheckCircle } from 'assets/images/icons/check_circle.svg'
 import { ReactComponent as Document } from 'assets/images/icons/document.svg'
@@ -40,6 +41,7 @@ export default {
   },
   icons: {
     bell: Bell,
+    bell_red: BellRed,
     calendar: Calendar,
     check_circle: CheckCircle,
     document: Document,

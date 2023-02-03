@@ -160,13 +160,30 @@ const MenuNotification = ({ rowsPerPage = 10 }) => {
     return <span className='absolute top-0.5 right-0 bg-red-light-1 w-2 h-2 rounded-full' />
   }
 
+  const renderNotifIcon = () => {
+    const notifListLengh = dataNotifications?.total || 0
+    const isNotifExist = (loadingNotif && !isMounted) || (notifListLengh > 0)
+
+    if (isNotifExist) {
+      return (
+        <>
+          <CustomIcon iconName='bell_red' className='h-6 w-6' aria-hidden='true' />
+
+          {renderBadge()}
+        </>
+      )
+    }
+
+    return (
+      <CustomIcon iconName='bell' className='h-6 w-6' aria-hidden='true' />
+    )
+  }
+
   return (
     <Menu as='div' className='relative'>
       <div>
         <Menu.Button className='relative focus:outline-none focus:ring-0'>
-          <CustomIcon iconName='bell' className='h-6 w-6' aria-hidden='true' />
-
-          {renderBadge()}
+          {renderNotifIcon()}
         </Menu.Button>
       </div>
       <Transition

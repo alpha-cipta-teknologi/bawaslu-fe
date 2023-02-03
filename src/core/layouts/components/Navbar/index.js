@@ -76,7 +76,7 @@ const Navbar = ({ navigations }) => {
                 </Disclosure.Button>
               </div>
               <div className='flex flex-1 items-center justify-center lg:items-stretch lg:justify-start'>
-                <div className='flex flex-shrink-0 items-center lg:gap-x-4'>
+                <div className='flex flex-shrink-0 items-center'>
                   <Logo
                     imageClassName='block lg:hidden'
                     sizing='h-10 sm:h-11 w-auto'
@@ -84,25 +84,18 @@ const Navbar = ({ navigations }) => {
                   />
                   <Logo imageClassName='hidden lg:block' />
 
-                  <div className='3lg:flex flex-col hidden'>
+                  <div className='3lg:flex 3lg:ml-3 flex-col hidden'>
                     <Text
                       theme='font-secondary'
                       weight='font-bold'
-                      type='span'
                       size='text-sm'
                     >Komunitas Digital Pengawasan Partisipatif
                     </Text>
-                    {/* <Text
-                      theme='font-secondary'
-                      type='span'
-                      size='text-sm'
-                      className='-mt-1'
-                    >“Jarimu Awasi Pemilu”</Text> */}
                   </div>
                 </div>
               </div>
               <div className='absolute inset-y-0 right-0 flex items-center lg:static lg:inset-auto lg:pl-6 lg:pr-0'>
-                <div className='hidden lg:mr-6 lg:flex lg:items-center lg:gap-x-3 lg:gap-x-5 2xl:gap-x-7 h-full'>
+                <div className='hidden lg:mr-6 lg:flex lg:items-center lg:gap-x-3 2xl:gap-x-7 h-full'>
                   {navigations.map((nav, index) => {
                     const isLinkActive = currentURL?.includes(nav.navLink)
 
