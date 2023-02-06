@@ -1,5 +1,9 @@
 export default {
   // ==== Global ====
+  getDataSearchForumArticle: {
+    path: '/fe/search',
+    method: 'GET'
+  },
   getDataForumArticle: {
     path: '/fe/article',
     method: 'GET'

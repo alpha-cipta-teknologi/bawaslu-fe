@@ -1,7 +1,10 @@
-import React, { useEffect, lazy, Suspense } from 'react'
-import { useHistory } from 'react-router-dom'
+import React, {
+  useEffect,
+  lazy,
+  Suspense
+} from 'react'
 
-import { hooks, screen } from 'utility'
+import { hooks, screen, styleHelper } from 'utility'
 import { actions } from 'store'
 
 import CardTrending from '../CardTrending'
@@ -12,10 +15,10 @@ const CommunityList = lazy(() => import('core/components/CommunityList'))
 const ForumListContainer = ({
   withChannel,
   renderForumArticleList,
-  channelId
+  channelId,
+  onChangeChannel,
+  renderSearchForum
 }) => {
-  const history = useHistory()
-
   // ** Store & Actions
   const getDataTrendingForumArticle = hooks.useCustomDispatch(actions.forums.getDataTrendingForumArticle)
 
@@ -33,6 +36,7 @@ const ForumListContainer = ({
           isMobileView={isMobileView}
           cardClassName={cardClassName}
           cardStyle={cardStyle}
+          onChangeChannel={onChangeChannel}
         />
       </Suspense>
     )
@@ -42,8 +46,8 @@ const ForumListContainer = ({
     const isMobile = windowDimensions.width < screen.lg
 
     return (
-      <div className='lg:sticky lg:top-[90px]'>
-        {renderCommunityList(false, 'overflow-y-auto custom-scrollbar', { maxHeight: isMobile ? 500 : 'calc(100vh - 110px)' })}
+      <div className={styleHelper.classNames('lg:sticky', renderSearchForum ? 'lg:top-[162px]' : 'lg:top-[90px]')}>
+        {renderCommunityList(false, 'overflow-y-auto custom-scrollbar', { maxHeight: isMobile ? 500 : 'calc(100vh - 182px)' })}
       </div>
     )
   }
@@ -67,12 +71,24 @@ const ForumListContainer = ({
 
           <CardTrending />
 
+          {renderSearchForum && (
+            <div className='flex lg:hidden'>
+              {renderSearchForum()}
+            </div>
+          )}
+
           <div className='flex flex-col w-full lg:col-span-6'>
             {renderForumArticleList ? renderForumArticleList() : null}
           </div>
 
           <div className='w-full gap-7 hidden lg:flex lg:flex-col lg:col-span-3'>
             <CardCreatePost isSticky={!withChannel} channelId={channelId} />
+
+            {renderSearchForum && (
+              <div className='lg:sticky lg:top-[90px]'>
+                {renderSearchForum()}
+              </div>
+            )}
 
             {withChannel ? renderStickyCommunityList() : null}
           </div>

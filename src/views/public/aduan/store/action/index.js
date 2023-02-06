@@ -41,7 +41,20 @@ export const getHistoryReportComplaint = (queryParams, callback = null) => {
         if (callback) callback(values)
       }
     },
-    null,
+    (response, dispatch) => {
+      if (response.code === 404) {
+        dispatch({
+          type: GET_HISTORY_REPORT_COMPLAINT,
+          data: {
+            data: [],
+            total: 0,
+            page: queryParams.page || 1
+          }
+        })
+      }
+
+      if (callback) callback([])
+    },
     dispatch => dispatch(lazyLoadStart('getHistoryReportComplaint')),
     dispatch => dispatch(lazyLoadEnd('getHistoryReportComplaint'))
   )

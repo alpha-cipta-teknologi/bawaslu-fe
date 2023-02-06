@@ -92,6 +92,46 @@ export const getDataForumArticleAuth = (queryParams, callback = null) => {
   )
 }
 
+// ** Get data on page or row change
+export const getDataSearchForumArticle = (queryParams, callback = null) => {
+  return api.request(
+    endpoints.getDataSearchForumArticle,
+    queryParams,
+    (response, dispatch, success) => {
+      if (success) {
+        const { data: { values, total } } = response
+
+        dispatch({
+          type: GET_DATA_FORUM_ARTICLE,
+          data: {
+            data: values && values.length ? values : [],
+            total,
+            page: queryParams.page || 1
+          }
+        })
+
+        if (callback) callback(success, values)
+      }
+    },
+    (response, dispatch) => {
+      if (response.code === 404) {
+        dispatch({
+          type: GET_DATA_FORUM_ARTICLE,
+          data: {
+            data: [],
+            total: 0,
+            page: queryParams.page || 1
+          }
+        })
+      }
+
+      if (callback) callback(false, [])
+    },
+    dispatch => dispatch(lazyLoadStart('getDataForumArticle')),
+    dispatch => dispatch(lazyLoadEnd('getDataForumArticle'))
+  )
+}
+
 export const getDataTrendingForumArticle = (callback = null) => {
   return api.request(
     endpoints.getDataTrendingForumArticle,

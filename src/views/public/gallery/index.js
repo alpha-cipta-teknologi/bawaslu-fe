@@ -93,7 +93,7 @@ const GalleryPage = () => {
                 setGalleryDetail({
                   ...data,
                   detail: data.detail?.length
-                    ? [{ path_image: data.path_thumbnail }, ...data.detail]
+                    ? data.detail
                     : [{ path_image: data.path_thumbnail }]
                 })
                 setActiveImageIdx(0)
@@ -102,14 +102,14 @@ const GalleryPage = () => {
                 <span className='group-hover:bg-gradient2 absolute inset-0 z-[1]' />
 
                 <img
-                  className='h-[150px] sm:h-[196px] w-full sm:w-1/4 object-cover skeleton-box'
+                  className='h-[150px] sm:h-[196px] w-full sm:w-1/4 object-cover skeleton-box select-none'
                   onLoad={({ currentTarget }) => {
                     currentTarget.className = 'h-[150px] sm:h-[196px] object-cover'
                   }}
                   onError={({ currentTarget }) => {
                     currentTarget.className = 'h-[150px] sm:h-[196px] sm:w-[250px] w-[200px] bg-gray-200'
                   }}
-                  src={utils.getImageAPI(data.path_thumbnail)}
+                  src={utils.getImageAPI(data.path_thumbnail || (data?.detail?.length ? data?.detail[0]?.path_image : ''))}
                   alt={data.folder_name}
                 />
 
@@ -151,10 +151,18 @@ const GalleryPage = () => {
         alt={galleryDetail.folder_name}
         content={galleryDetail.description}
         onClickArrow={action => {
-          if (action === 'next' && activeImageIdx < (galleryDetail.detail?.length - 1)) {
-            setActiveImageIdx(prevIdx => prevIdx + 1)
-          } else if (action === 'prev' && activeImageIdx > 0) {
-            setActiveImageIdx(prevIdx => prevIdx - 1)
+          if (action === 'next') {
+            if (activeImageIdx < (galleryDetail.detail?.length - 1)) {
+              setActiveImageIdx(prevIdx => prevIdx + 1)
+            } else {
+              setActiveImageIdx(0)
+            }
+          } else if (action === 'prev') {
+            if (activeImageIdx > 0) {
+              setActiveImageIdx(prevIdx => prevIdx - 1)
+            } else {
+              setActiveImageIdx(galleryDetail.detail?.length - 1)
+            }
           }
         }}
       />

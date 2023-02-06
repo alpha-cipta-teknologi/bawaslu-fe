@@ -29,10 +29,7 @@ export default {
           } else {
             // ======== Execute THROW_ERROR dispatch ========
             if (typeof errorFunction === 'function') {
-              console.log('Error debugger: utilities/api: (#1)', result)
               await errorFunction(result, dispatch)
-            } else {
-              console.log('Error debugger: utilities/api: (#2)', result)
             }
 
             dispatch({
@@ -52,8 +49,6 @@ export default {
           if (typeof postFunction === 'function') {
             await postFunction(dispatch)
           }
-
-          console.log('==== Err ====', error)
 
           toastify.error('Maaf, terjadi kesalahan. Silakan muat ulang halaman beberapa saat lagi')
 

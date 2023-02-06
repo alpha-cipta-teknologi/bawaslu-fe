@@ -33,8 +33,6 @@ export const axiosRequest = async (endpoint, body) => {
 
     const result = await response.data
 
-    // console.log('==== RESULT ====', result)
-
     const data = await {
       code: response.status,
       stat_code: result?.stat_code || response.status,
@@ -106,8 +104,6 @@ export const requestDownloadFile = async (endpoint, body, name = '') => {
 
     return response
   } catch (error) {
-    console.log(error)
-
     throw error
   }
 }

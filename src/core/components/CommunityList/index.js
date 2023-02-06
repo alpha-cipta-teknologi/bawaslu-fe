@@ -15,7 +15,8 @@ const CommunityList = ({
   isMobileView,
   cardClassName,
   cardStyle,
-  channelId
+  channelId,
+  onChangeChannel
 }) => {
   const history = useHistory()
 
@@ -28,7 +29,8 @@ const CommunityList = ({
   const onClickCommunity = useCallback(community => {
     setSelectedCommunityId(+community.value)
 
-    history.push(`/forum/channel/${community.value}`)
+    if (onChangeChannel) onChangeChannel(community)
+    else history.push(`/forum/channel/${community.value}`)
   }, [])
 
   const onClickToggleShowData = useCallback(() => {
