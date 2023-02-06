@@ -152,7 +152,7 @@ const HomePage = () => {
                   spacing='py-3 px-10'
                   fontSize='text-xl'
                   onClick={onClickToForum}
-                >Awasi Pemilu</Button.ButtonPrimary>
+                >Ayo Awasi Bersama</Button.ButtonPrimary>
               </div>
             </div>
 
