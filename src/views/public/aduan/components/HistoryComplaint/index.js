@@ -26,7 +26,7 @@ const HistoryComplaint = ({ selectedTab, setSelectedTab }) => {
   const [showModalDetailCard, setShowModalDetailCard] = useState(false)
   const [activeComplaint, setActiveComplaint] = useState(null)
 
-  const debouncedSearch = hooks.useDebounce(search, 900)
+  const debouncedSearch = hooks.useDebounce(search, 800)
   const loadingHistory = utils.isLazyLoading(lazyLoad, 'getHistoryReportComplaint') || !isMounted
 
   const observer = useRef()
@@ -195,6 +195,12 @@ const HistoryComplaint = ({ selectedTab, setSelectedTab }) => {
     const historyComplaintData = historyComplaintList?.data || []
     const cardClassName = 'border-t border-b border-gray-200 bg-white shadow-sm sm:rounded-lg sm:border'
 
+    if (!historyComplaintData.length && debouncedSearch) {
+      return (
+        <EmptyState title='Riwayat tidak ditemukan' subtitle='Silakan cari dengan kata kunci lainnya' />
+      )
+    }
+
     return (
       <div className='flex flex-col gap-y-6'>
         {historyComplaintData.map((complaint, index) => {
@@ -225,7 +231,7 @@ const HistoryComplaint = ({ selectedTab, setSelectedTab }) => {
   const renderContent = () => {
     const historyComplaintData = historyComplaintList?.data || []
 
-    if (!historyComplaintData?.length && !loadingHistory) {
+    if (!historyComplaintData?.length && !loadingHistory && !debouncedSearch) {
       return (
         <EmptyState title='Anda tidak memiliki riwayat' subtitle='Anda bisa membuat pengaduan Anda disini'>
           <div className='mt-5'>

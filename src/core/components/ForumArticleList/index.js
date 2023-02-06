@@ -18,7 +18,9 @@ const ForumArticleList = ({
   rowsPerPage = 10,
   emptyStateTitle = 'Tidak ada data',
   wrapperListClassName,
-  paramsList = {}
+  renderSearch,
+  search,
+  channelId
 }) => {
   const history = useHistory()
   const { userdata } = utils.isUserLoggedIn() ? utils.getUserData() : { userdata: null }
@@ -27,6 +29,7 @@ const ForumArticleList = ({
   const getDataForumArticle = hooks.useCustomDispatch(userdata ? actions.forums.getDataForumArticleAuth : actions.forums.getDataForumArticle)
   const deleteForumArticle = hooks.useCustomDispatch(actions.forums.deleteForumArticle)
   const getForumArticleDetail = hooks.useCustomDispatch(utils.isUserLoggedIn() ? actions.forums.getForumArticleDetailAuth : actions.forums.getForumArticleDetail)
+  const getDataSearchForumArticle = hooks.useCustomDispatch(actions.forums.getDataSearchForumArticle)
 
   const forumList = useSelector(state => state.forums).forumList
   const lazyLoad = useSelector(state => state.misc).lazyLoad
@@ -69,10 +72,24 @@ const ForumArticleList = ({
     getDataForumArticle({
       page,
       perPage: rowsPerPage,
+      ...search ? { q: search || '' } : {},
       ...userdata && !withActionCard
         ? { type: 'fe' }
         : {},
-      ...paramsList
+      ...channelId ? { komunitas_id: channelId } : {}
+    }, () => {
+      if (!isMounted) setIsMounted(true)
+      if (refreshing) setRefreshing(false)
+    })
+  }
+
+  const fetchSearchForumArticle = () => {
+    getDataSearchForumArticle({
+      page,
+      perPage: rowsPerPage,
+      q: search || '',
+      ...channelId ? { komunitas_id: channelId } : {},
+      ...userdata ? { user_id: userdata?.resource_id || 0 } : {}
     }, () => {
       if (!isMounted) setIsMounted(true)
       if (refreshing) setRefreshing(false)
@@ -81,9 +98,13 @@ const ForumArticleList = ({
 
   useEffect(() => {
     if (fulfilledCondition) {
-      fetchForumArticle()
+      if (search) {
+        fetchSearchForumArticle()
+      } else {
+        fetchForumArticle()
+      }
     }
-  }, [page, fulfilledCondition])
+  }, [fulfilledCondition, page, search, channelId])
 
   // ==== Refreshing ====
   useEffect(() => {
@@ -139,40 +160,52 @@ const ForumArticleList = ({
     )
   }
 
-  const renderForumArticles = () => {
-    if ((loadingForumArticle && !isMounted) || forumList?.data?.length) {
+  const renderList = () => {
+    if (!forumList?.data?.length && search) {
       return (
-        <div className={styleHelper.classNames('grid gap-y-4', wrapperListClassName)}>
-          {!isMounted || (loadingForumArticle && page === 1)
-            ? renderSpinner()
-            : (
-              <>
-                {forumList?.data?.map((data, i) => {
-                  const isLastElement = forumList?.data?.length === i + 1
-
-                  return isLastElement ? (
-                    <div key={i} ref={lastElementRef}>
-                      {renderCardArticle(data)}
-                    </div>
-                  ) : (
-                    <div key={i}>
-                      {renderCardArticle(data)}
-                    </div>
-                  )
-                })}
-              </>
-            )}
-
-          {loadingForumArticle
-            && isMounted
-            && page > 1
-            && renderSpinner()}
-        </div>
+        <EmptyState title='Thread tidak ditemukan' subtitle='Silakan cari dengan kata kunci lainnya' />
       )
     }
 
     return (
-      <EmptyState title={emptyStateTitle} />
+      <>
+        {forumList?.data?.map((data, i) => {
+          const isLastElement = forumList?.data?.length === i + 1
+
+          return isLastElement ? (
+            <div key={i} ref={lastElementRef}>
+              {renderCardArticle(data)}
+            </div>
+          ) : (
+            <div key={i}>
+              {renderCardArticle(data)}
+            </div>
+          )
+        })}
+      </>
+    )
+  }
+
+  const renderForumArticles = () => {
+    if (!loadingForumArticle && !forumList?.data?.length && !search) {
+      return (
+        <EmptyState title={emptyStateTitle} />
+      )
+    }
+
+    return (
+      <div className={styleHelper.classNames('grid gap-y-4', wrapperListClassName)}>
+        {renderSearch && renderSearch()}
+
+        {!isMounted || (loadingForumArticle && page === 1)
+          ? renderSpinner()
+          : renderList()}
+
+        {loadingForumArticle
+          && isMounted
+          && page > 1
+          && renderSpinner()}
+      </div>
     )
   }
 
