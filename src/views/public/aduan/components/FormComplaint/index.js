@@ -264,11 +264,14 @@ const FormComplaint = () => {
 
   return (
     <div className='max-w-2xl lg:max-w-4xl mx-auto flex flex-col gap-6 items-center'>
-      <Text
-        size='text-2.5xl'
-        weight='font-bold'
-        align='text-center'
-      >Buat Pengaduan</Text>
+      <div className='flex flex-col gap-2.5'>
+        <Text
+          size='text-2.5xl'
+          weight='font-bold'
+          align='text-center'
+        >Buat Aduan</Text>
+        <Text align='text-center' size='text-sm'>Aduan ini menjadi informasi awal bagi Bawaslu dalam penanganan politisasi SARA, disinformasi, kampanye hitam, dan ujaran kebencian dalam Pemilu dan Pemilihan Tahun 2024</Text>
+      </div>
 
       <Card
         paddingHorizontal='px-3'
@@ -278,7 +281,15 @@ const FormComplaint = () => {
         <div className='flex flex-col gap-3'>
           {formComplaintInputProps.map(inputProps => (
             <div key={inputProps.name} className='w-full'>
-              <Text size='text-sm' spacing='mb-2.5'>{inputProps.label}</Text>
+              <div className='mb-2.5'>
+                <Text size='text-sm'>{inputProps.label}</Text>
+                {inputProps.name === 'regencies_id'
+                  ? (
+                    <Text size='text-xs' spacing='mt-1'>
+                      (Tujuan adalah Bawaslu kabupaten/kota sesuai domisili pengadu)
+                    </Text>
+                  ) : null}
+              </div>
 
               {renderInput(inputProps)}
             </div>

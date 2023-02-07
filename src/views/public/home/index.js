@@ -52,32 +52,30 @@ const HomePage = () => {
     getDataContentHome()
   }, [])
 
-  const transformDescription = (node, nodeIdx) => {
-    if (node.type === 'tag' && (['p', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(node.name))) {
-      if (node.attribs?.style) {
-        node.attribs.style = `${node.attribs?.style || ''}; font-family: "Montserrat" !important;`
-      }
-    }
+  // const transformDescription = (node, nodeIdx) => {
+  //   if (node.type === 'tag' && (['p', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(node.name))) {
+  //     if (node.attribs?.style) {
+  //       node.attribs.style = `${node.attribs?.style || ''}; font-family: "Montserrat" !important;`
+  //     }
+  //   }
 
-    if (node.type === 'tag' && node.name === 'p' && nodeIdx === 0) {
-      return (
-        <Text
-          key={nodeIdx}
-          type='span'
-          size='text-lg'
-          lineHeight='leading-[30px]'
-        >
-          {node.children.map((child, childIdx) => {
-            if (child.attribs?.style) {
-              child.attribs.style = `${child.attribs?.style || ''}; font-family: "Montserrat" !important;`
-            }
+  //   if (node.type === 'tag' && node.name === 'p' && nodeIdx === 0) {
+  //     return (
+  //       <Text
+  //         key={nodeIdx}
+  //         type='span'
+  //       >
+  //         {node.children.map((child, childIdx) => {
+  //           if (child.attribs?.style) {
+  //             child.attribs.style = `${child.attribs?.style || ''}; font-family: "Montserrat" !important;`
+  //           }
 
-            return convertNodeToElement(child, childIdx, transformDescription)
-          })}
-        </Text>
-      )
-    }
-  }
+  //           return convertNodeToElement(child, childIdx, transformDescription)
+  //         })}
+  //       </Text>
+  //     )
+  //   }
+  // }
 
   const onClickToForum = () => {
     if (userdata?.komunitas_id) {
@@ -108,9 +106,7 @@ const HomePage = () => {
         <div>
           <TextHTML
             htmlString={content?.description || content?.short_description || ''}
-            size='text-lg'
-            lineHeight='leading-[30px]'
-            options={{ transform: transformDescription }}
+          // options={{ transform: transformDescription }}
           />
         </div>
       </Modal>
