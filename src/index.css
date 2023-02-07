@@ -275,6 +275,10 @@ input[type="search"]::-webkit-search-results-decoration {
 
 .html-str ul {
   all: revert;
+  margin: 0;
+  padding: 0;
+  list-style-position: outside;
+  padding-left: 15px;
 }
 
 .html-str ol {
