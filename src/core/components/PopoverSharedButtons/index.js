@@ -12,10 +12,10 @@ const buttonSharedContent = [
     iconName: 'facebook',
     titleProps: 'quote'
   },
-  // {
-  //   buttonName: 'Linkedin',
-  //   iconName: 'linkedin'
-  // },
+  {
+    buttonName: 'Linkedin',
+    iconName: 'linkedin'
+  },
   {
     buttonName: 'Twitter',
     iconName: 'twitter',
