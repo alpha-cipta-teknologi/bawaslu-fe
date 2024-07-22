@@ -29,11 +29,13 @@ const Navbar = ({ navigations }) => {
         return
       }
 
-      getAllDataCommunity(data => {
-        if (data && data?.length) {
-          history.push(`/forum/channel/${data[0]?.value || 1}`)
-        }
-      })
+      history.push(`/forum/channel/0`)
+
+      // getAllDataCommunity(data => {
+      //   if (data && data?.length) {
+      //     history.push(`/forum/channel/${data[0]?.value || 1}`)
+      //   }
+      // })
     } else {
       history.push(nav.navLink)
     }

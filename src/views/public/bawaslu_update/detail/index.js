@@ -228,6 +228,7 @@ const BawasluUpdateDetailPage = () => {
           borderColor='border-grey-light-1'
           key='title'
           id='title'
+          type='textarea'
           placeholder='Tambahkan Komentar'
           onChange={(e) => setCommentArticle(e.target.value)}
           value={commentArticle}
@@ -254,10 +255,12 @@ const BawasluUpdateDetailPage = () => {
           borderColor='border-grey-light-1'
           key='title'
           id='title'
+          type='textarea'
           placeholder='Balas'
           value={replyCommentArticle}
           onChange={(e) => setReplyCommentArticle(e.target.value)}
           autoFocus
+          onFocus={e => (e.currentTarget.value = '')}
         />
         <Button.ButtonPrimary
           spacing='py-2.5 px-5'

@@ -335,11 +335,13 @@ const ForumDetailPage = () => {
                 borderColor='border-grey-light-1'
                 key='title'
                 id='title'
+                type='textarea'
                 placeholder='Balas'
                 textSize='text-sm'
                 value={replyCommentArticle}
                 onChange={(e) => setReplyCommentArticle(e.target.value)}
                 autoFocus
+                onFocus={e => (e.currentTarget.value = '')}
               />
               <Button.ButtonPrimary
                 spacing='py-2.5 px-5'
@@ -428,6 +430,7 @@ const ForumDetailPage = () => {
               borderColor='border-grey-light-1'
               key='commentar'
               id='commentar'
+              type='textarea'
               placeholder='Tambahkan Komentar'
               textSize='text-sm'
               onChange={(e) => setCommentArticle(e.target.value)}

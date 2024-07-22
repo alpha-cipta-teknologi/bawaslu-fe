@@ -21,6 +21,7 @@ import { ReactComponent as Telegram } from 'assets/images/icons/telegram.svg'
 import { ReactComponent as Twitter } from 'assets/images/icons/twitter.svg'
 import { ReactComponent as User } from 'assets/images/icons/user.svg'
 import { ReactComponent as Whatsapp } from 'assets/images/icons/whatsapp.svg'
+import { ReactComponent as Instagram } from 'assets/images/icons/instagram.svg'
 
 export default {
   logo_bawaslu: require('assets/images/logo/logo.png'),
@@ -62,7 +63,8 @@ export default {
     twitter: Twitter,
     trash_outline: Trash_Outline,
     user: User,
-    whatsapp: Whatsapp
+    whatsapp: Whatsapp,
+    instagram: Instagram
   },
   social_media: {
     instagram: require('assets/images/footer/instagram.png'),

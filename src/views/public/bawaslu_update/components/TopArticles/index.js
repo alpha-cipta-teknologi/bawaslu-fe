@@ -31,7 +31,7 @@ const TopArticles = ({
             <div className='w-full h-full bg-gray-200'>
               <img
                 className='w-full h-full object-cover'
-                src={utils.getImageAPI(mainArticle?.path_thumbnail)}
+                src={utils.getImageAPI(mainArticle?.path_image)}
                 alt={mainArticle?.title}
               />
             </div>
