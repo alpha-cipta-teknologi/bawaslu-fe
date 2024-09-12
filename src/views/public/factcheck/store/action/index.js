@@ -7,7 +7,7 @@ import { GET_DATA_FACT_CHECK } from '../actionTypes'
 // ** Get data on page or row change
 export const getDataFactCheck = (queryParams, callback = null) => {
   return api.request(
-    endpoints.getDataFactCheck,
+    endpoints.getLatestAntihoax,
     queryParams,
     (response, dispatch, success) => {
       if (success) {

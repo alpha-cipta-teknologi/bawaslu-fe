@@ -2,10 +2,8 @@ import { GET_DATA_FACT_CHECK } from '../actionTypes'
 
 // ** Initial State
 const initialState = {
-  factCheckList: {
-    data: [],
-    total: 0
-  }
+  data: [],
+  total: 0
 }
 
 const factCheckReducer = (state = initialState, action) => {
@@ -13,15 +11,8 @@ const factCheckReducer = (state = initialState, action) => {
     case GET_DATA_FACT_CHECK:
       return {
         ...state,
-        factCheckList: action.data.page === 1
-          ? {
-            data: action.data.data,
-            total: action.data.total
-          }
-          : {
-            data: [...state.factCheckList.data, ...action.data.data],
-            total: action.data.total
-          }
+        data: action.data.data || [], // Memastikan struktur yang benar
+        total: action.data.total || 0
       }
     default:
       return state
@@ -29,3 +20,4 @@ const factCheckReducer = (state = initialState, action) => {
 }
 
 export default factCheckReducer
+

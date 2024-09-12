@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import ReCAPTCHA from 'react-google-recaptcha'
 
 import { AsyncSelect, Button, Input } from 'core/components'
 import { utils, hooks, toastify, validation } from 'utility'
@@ -111,6 +112,8 @@ const RegisterPage = () => {
   })
   const [showErrorInput, setShowErrorInput] = useState(false)
 
+  const [captchaToken, setCaptchaToken] = useState(null)
+
   useEffect(() => {
     getDataProvinces()
     getAllDataCommunity()
@@ -125,8 +128,17 @@ const RegisterPage = () => {
     }
   }, [selectedSelect.province_id.value])
 
+  const onCaptchaChange = (token) => {
+    setCaptchaToken(token) // Menyimpan token CAPTCHA
+  }
+
   const onSubmitRegister = event => {
     event.preventDefault()
+
+    if (!captchaToken) {
+      toastify.error('Please complete the CAPTCHA') // Validasi jika CAPTCHA belum diisi
+      return
+    }
 
     const isFormRegisterError = utils.isFormError(formRegisterInputProps, formRegister)
 
@@ -158,7 +170,8 @@ const RegisterPage = () => {
           ...selectedSelect.komunitas_id,
           value: +selectedSelect.komunitas_id.value
         },
-        tema_id: selectedSelect.tema_id.map(komunitas => +komunitas.value)
+        tema_id: selectedSelect.tema_id.map(komunitas => +komunitas.value),
+        captcha_token: captchaToken
       }
 
       // handle register dispatch
@@ -288,6 +301,12 @@ const RegisterPage = () => {
     return (
       <form className='grid gap-y-6' onSubmit={onSubmitRegister}>
         {formRegisterInputProps.map(form => renderInput(form))}
+
+        {/* Tambahkan reCAPTCHA di sini */}
+        <ReCAPTCHA
+          sitekey="6LcRGz4qAAAAAOjcgJSy9b0eMsA6PIhQM276D4RO"  // Ganti dengan site key dari Google reCAPTCHA
+          onChange={onCaptchaChange}
+        />
 
         <Button.ButtonPrimary
           sizing='w-full'
