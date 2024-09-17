@@ -171,7 +171,7 @@ const RegisterPage = () => {
           value: +selectedSelect.komunitas_id.value
         },
         tema_id: selectedSelect.tema_id.map(komunitas => +komunitas.value),
-        captcha_token: captchaToken
+        captcha: captchaToken
       }
 
       // handle register dispatch
@@ -304,7 +304,7 @@ const RegisterPage = () => {
 
         {/* Tambahkan reCAPTCHA di sini */}
         <ReCAPTCHA
-          sitekey="6LcRGz4qAAAAAOjcgJSy9b0eMsA6PIhQM276D4RO"  // Ganti dengan site key dari Google reCAPTCHA
+          sitekey="6LfhST4qAAAAAGeXNTARW8-LxVhEbnexBqEMxT2U"  // Ganti dengan site key dari Google reCAPTCHA
           onChange={onCaptchaChange}
         />
 
