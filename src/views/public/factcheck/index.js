@@ -1,227 +1,132 @@
-import React, { useCallback, useRef, useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useState, useEffect } from 'react'
+import { Button } from 'core/components'
 
-import { EmptyState, ModalImage, Spinner, Text } from 'core/components'
-import { actions } from 'store'
-import { hooks, utils } from 'utility'
-
-const rowsPerPage = 12
-
-const FactCheckPage = () => {
-  // ** Store & Actions
-  const lazyLoad = useSelector(state => state.misc).lazyLoad
-  const factCheckList = useSelector(state => state.factcheck).factCheckList
-
-  const getDataFactCheck = hooks.useCustomDispatch(actions.factcheck.getDataFactCheck)
-
-  const [isMounted, setIsMounted] = useState(false)
-  const [page, setPage] = useState(1)
-  const [hasMoreData, setHasMoreData] = useState(true)
-  const [showModalDetailCard, setShowModalDetailCard] = useState(false)
-  const [activeFact, setActiveFact] = useState(null)
-
-  const loading = utils.isLazyLoading(lazyLoad, 'getDataFactCheck') || !isMounted
-
-  const observer = useRef()
-  const lastElementRef = useCallback(node => {
-    if (loading) return
-
-    if (observer.current) observer.current.disconnect()
-    observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMoreData) {
-        setPage(prev => prev + 1)
-      }
-    })
-
-    if (node) observer.current.observe(node)
-  }, [loading, hasMoreData])
-
-  useEffect(() => {
-    const pageCount = Math.ceil(factCheckList?.total / rowsPerPage) || 1
-
-    if (page >= pageCount) {
-      setHasMoreData(false)
-    } else {
-      setHasMoreData(true)
+// Komponen untuk menampilkan artikel
+const Article = ({ article }) => {
+  const handleCardClick = () => {
+    if (article.references) {
+      window.open(article.references, '_blank', 'noopener,noreferrer') // Membuka referensi di tab baru
     }
-  }, [page, factCheckList?.total])
-
-  const fetchFactCheck = () => {
-    getDataFactCheck({
-      page,
-      perPage: rowsPerPage
-    }, () => {
-      if (!isMounted) setIsMounted(true)
-    })
   }
-
-  useEffect(() => {
-    fetchFactCheck()
-  }, [page])
-
-  const onClickShowModalDetailCard = (data) => {
-    setActiveFact(data)
-    setShowModalDetailCard(true)
-  }
-
-  const renderSpinner = () => {
-    return (
-      <div className='my-12.5 center-content'>
-        <Spinner sizing='w-7.5 h-7.5' />
-      </div>
-    )
-  }
-
-  const renderContentCard = data => {
-    return (
-      <>
-        <div className='bg-gray-200 group-hover:opacity-75 h-40 lg:h-52 cursor-pointer'>
-          <img
-            src={utils.getImageAPI(data.path_image || '')}
-            alt={data.judul}
-            className='h-full w-full object-cover object-center sm:h-full sm:w-full'
-          />
-        </div>
-        <div className='flex flex-1 flex-col space-y-2 p-4 cursor-pointer'>
-          <Text
-            weight='font-bold'
-            lineClamp='line-clamp-3'
-            cursor='cursor-pointer'
-          >
-            <span aria-hidden='true' className='absolute inset-0' />
-            {data.judul}
-          </Text>
-
-          <div className='flex flex-1 flex-col justify-end cursor-pointer'>
-            <Text size='text-sm' color='text-grey-dark'>Link Berita</Text>
-
-            <a
-              href={data.link_berita}
-              target='_blank'
-              rel='noopener noreferrer'
-              className='break-all'
-            >
-              <Text
-                size='text-sm'
-                weight='font-medium'
-                color='text-secondary'
-                underlineOnHover
-              >{data.link_berita}</Text>
-            </a>
-          </div>
-        </div>
-      </>
-    )
-  }
-
-  const renderFactCheckList = () => {
-    const factCheckData = factCheckList?.data || []
-    const cardClassName = 'group relative flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white cursor-pointer'
-
-    return (
-      <div className='grid grid-cols-1 gap-y-4 sm:grid-cols-2 md:grid-cols-3 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-4 lg:gap-x-8'>
-        {factCheckData.map((data, index) => {
-          const isLastElement = factCheckData?.length === index + 1
-
-          return isLastElement ? (
-            <div
-              key={data.id}
-              ref={lastElementRef}
-              className={cardClassName}
-              onClick={() => onClickShowModalDetailCard(data)}
-            >
-              {renderContentCard(data)}
-            </div>
-          ) : (
-            <div
-              key={data.id}
-              className={cardClassName}
-              onClick={() => onClickShowModalDetailCard(data)}
-            >
-              {renderContentCard(data)}
-            </div>
-          )
-        })}
-      </div>
-    )
-  }
-
-  const renderContent = () => {
-    const factCheckData = factCheckList?.data || []
-
-    if (!factCheckData?.length && !loading) {
-      return (
-        <div className='my-12.5'>
-          <EmptyState title='Hasil cek fakta belum tersedia' subtitle='Hasil cek fakta akan segera tersedia untuk Anda disini' />
-        </div>
-      )
-    }
-
-    return (
-      <div className='w-full'>
-        {!isMounted || (loading && page === 1)
-          ? renderSpinner()
-          : renderFactCheckList()
-        }
-
-        {loading
-          && isMounted
-          && page > 1
-          && renderSpinner()}
-      </div>
-    )
-  }
-
-  const renderModalDetail = () => {
-    const src = utils.getImageAPI(activeFact?.path_image || '')
-
-    return (
-      <ModalImage
-        src={src}
-        alt={activeFact?.judul}
-        open={showModalDetailCard}
-        setOpen={setShowModalDetailCard}
-        placementContent='top'
-        content={(
-          <div className='flex flex-1 flex-col gap-y-5 p-4'>
-            <Text size='text-lg' weight='font-bold'>
-              {activeFact?.judul}
-            </Text>
-
-            <div className='flex flex-col gap-1'>
-              <Text color='text-grey-dark'>Link Berita</Text>
-
-              <a
-                href={activeFact?.link_berita}
-                target='_blank'
-                rel='noopener noreferrer'
-                className='break-all'
-              >
-                <Text
-                  weight='font-medium'
-                  color='text-secondary'
-                  underlineOnHover
-                >{activeFact?.link_berita}</Text>
-              </a>
-            </div>
-          </div>
-        )}
-      />
-    )
-  }
-
   return (
-    <>
-      <div className='py-6 md:py-7'>
-        <Text weight='font-bold' size='text-2.5xl' spacing='mb-7'>Hasil Cek Fakta</Text>
+    <div className="border border-gray-200 rounded-lg shadow-sm p-3 bg-white h-full" onClick={handleCardClick} style={{ cursor: 'pointer' }}>
+      <h2 className="text-lg font-semibold text-gray-800 mb-1">{article.title}</h2>
+      <p className="text-sm text-gray-600 mb-1"><strong>Penulis:</strong> {article.authors}</p>
+      <p className="text-sm text-gray-600 mb-1"><strong>Status:</strong> {article.status}</p>
+      <p className="text-sm text-gray-600 mb-1"><strong>Klasifikasi:</strong> {article.classification}</p>
+      <p className="text-sm text-gray-600 mb-1"><strong>Tanggal:</strong> {article.tanggal}</p>
 
-        {renderContent()}
+      {/* Potong konten yang panjang */}
+      <p className="text-sm text-gray-600 mb-1 line-clamp-3">
+        <strong>Konten:</strong> {article.content}
+      </p>
 
-      </div>
+      <p className="text-sm text-blue-500 mb-1">
+        <strong>Sumber:</strong> <a href={article.source_link} className="hover:underline">{article.source_issue}</a>
+      </p>
 
-      {renderModalDetail()}
-    </>
+      {article.picture1 && (
+        <img
+          src={article.picture1}
+          alt="Gambar Artikel"
+          className="w-full h-40 object-cover mt-2 rounded-lg"
+        />
+      )}
+
+      <p className="text-sm text-gray-600 mt-2 line-clamp-2"><strong>Kesimpulan:</strong> {article.conclusion}</p>
+      <p className="text-sm text-blue-500 mt-1">
+        <strong>Referensi:</strong> <a href={article.references} target="_blank" rel="noopener noreferrer" className="hover:underline">Baca selengkapnya</a>
+      </p>
+    </div>
   )
 }
 
-export default FactCheckPage
+// Komponen untuk mengambil dan menampilkan data
+const FetchData = () => {
+  const [articles, setArticles] = useState([]) // Menyimpan daftar artikel
+  const [searchTerm, setSearchTerm] = useState("") // Menyimpan kata pencarian
+  const [loading, setLoading] = useState(false) // Menyimpan status loading
+  const [error, setError] = useState(null) // Menyimpan pesan error
+  
+
+  // Fungsi untuk mengambil data dari API berdasarkan kata kunci pencarian
+  const fetchData = async (keyword) => {
+    setLoading(true)
+    try {
+      const response = await fetch('https://yudistira.turnbackhoax.id/api/antihoax/search/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Accept: 'application/json'
+        },
+        body: new URLSearchParams({
+          key: '528b20z21xcdd30b0ac2',
+          method: 'content',
+          value: keyword, // Kata kunci dari input pencarian
+          limit: '5'
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+
+      const data = await response.json()
+      setArticles(data.data) // Menyimpan data artikel di state
+      // setArticles(dummyData)
+    } catch (error) {
+      setError(error.message) // Menyimpan pesan error
+    } finally {
+      setLoading(false) // Mengatur status loading menjadi false
+    }
+  }
+
+  // Fungsi untuk menangani pencarian ketika tombol ditekan
+  const handleSearch = () => {
+    if (searchTerm.trim()) {
+      fetchData(searchTerm)
+    }
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-6">
+      {/* Buat div ini menggunakan flex agar tetap satu baris */}
+      <div className="flex justify-between items-center mb-6 flex-wrap">
+        <h1 className="text-xl font-semibold text-gray-800 flex-none mr-6">Daftar Artikel</h1>
+
+        {/* Buat elemen input dan tombol search tetap sejajar */}
+        <div className="flex flex-grow space-x-2">
+          <input
+            type="text"
+            placeholder="Cari artikel..."
+            className="border border-gray-300 rounded-md p-2 w-full text-sm"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <Button.ButtonPrimary fontSize="text-sm" spacing="py-2 px-4" onClick={handleSearch}>
+            Search
+          </Button.ButtonPrimary>
+        </div>
+      </div>
+
+      {/* Tampilkan status loading atau error jika ada */}
+      {loading && <p>Loading...</p>}
+      {error && <p>Error: {error}</p>}
+
+      {/* Tampilkan artikel jika sudah selesai memuat */}
+      {!loading && !error && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {articles.length > 0 ? (
+            articles.map((article) => (
+              <Article key={article.id} article={article} />
+            ))
+          ) : (
+            <p>Search untuk memulai pencarian</p>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default FetchData

@@ -37,17 +37,17 @@ const initialState = {
       status: '',
       auth: false
     },
-    {
-      menu_id: 4,
-      menu_name: 'Galeri',
-      menu_icon: '',
-      module_name: 'gallery',
-      type_menu: '',
-      seq_number: 3,
-      parent_id: 0,
-      status: '',
-      auth: false
-    },
+    // {
+    //   menu_id: 4,
+    //   menu_name: 'Galeri',
+    //   menu_icon: '',
+    //   module_name: 'gallery',
+    //   type_menu: '',
+    //   seq_number: 3,
+    //   parent_id: 0,
+    //   status: '',
+    //   auth: false
+    // },
     {
       menu_id: 5,
       menu_name: 'Pengaduan',
