@@ -110,7 +110,7 @@ const LoginPage = () => {
 
         {/* Tambahkan komponen reCAPTCHA */}
         <ReCAPTCHA
-          sitekey="6LfhST4qAAAAAGeXNTARW8-LxVhEbnexBqEMxT2U"  // Ganti dengan site key dari Google reCAPTCHA
+          sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY} // Ganti dengan site key dari Google reCAPTCHA
           onChange={onCaptchaChange}
         />
 
