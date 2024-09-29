@@ -92,38 +92,41 @@ const FetchData = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      {!selectedArticle ? ( // Conditionally render article list or full view
+    <div className="container mx-auto px-6 py-8">
+      <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">Cek Kebenaran Informasi: Fakta atau Hoax?</h3>
+      {!selectedArticle ? (
         <>
-          <div className="flex justify-between items-center mb-6 flex-wrap">
-            <h1 className="text-xl font-semibold text-gray-800 flex-none mr-6">Daftar Artikel</h1>
-            <div className="flex flex-grow space-x-2">
+          <div className="flex justify-between items-center mb-8 flex-wrap">
+            {/* <div className="w-full md:w-auto mb-4 md:mb-0">
+              <h1 className="text-xl font-bold text-gray-800">Daftar Artikel</h1>
+            </div> */}
+            <div className="flex flex-grow space-x-3">
               <input
                 type="text"
                 placeholder="Cari artikel..."
-                className="border border-gray-300 rounded-md p-2 w-full text-sm"
+                className="border border-gray-300 rounded-md p-3 w-full text-base"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-              <Button.ButtonPrimary fontSize="text-sm" spacing="py-2 px-4" onClick={handleSearch}>
+              <Button.ButtonPrimary fontSize="text-base" spacing="py-3 px-5" onClick={handleSearch}>
                 Search
               </Button.ButtonPrimary>
             </div>
           </div>
 
           {loading && (
-            <div className="flex items-center justify-center flex-col h-full mt-12">
+            <div className="flex items-center justify-center h-full mt-12">
               <div className="animate-spin h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full mb-4"></div>
               <p className="text-lg text-gray-700 text-center">Memuat data, harap tunggu...</p>
             </div>
           )}
+
           {error && (
             <div className="flex items-center justify-center col-span-full">
-              <div className="text-center bg-red-100 p-6 rounded-lg border border-red-300 shadow-lg">
-                <h2 className="text-xl font-semibold text-red-600 mb-2">Error!</h2>
+              <div className="text-center bg-red-100 p-8 rounded-lg border border-red-300 shadow-md">
+                <h2 className="text-xl font-semibold text-red-600 mb-4">Error!</h2>
                 <p className="text-gray-600 mb-4">{error}</p>
-                <p className="text-sm text-gray-500">Silakan coba lagi nanti atau hubungi dukungan jika masalah terus berlanjut.</p>
-                <Button.ButtonPrimary onClick={() => setError(null)} spacing="py-2 px-4" className="mt-4">
+                <Button.ButtonPrimary onClick={() => setError(null)} spacing="py-3 px-5" className="mt-4">
                   Coba Lagi
                 </Button.ButtonPrimary>
               </div>
@@ -131,21 +134,21 @@ const FetchData = () => {
           )}
 
           {!loading && !error && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {articles.length > 0 ? (
                 articles.map((article) => (
-                  <ArticleThumbnail key={article.id} article={article} onClick={() => setSelectedArticle(article)} /> // Set selected article on click
+                  <ArticleThumbnail key={article.id} article={article} onClick={() => setSelectedArticle(article)} />
                 ))
               ) : (
                 <div className="flex items-center justify-center col-span-full">
-                  <div className="text-center bg-gray-100 p-6 rounded-lg border border-gray-300 shadow-lg">
+                  <div className="text-center bg-gray-100 p-8 rounded-lg border border-gray-300 shadow-md">
                     {noArticlesMessage ? (
                       <>
                         <h2 className="text-xl font-semibold text-gray-800 mb-2">Oops! Tidak ada artikel ditemukan.</h2>
                         <p className="text-gray-600 mb-4">
                           Cobalah untuk menggunakan kata kunci yang berbeda atau periksa kembali ejaan Anda.
                         </p>
-                        <Button.ButtonPrimary onClick={() => setSearchTerm("")} spacing="py-2 px-4" className="mt-4">
+                        <Button.ButtonPrimary onClick={() => setSearchTerm("")} spacing="py-3 px-5" className="mt-4">
                           Coba Lagi
                         </Button.ButtonPrimary>
                       </>
@@ -161,7 +164,7 @@ const FetchData = () => {
           )}
         </>
       ) : (
-        <FullArticleView article={selectedArticle} onBack={() => setSelectedArticle(null)} /> // Show full article view
+        <FullArticleView article={selectedArticle} onBack={() => setSelectedArticle(null)} />
       )}
     </div>
   )
