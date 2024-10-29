@@ -20,6 +20,8 @@ import BawasluUpdateDetailPage from './public/bawaslu_update/detail'
 import GalleryPage from './public/gallery'
 import ComplaintPage from './public/aduan'
 import FactCheckPage from './public/factcheck'
+import lembagaPage from './public/antar_lembaga/component'
+import FormKerjasama from './public/antar_lembaga/component/form_kerjasama'
 
 export {
   LoginPage,
@@ -43,5 +45,7 @@ export {
   BawasluUpdateDetailPage,
   GalleryPage,
   ComplaintPage,
-  FactCheckPage
+  FactCheckPage,
+  lembagaPage,
+  FormKerjasama
 }

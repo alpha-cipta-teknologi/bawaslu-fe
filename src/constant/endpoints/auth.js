@@ -36,5 +36,13 @@ export default {
   loginSSO: {
     path: '/auth/login-sso',
     method: 'POST'
+  },
+  getOTP: {
+    path: '/auth/otp',
+    method: 'POST'
+  },
+  verifyOTP: {
+    path: '/auth/verify-otp',
+    method: 'POST'
   }
 }

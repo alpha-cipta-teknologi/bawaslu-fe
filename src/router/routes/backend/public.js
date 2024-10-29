@@ -8,7 +8,9 @@ import {
   BawasluUpdateListPage,
   BawasluUpdateDetailPage,
   GalleryPage,
-  FactCheckPage
+  FactCheckPage,
+  lembagaPage,
+  FormKerjasama
 } from 'views'
 
 const PublicRoutes = [
@@ -84,6 +86,20 @@ const PublicRoutes = [
   {
     path: '/cek-fakta',
     component: FactCheckPage,
+    meta: {
+      publicRoute: true
+    }
+  },
+  {
+    path: '/hubungan-antar-lembaga',
+    component: lembagaPage,
+    meta: {
+      publicRoute: true
+    }
+  },
+  {
+    path: '/hubungan-antar-lembaga/form_kerja_sama',
+    component: FormKerjasama,
     meta: {
       publicRoute: true
     }

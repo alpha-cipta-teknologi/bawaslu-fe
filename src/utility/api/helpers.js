@@ -16,17 +16,17 @@ export const axiosRequest = async (endpoint, body) => {
   const method = endpoint.method
   const isFormData = endpoint.type === 'form-data'
   const contentType = isFormData ? 'multipart/form-data' : 'application/json; charset=utf-8'
-  const headers = {
-    Accept: 'application/json',
-    'Content-Type': contentType
-  }
+  // const headers = {
+  //   Accept: 'application/json',
+  //   'Content-Type': contentType
+  // }
   const requestBody = isFormData ? convertToFormData(body) : body
 
   try {
     const response = await axiosInstance.request({
       url,
       method,
-      headers,
+      // headers,
       data: (method !== 'GET' && requestBody) || undefined,
       params: (method === 'GET' && requestBody)
     })

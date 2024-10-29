@@ -1,3 +1,6 @@
+import { method } from "lodash"
+import { formAudience } from "views/public/antar_lembaga/store/action"
+
 export default {
   // ==== Global ====
   getDataSearchForumArticle: {
@@ -112,5 +115,25 @@ export default {
   getDataFactCheck: {
     path: '/fe/factcheck',
     method: 'GET'
+  },
+
+  formCollaboration: {
+    path: '/form/kerjasama',
+    method: 'POST'
+  },
+
+  formAudience: {
+    path: '/form/audiensi',
+    method: 'POST'
+  },
+
+  getBentukKerjasama: {
+    path: '/reff/bentuk-kerjasama/all-data',
+    method: 'GET'
+  },
+
+  lacakPengajuan: {
+    path: '/form/lacak-pengajuan',
+    method: 'POST'
   }
 }

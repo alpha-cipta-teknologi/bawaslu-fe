@@ -144,3 +144,49 @@ export const handleLoginSSO = (formLogin, callback = null) => {
     dispatch => dispatch(lazyLoadEnd('loginSSO'))
   )
 }
+
+export const getOTP = (formOTP, callback = null) => {
+  return api.request(
+    endpoints.getOTP,
+    formOTP,
+    (response, dispatch, success) => {
+      if (success) {
+        const { status, message } = response // Extracting status and message
+
+        if (status) {
+          if (callback) callback({ status: true, message }) // Call callback with success
+        } else {
+          if (callback) callback({ status: false, message: message || "Gagal mengirim OTP" }) // Use provided message if exists
+        }
+      } else {
+        if (callback) callback({ status: false, message: "Gagal mengirim OTP" }) // General failure message
+      }
+    },
+    null,
+    dispatch => dispatch(lazyLoadStart('getOTP')),
+    dispatch => dispatch(lazyLoadEnd('getOTP'))
+  )
+}
+
+export const verificationOTP = (formOTP, callback = null) => {
+  return api.request(
+    endpoints.verifyOTP,
+    formOTP,
+    (response, dispatch, success) => {
+      if (success) {
+        const { status, message } = response // Extracting status and message
+
+        if (status) {
+          if (callback) callback({ status: true, message }) // Call callback with success
+        } else {
+          if (callback) callback({ status: false, message: message || "Gagal Verifikasi OTP" }) // Use provided message if exists
+        }
+      } else {
+        if (callback) callback({ status: false, message: "Gagal Verifikasi OTP" }) // General failure message
+      }
+    },
+    null,
+    dispatch => dispatch(lazyLoadStart('getOTP')),
+    dispatch => dispatch(lazyLoadEnd('getOTP'))
+  )
+}

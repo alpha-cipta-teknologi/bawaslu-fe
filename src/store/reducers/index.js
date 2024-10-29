@@ -26,6 +26,9 @@ import home from 'views/public/home/store/reducer'
 import complaint from 'views/public/aduan/store/reducer'
 import factcheck from 'views/public/factcheck/store/reducer'
 
+// ** Antarlembaga Reducer (import this)
+import antarlembaga from 'views/public/antar_lembaga/store/reducer'
+
 import { history } from '../../history'
 
 const reducers = {
@@ -43,12 +46,13 @@ const reducers = {
   auth,
   profile,
   // ** Global FE
-  // forums,
   bawasluupdates,
   gallerys,
   home,
   complaint,
-  factcheck
+  factcheck,
+  // ** Add antarlembaga here
+  antarlembaga
 }
 
 const forumsPersistConfig = {

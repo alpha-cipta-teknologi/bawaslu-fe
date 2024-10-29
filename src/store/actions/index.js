@@ -18,6 +18,7 @@ import * as complaint from 'views/public/aduan/store/action'
 import * as factcheck from 'views/public/factcheck/store/action'
 
 import * as profile from 'views/private/profile/store/action'
+import * as antarlembaga from 'views/public/antar_lembaga/store/action'
 
 const actions = {
   // ** Layout & Nav
@@ -39,7 +40,8 @@ const actions = {
   gallerys,
   home,
   complaint,
-  factcheck
+  factcheck,
+  antarlembaga
 }
 
 export default actions

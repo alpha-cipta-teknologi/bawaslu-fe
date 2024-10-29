@@ -26,17 +26,17 @@ const initialState = {
       status: '',
       auth: false
     },
-    {
-      menu_id: 3,
-      menu_name: 'Bawaslu Update',
-      menu_icon: '',
-      module_name: 'bawaslu-update',
-      type_menu: '',
-      seq_number: 2,
-      parent_id: 0,
-      status: '',
-      auth: false
-    },
+    // {
+    //   menu_id: 3,
+    //   menu_name: 'Bawaslu Update',
+    //   menu_icon: '',
+    //   module_name: 'bawaslu-update',
+    //   type_menu: '',
+    //   seq_number: 2,
+    //   parent_id: 0,
+    //   status: '',
+    //   auth: false
+    // },
     // {
     //   menu_id: 4,
     //   menu_name: 'Galeri',
@@ -66,6 +66,17 @@ const initialState = {
       module_name: 'cek-fakta',
       type_menu: '',
       seq_number: 5,
+      parent_id: 0,
+      status: '',
+      auth: false
+    },
+    {
+      menu_id: 7,
+      menu_name: 'Antar Lembaga',
+      menu_icon: '',
+      module_name: 'hubungan-antar-lembaga',
+      type_menu: '',
+      seq_number: 6,
       parent_id: 0,
       status: '',
       auth: false
