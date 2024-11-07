@@ -49,53 +49,51 @@ const LacakPengajuan = () => {
                 <div className="results flex flex-wrap gap-8 mt-5">
                     <div className="general-info flex-1 p-6 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-300">
                         <h3 className="text-2xl font-semibold text-primary mb-4">Informasi Pengajuan</h3>
-                        <p className="text-base font-medium text-gray-700">
+                        <p className="text-base font-medium text-gray-700 mb-2">
                             <strong>No. Register:</strong> <span className="font-normal">{results.no_register}</span>
                         </p>
-                        <p className="text-base font-medium text-gray-700">
+                        <p className="text-base font-medium text-gray-700 mb-2">
                             <strong>Nama Lembaga:</strong> <span className="font-normal">{results.nama_lembaga}</span>
                         </p>
-                        <p className="text-base font-medium text-gray-700">
+                        <p className="text-base font-medium text-gray-700 mb-2">
                             <strong>Nama PIC:</strong> <span className="font-normal">{results.pic_name}</span>
                         </p>
-                        <p className="text-base font-medium text-gray-700">
+                        <p className="text-base font-medium text-gray-700 mb-2">
                             <strong>Email PIC:</strong> <span className="font-normal">{results.pic_email}</span>
                         </p>
-                        <p className="text-base font-medium text-gray-700">
+                        <p className="text-base font-medium text-gray-700 mb-2">
                             <strong>No. Telepon PIC:</strong> <span className="font-normal">{results.pic_phone}</span>
                         </p>
                         {results.nama_kerjasama && (
-                            <p className="text-base font-medium text-gray-700">
+                            <p className="text-base font-medium text-gray-700 mb-2">
                                 <strong>Jenis Kerjasama:</strong> <span className="font-normal">{results.nama_kerjasama}</span>
                             </p>
                         )}
-                        {results.perihal_audiensi && (
-                            <p className="text-base font-medium text-gray-700">
+                        {results.perihal_audiensi && ( 
+                            <p className="text-base font-medium text-gray-700 mb-2">
                                 <strong>Perihal Audiensi:</strong> <span className="font-normal">{results.perihal_audiensi}</span>
                             </p>
                         )}
                         {results.waktu_audiensi && (
-                            <p className="text-base font-medium text-gray-700">
+                            <p className="text-base font-medium text-gray-700 mb-2">
                                 <strong>Waktu Audiensi:</strong> <span className="font-normal">{new Date(results.waktu_audiensi).toLocaleString()}</span>
                             </p>
                         )}
                         {results.konfirmasi_waktu_audiensi !== null && (
-                            <p className="text-base font-medium text-gray-700">
-                                <strong>Konfirmasi Waktu Audiensi:</strong> <span className={`font-normal ${results.konfirmasi_waktu_audiensi ? 'text-green-600' : 'text-red-600'}`}>
-                                    {results.konfirmasi_waktu_audiensi ? 'Sudah dikonfirmasi' : 'Belum dikonfirmasi'}
-                                </span>
+                            <p className="text-base font-medium text-gray-700 mb-2">
+                                <strong>Konfirmasi Audiensi:</strong> <span className="font-normal">{new Date(results.konfirmasi_waktu_audiensi).toLocaleString()}</span>
                             </p>
                         )}
-                        <p className="text-base font-medium text-gray-700">
+                        <p className="text-base font-medium text-gray-700 mb-2">
                             <strong>Provinsi:</strong> <span className="font-normal">{results.province.name}</span>
                         </p>
-                        <p className="text-base font-medium text-gray-700">
+                        <p className="text-base font-medium text-gray-700 mb-2">
                             <strong>Kabupaten/Kota:</strong> <span className="font-normal">{results.regency.name}</span>
                         </p>
                         {/* <p className="text-base font-medium text-gray-700">
                             <strong>Status Pengajuan:</strong> <span className="font-normal">{results.status}</span>
                         </p> */}
-                        <p className="text-base font-medium text-gray-700">
+                        <p className="text-base font-medium text-gray-700 mb-2">
                             <strong>Tanggal Dibuat:</strong> <span className="font-normal">{new Date(results.created_date).toLocaleDateString()}</span>
                         </p>
                     </div>
@@ -121,7 +119,7 @@ const LacakPengajuan = () => {
                         )}
                     </div>
 
-                    {results.attachment.length > 0 && (
+                    {/* {results.attachment.length > 0 && (
                         <div className="attachments p-6 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-300">
                             <h3 className="text-2xl font-semibold text-primary mb-4">Lampiran</h3>
                             {results.attachment.map((attachment, index) => (
@@ -132,7 +130,7 @@ const LacakPengajuan = () => {
                                 </p>
                             ))}
                         </div>
-                    )}
+                    )} */}
                 </div>
             )}
 
