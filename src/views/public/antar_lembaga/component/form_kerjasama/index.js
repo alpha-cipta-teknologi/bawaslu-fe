@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { AsyncSelect, Button, Input } from 'core/components'
+import { Button, Input } from 'core/components'
 import { hooks, toastify } from 'utility'
 import { toast, ToastContainer } from 'react-toastify'
 import { actions } from 'store'
 import { images } from 'constant'
+import AsyncSelect from 'react-select/async'
 
 const initialSelect = {
   value: '',
@@ -18,10 +19,12 @@ const FormKerjasama = ({ onBackClick }) => {
   const getBentukKerjasama = hooks.useCustomDispatch(actions.antarlembaga.getBentukKerjasama)
   const getOTP = hooks.useCustomDispatch(actions.auth.getOTP)
   const verificationOTP = hooks.useCustomDispatch(actions.auth.verificationOTP)
+  const getPengajuanKe = hooks.useCustomDispatch(actions.params.getPengajuanKe)
 
   const allProvinces = useSelector(state => state.areas.allProvinces)
   const dataRegencies = useSelector(state => state.areas.dataRegencies)
   const listKerjasama = useSelector(state => state.antarlembaga).listKerjasama
+  const pengajuanKe = useSelector(state => state.params.pengajuanKe)
 
   const [formData, setFormData] = useState({
     nama_lembaga: '',
@@ -33,6 +36,7 @@ const FormKerjasama = ({ onBackClick }) => {
     regency_id: initialSelect,
     keterangan_attach: [],
     attachs: [],
+    pengajuan_ke: '',
     otp: ''
   })
 
@@ -56,6 +60,12 @@ const FormKerjasama = ({ onBackClick }) => {
       getDataRegenciesByProvince(province_id)
     }
   }, [formData.province_id.value])
+
+  useEffect(() => {
+    getPengajuanKe((data) => {
+      setOptions(data)  // Menghentikan status loading
+    })
+  }, [getPengajuanKe])
 
   const startOtpTimer = () => {
     setOtpTimer(180)
@@ -93,7 +103,7 @@ const FormKerjasama = ({ onBackClick }) => {
 
   const verifyOTP = () => {
     if (!formData.pic_email || !formData.otp) {
-      toast.error("Please enter your email and OTP to verify.")
+      toast.error("Harap isi email terlebih dahulu sebelum melakukan get OTP.")
       return
     }
 
@@ -119,10 +129,10 @@ const FormKerjasama = ({ onBackClick }) => {
     })
   }
 
-  const handleChange = (e) => {
+  const handleChange = (event) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [event.target.name]: event.target.value
     })
   }
 
@@ -130,7 +140,7 @@ const FormKerjasama = ({ onBackClick }) => {
     e.preventDefault()
 
     if (!isOtpVerified) {
-      alert("Please verify your OTP before submitting the form.")
+      alert("Harap verifikasi OTP dahulu sebelum submit.")
       return
     }
 
@@ -156,6 +166,7 @@ const FormKerjasama = ({ onBackClick }) => {
     dataToSubmit.append('pic_phone', formData.pic_phone)
     dataToSubmit.append('pic_email', formData.pic_email)
     dataToSubmit.append('otp', formData.otp)
+    dataToSubmit.append('pengajuan_ke', formData.pengajuan_ke)
 
     // Append select fields as JSON strings
     const appendSelectField = (key) => {
@@ -170,12 +181,14 @@ const FormKerjasama = ({ onBackClick }) => {
     appendSelectField('province_id')
     appendSelectField('regency_id')
 
-    // Append files and descriptions
-    const keteranganArray = selectedFile.map(file => file.name)
-    selectedFile.forEach((file) => {
-      dataToSubmit.append('attachs', file) // Append each file
-    })
-    dataToSubmit.append('keterangan_attach', JSON.stringify(keteranganArray)) // Append descriptions as JSON array
+    // Append files and descriptions only if selectedFile is not empty
+    if (selectedFile && selectedFile.length > 0) {
+      const keteranganArray = selectedFile.map(file => file.name)
+      selectedFile.forEach((file) => {
+        dataToSubmit.append('attachs', file) // Append each file
+      })
+      dataToSubmit.append('keterangan_attach', JSON.stringify(keteranganArray)) // Append descriptions as JSON array
+    }
 
     // Submit form data
     formCollaboration(dataToSubmit, (success) => {
@@ -220,6 +233,9 @@ const FormKerjasama = ({ onBackClick }) => {
           value={formData[keyName]}
           onChange={value => onChangeSelect(value, keyName)}
           loadOptions={inputValue => promiseSelect(inputValue, keyName)}
+          defaultOptions={keyName === 'province_id' ? allProvinces :
+            keyName === 'regency_id' ? dataRegencies :
+              []}
         />
       )
     }
@@ -285,6 +301,27 @@ const FormKerjasama = ({ onBackClick }) => {
       </div>
 
       <div className="mb-4">
+        <label htmlFor="pengajuan_ke" className="block text-sm font-medium text-gray-700 mb-2">Pengajuan Kepada</label>
+        <select
+          name="pengajuan_ke"
+          id="pengajuan_ke"
+          value={formData.pengajuan_ke}
+          onChange={handleChange}
+          className="w-full border border-gray-300 p-2 rounded-md"
+          required // Menonaktifkan select saat data sedang dimuat
+        >
+          <option value="">Pilih Pengajuan Kepada</option>
+          {
+            pengajuanKe.map((option) => (
+              <option key={option.id} value={option.id}>
+                {option.name}
+              </option>
+            ))
+          }
+        </select>
+      </div>
+
+      <div className="mb-4">
         <label htmlFor="bentuk_kerjasama" className="block text-sm font-medium text-gray-700 mb-2">Bentuk kerjasama</label>
         {renderInput({ name: 'bentuk_kerjasama' })}
       </div>
@@ -300,8 +337,19 @@ const FormKerjasama = ({ onBackClick }) => {
       </div>
 
       <div className="mb-4">
-        <label htmlFor="file" className="block text-sm font-medium text-gray-700 mb-2">Lampirkan Dokumen</label>
-        <input type="file" id="file" multiple onChange={handleFileChange} accept=".pdf, .xls, .xlsx" />
+        <label htmlFor="file" className="block text-sm font-medium text-gray-700 mb-2">
+          Lampirkan Dokumen
+        </label>
+        <input
+          type="file"
+          id="file"
+          multiple
+          onChange={handleFileChange}
+          accept=".pdf, .xls, .xlsx, .doc, .docx, .ppt, .pptx"
+        />
+        <small className="text-gray-500 mt-1 block">
+          Hanya file PDF, Excel (.xls, .xlsx), Word (.doc, .docx), dan PowerPoint (.ppt, .pptx) yang diperbolehkan.
+        </small>
       </div>
 
       {/* OTP */}

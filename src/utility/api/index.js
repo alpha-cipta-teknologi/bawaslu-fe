@@ -22,6 +22,27 @@ export default {
 
           const result = await axiosRequest(endpoint, body)
 
+          // ======== Check for "Data Not Found" condition ========
+          if (result.message === "Data not found") {
+            // Jika data tidak ditemukan, tampilkan pesan info menggunakan toastify
+            toastify.info('Tidak ada data yang ditemukan sesuai dengan pencarian Anda.', {
+              autoClose: 3000,
+              hideProgressBar: true
+            })
+
+            // Dispatch dengan data kosong
+            dispatch({
+              type: 'SET_PROGRESS',
+              data: -1
+            })
+
+            // Panggil callback jika ada
+            if (typeof successFunction === 'function') {
+              successFunction([], dispatch, false, getState)
+            }
+            return false
+          }
+
           // ======== Success or Error Handler ========
           if (result.code === 200) {
             // ======== Execute Success dispatch ========
@@ -50,7 +71,10 @@ export default {
             await postFunction(dispatch)
           }
 
-          toastify.error('Maaf, terjadi kesalahan. Silakan muat ulang halaman beberapa saat lagi')
+          toastify.error('Maaf, terjadi kesalahan. Silakan muat ulang halaman beberapa saat lagi', {
+            autoClose: 5000,
+            hideProgressBar: true
+          })
 
           dispatch({
             type: 'SET_PROGRESS',

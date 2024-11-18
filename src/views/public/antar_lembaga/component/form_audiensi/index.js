@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
-import { AsyncSelect, Button, Input } from 'core/components'
+import { Button, Input } from 'core/components'
 import { hooks, toastify } from 'utility'
+import AsyncSelect from 'react-select/async'
 import { toast, ToastContainer } from 'react-toastify' // Import toast and ToastContainer
 import 'react-toastify/dist/ReactToastify.css'
 import { actions } from 'store'
 import { images } from 'constant'
+import { getProvince, getRegency } from '../../store/action'
+import { getPengajuanKe } from '../../../../../store/actions/params'
+
 
 const initialSelect = {
     value: '',
@@ -19,11 +23,14 @@ const AudienciForm = ({ onBackClick }) => {
     const getDataRegencies = hooks.useCustomDispatch(actions.areas.getDataRegencies)
     const getDataRegenciesByProvince = hooks.useCustomDispatch(actions.areas.getDataRegenciesByProvince)
     const formAudience = hooks.useCustomDispatch(actions.antarlembaga.formAudience)
+    const getPengajuanKe = hooks.useCustomDispatch(actions.params.getPengajuanKe)
 
     const allProvinces = useSelector(state => state.areas.allProvinces)
     const dataRegencies = useSelector(state => state.areas.dataRegencies)
+    const pengajuanKe = useSelector(state => state.params.pengajuanKe)
     const [isOtpVerified, setIsOtpVerified] = useState(false)
     const [isOtpSent, setIsOtpSent] = useState(false)
+    const [options, setOptions] = useState([])
 
     const [selectedFile, setSelectedFile] = useState(null)
 
@@ -39,6 +46,7 @@ const AudienciForm = ({ onBackClick }) => {
         regency_id: initialSelect,
         keterangan_attach: [],
         attachs: null,
+        pengajuan_ke: '',
         otp: ''
     })
 
@@ -50,6 +58,21 @@ const AudienciForm = ({ onBackClick }) => {
     useEffect(() => {
         getDataProvinces()
     }, [])
+
+    useEffect(() => {
+        console.log("Regencies data:", dataRegencies) // Check if regencies data is updated
+    }, [dataRegencies])
+
+    useEffect(() => {
+        // Memanggil action ketika komponen di-mount
+        getPengajuanKe(responseData => {
+            // Callback untuk menangani data jika diperlukan
+            console.log(responseData)
+
+        })
+        console.log("TES", pengajuanKe)
+    }, [getPengajuanKe])
+
 
     useEffect(() => {
         if (+formData.province_id.value > 0) {
@@ -66,19 +89,26 @@ const AudienciForm = ({ onBackClick }) => {
     }
 
     const handleFileChange = (e) => {
-        const files = Array.from(e.target.files) // Ubah ke array untuk pemrosesan lebih lanjut
-        const allowedTypes = ['application/pdf', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
+        const files = Array.from(e.target.files) // Konversi ke array untuk pemrosesan lebih lanjut
+        const allowedTypes = [
+            'application/pdf',
+            'application/vnd.ms-excel', // .xls
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+            'application/msword', // .doc
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+            'application/vnd.ms-powerpoint', // .ppt
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation' // .pptx
+        ]
 
         // Filter file yang sesuai dengan tipe yang diizinkan
         const filteredFiles = files.filter(file => allowedTypes.includes(file.type))
 
         if (filteredFiles.length < files.length) {
-            // alert("Hanya file PDF dan Excel yang diperbolehkan.")
-            toast.error("Hanya file PDF dan Excel yang diperbolehkan.")
+            toast.error("Hanya file PDF, Excel, Word, dan PowerPoint yang diperbolehkan.")
         }
 
         setSelectedFile(filteredFiles) // Menyimpan hanya file yang sesuai ke state
-        console.log(filteredFiles) // Untuk debugging, pastikan hanya file yang sesuai yang terbaca
+        console.log(filteredFiles) // Debugging, memastikan hanya file yang sesuai
     }
 
     const handleSubmit = (e) => {
@@ -113,6 +143,7 @@ const AudienciForm = ({ onBackClick }) => {
         formDataToSubmit.append('perihal_audiensi', formData.perihal_audiensi)
         formDataToSubmit.append('waktu_audiensi', formData.waktu_audiensi)
         formDataToSubmit.append('otp', formData.otp)
+        formDataToSubmit.append('pengajuan_ke', formData.pengajuan_ke)
 
         // Mengirimkan province_id dan regency_id dalam format yang diinginkan
         formDataToSubmit.append('province_id', JSON.stringify({ value: formData.province_id.value, label: formData.province_id.label }))
@@ -231,6 +262,9 @@ const AudienciForm = ({ onBackClick }) => {
                     value={formData[keyName]}
                     onChange={value => onChangeSelect(value, keyName)}
                     loadOptions={inputValue => promiseSelect(inputValue, keyName)}
+                    defaultOptions={keyName === 'province_id' ? allProvinces :
+                        keyName === 'regency_id' ? dataRegencies :
+                            []} // Use options instead of defaultOptions
                 />
             )
         }
@@ -344,6 +378,28 @@ const AudienciForm = ({ onBackClick }) => {
                 />
             </div>
 
+            {/* Pemgajuan ke */}
+            <div className="mb-4">
+                <label htmlFor="pengajuan_ke" className="block text-sm font-medium text-gray-700 mb-2">Pengajuan Kepada</label>
+                <select
+                    name="pengajuan_ke"
+                    id="pengajuan_ke"
+                    value={formData.pengajuan_ke}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 p-2 rounded-md"
+                    required // Menonaktifkan select saat data sedang dimuat
+                >
+                    <option value="">Pilih Pengajuan Kepada</option>
+                    {
+                        pengajuanKe.map((option) => (
+                            <option key={option.id} value={option.id}>
+                                {option.name}
+                            </option>
+                        ))
+                    }
+                </select>
+            </div>
+
             {/* Date and Time Input */}
             <div className="mb-4">
                 <label className="block text-gray-700 font-medium mb-2" htmlFor="waktu_audiensi">
@@ -362,10 +418,19 @@ const AudienciForm = ({ onBackClick }) => {
 
             {/* Upload File*/}
             <div className="mb-4">
-                <label className="block text-gray-700 font-medium mb-2" htmlFor="attchs">
-                    Lampirkan document
+                <label htmlFor="file" className="block text-sm font-medium text-gray-700 mb-2">
+                    Lampirkan Dokumen
                 </label>
-                <input type="file" multiple accept=".pdf, .xls, .xlsx" onChange={handleFileChange} />
+                <input
+                    type="file"
+                    id="file"
+                    multiple
+                    onChange={handleFileChange}
+                    accept=".pdf, .xls, .xlsx, .doc, .docx, .ppt, .pptx"
+                />
+                <small className="text-gray-500 mt-1 block">
+                    Hanya file PDF, Excel (.xls, .xlsx), Word (.doc, .docx), dan PowerPoint (.ppt, .pptx) yang diperbolehkan.
+                </small>
             </div>
 
             {/* OTP */}
@@ -383,10 +448,12 @@ const AudienciForm = ({ onBackClick }) => {
                         className="w-24 border border-gray-300 p-2 text-center rounded-md"
                         required
                     />
-                    <button onClick={handleGetOTP} disabled={isOtpDisabled} className="bg-blue-500 text-white px-4 py-2 rounded-md">
-                        {isOtpDisabled ? `Resend OTP in ${Math.floor(otpTimer / 60)}:${(otpTimer % 60).toString().padStart(2, '0')}` : "Get OTP"}
-                    </button>
-                    {isOtpSent && ( // Tampilkan tombol hanya jika OTP berhasil dikirim
+                    {!isOtpVerified && ( // Only show "Get OTP" button if OTP is not verified
+                        <button onClick={handleGetOTP} disabled={isOtpDisabled} className="bg-blue-500 text-white px-4 py-2 rounded-md">
+                            {isOtpDisabled ? `Resend OTP in ${Math.floor(otpTimer / 60)}:${(otpTimer % 60).toString().padStart(2, '0')}` : "Get OTP"}
+                        </button>
+                    )}
+                    {isOtpSent && !isOtpVerified && ( // Only show "Verify OTP" button if OTP is sent but not verified
                         <button
                             type="button"
                             onClick={verifyOTP}

@@ -85,3 +85,39 @@ export const getReportArticleCategories = (callback = null) => {
     dispatch => dispatch(lazyLoadEnd('getReportArticleCategories'))
   )
 }
+
+export const getPengajuanKe = (callback = null) => {
+  const queryParams = { key: 'FORM_APPROVAL' }  // Mengganti param_key dengan key yang sesuai
+
+  return api.request(
+    endpoints.getPengajuanKe,
+    queryParams,
+    (response, dispatch, success) => {
+      if (success) {
+        dispatch({
+          type: 'GET_PENGAJUAN_KE',
+          data: response.data  // pastikan response data yang digunakan
+        })
+
+        if (callback) callback(response.data)
+      } else {
+        dispatch({
+          type: 'GET_PENGAJUAN_KE',
+          data: []
+        })
+
+        if (callback) callback([])
+      }
+    },
+    (response, dispatch) => {
+      dispatch({
+        type: 'GET_PENGAJUAN_KE',
+        data: []
+      })
+
+      if (callback) callback([])
+    },
+    dispatch => dispatch(lazyLoadStart('getPengajuanKe')),
+    dispatch => dispatch(lazyLoadEnd('getPengajuanKe'))
+  )
+} 

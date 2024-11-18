@@ -135,5 +135,10 @@ export default {
   lacakPengajuan: {
     path: '/form/lacak-pengajuan',
     method: 'POST'
+  },
+
+  getDocMou: {
+    path: '/form/pengajuan/mou',
+    method: 'GET'
   }
 }

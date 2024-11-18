@@ -1,6 +1,7 @@
 const initState = {
   complaintCategories: [],
-  reportArticleCategories: []
+  reportArticleCategories: [],
+  pengajuanKe: []  // Tambahkan properti baru untuk menyimpan data pengajuan
 }
 
 const paramsReducer = (state = initState, action) => {
@@ -15,6 +16,20 @@ const paramsReducer = (state = initState, action) => {
       return {
         ...state,
         reportArticleCategories: action.data
+      }
+
+    case 'GET_PENGAJUAN_KE':
+      // Memproses data agar dipisahkan berdasarkan "|"
+      const pengajuanKeData = action.data.param_value.split('|').map((value, index) => {
+        return {
+          id: value,  // id dari param_value
+          name: action.data.param_desc.split('|')[index] // name dari param_desc
+        }
+      })
+
+      return {
+        ...state,
+        pengajuanKe: pengajuanKeData  // Menyimpan data yang sudah diproses ke dalam state
       }
 
     case 'LOGOUT':

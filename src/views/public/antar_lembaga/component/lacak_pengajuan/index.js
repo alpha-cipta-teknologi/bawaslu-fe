@@ -3,7 +3,7 @@ import { Button, Input, Skeleton } from 'core/components'
 import { actions } from 'store'
 import { hooks, toastify } from 'utility'
 
-const LacakPengajuan = () => {
+const LacakPengajuan = ({ onBackClick }) => {
     const lacakPengajuan = hooks.useCustomDispatch(actions.antarlembaga.lacakPengajuan)
 
     const [searchQuery, setSearchQuery] = useState('')
@@ -26,6 +26,7 @@ const LacakPengajuan = () => {
 
     return (
         <div className="container mx-auto px-6 py-8">
+            <Button.ButtonSecondary onClick={onBackClick} className="mb-4">Kembali</Button.ButtonSecondary>
             <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Lacak Pengajuan Anda</h2>
 
             <div className="flex flex-grow space-x-3">
@@ -69,7 +70,7 @@ const LacakPengajuan = () => {
                                 <strong>Jenis Kerjasama:</strong> <span className="font-normal">{results.nama_kerjasama}</span>
                             </p>
                         )}
-                        {results.perihal_audiensi && ( 
+                        {results.perihal_audiensi && (
                             <p className="text-base font-medium text-gray-700 mb-2">
                                 <strong>Perihal Audiensi:</strong> <span className="font-normal">{results.perihal_audiensi}</span>
                             </p>

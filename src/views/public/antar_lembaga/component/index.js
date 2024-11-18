@@ -2,50 +2,42 @@ import { images } from 'constant'
 import CollaborationForm from './form_kerjasama'
 import AudiensiForm from './form_audiensi' // Import AudiensiForm component
 import LacakPengajuan from './lacak_pengajuan' // Import AudiensiForm component
-import React, { useState } from 'react'
+import DataMou from './history_mou' // Import AudiensiForm component
+import React, { useState, useEffect } from 'react'
 import { Button, Text, Skeleton, VideoPlayer, Modal, ModalLoader, TextHTML } from 'core/components'
 
 const LembagaPage = () => {
-    const [showForm, setShowForm] = useState(false)
-    const [showAudiensiForm, setShowAudiensiForm] = useState(false)
-    const [showLacakPengajuan, setShowLacakPengajuan] = useState(false) // State to control LacakPengajuan visibility
+    const [activeForm, setActiveForm] = useState(null) // Track which form is active
 
-    // Function to handle button click and show the Collaboration Form
-    const handleFormClick = () => {
-        setShowForm(true)
-        setShowAudiensiForm(false)
-        setShowLacakPengajuan(false)
+    useEffect(() => {
+        // Check local storage on mount and set the active form
+        const savedForm = localStorage.getItem('activeForm')
+        if (savedForm) {
+            setActiveForm(savedForm)
+        }
+    }, [])
+
+    // Update local storage and state when showing a form
+    const showForm = (formName) => {
+        setActiveForm(formName)
+        localStorage.setItem('activeForm', formName)
     }
 
-    // Function to handle button click and show the Audiensi Form
-    const handleAudiensiFormClick = () => {
-        setShowAudiensiForm(true)
-        setShowForm(false)
-        setShowLacakPengajuan(false)
-    }
-
-    // Function to handle button click and show the LacakPengajuan component
-    const handleLacakPengajuanClick = () => {
-        setShowLacakPengajuan(true)
-        setShowForm(false)
-        setShowAudiensiForm(false)
-    }
-
-    // Function to handle returning to the main page from all components
     const handleBackClick = () => {
-        setShowForm(false)
-        setShowAudiensiForm(false)
-        setShowLacakPengajuan(false)
+        setActiveForm(null)
+        localStorage.removeItem('activeForm')
     }
 
     return (
         <div className="min-h-screen p-4">
-            {showForm ? (
+            {activeForm === 'CollaborationForm' ? (
                 <CollaborationForm onBackClick={handleBackClick} />
-            ) : showAudiensiForm ? (
+            ) : activeForm === 'AudiensiForm' ? (
                 <AudiensiForm onBackClick={handleBackClick} />
-            ) : showLacakPengajuan ? (
+            ) : activeForm === 'LacakPengajuan' ? (
                 <LacakPengajuan onBackClick={handleBackClick} />
+            ) : activeForm === 'DataMou' ? (
+                <DataMou onBackClick={handleBackClick} />
             ) : (
                 // Show the rest of the content when `showForm` and `showAudiensiForm` are false
                 <>
@@ -56,13 +48,22 @@ const LembagaPage = () => {
                                 Berikut adalah layanan pengajuan kerjasama dan audiensi kepada Bawaslu
                             </p>
                         </div>
-                        <Button.ButtonPrimary
-                            spacing='py-3 px-5'
-                            fontSize='text-sm'
-                            onClick={handleLacakPengajuanClick}
-                        >
-                            Lacak Pengajuan
-                        </Button.ButtonPrimary>
+                        <div className="flex space-x-2">
+                            <Button.ButtonPrimary
+                                spacing="py-3 px-5"
+                                fontSize="text-sm"
+                                onClick={() => showForm('LacakPengajuan')}
+                            >
+                                Lacak Pengajuan
+                            </Button.ButtonPrimary>
+                            <Button.ButtonPrimary
+                                spacing="py-3 px-5"
+                                fontSize="text-sm"
+                                onClick={() => showForm('DataMou')}
+                            >
+                                Doc MOU
+                            </Button.ButtonPrimary>
+                        </div>
                     </header>
 
                     <div className="flex justify-center space-x-4">
@@ -111,8 +112,8 @@ const LembagaPage = () => {
                             <Button.ButtonPrimary
                                 spacing='py-3 px-5'
                                 fontSize='text-sm'
-                                onClick={handleFormClick}
-                            >Isi Formulir</Button.ButtonPrimary>
+                                onClick={() => showForm('CollaborationForm')}
+                            >Isi Formulir Kerjasama</Button.ButtonPrimary>
                         </div>
 
                         {/* Layanan Pengajuan Audiensi */}
@@ -160,7 +161,7 @@ const LembagaPage = () => {
                             <Button.ButtonPrimary
                                 spacing='py-3 px-5'
                                 fontSize='text-sm'
-                                onClick={handleAudiensiFormClick}
+                                onClick={() => showForm('AudiensiForm')}
                             >Isi Formulir Audiensi</Button.ButtonPrimary>
                         </div>
                     </div>
