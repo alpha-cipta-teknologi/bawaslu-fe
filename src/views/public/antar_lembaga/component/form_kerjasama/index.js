@@ -6,6 +6,7 @@ import { toast, ToastContainer } from 'react-toastify'
 import { actions } from 'store'
 import { images } from 'constant'
 import AsyncSelect from 'react-select/async'
+import { CheckIcon } from '@heroicons/react/24/outline'
 
 const initialSelect = {
   value: '',
@@ -367,10 +368,14 @@ const FormKerjasama = ({ onBackClick }) => {
             className="w-24 border border-gray-300 p-2 text-center rounded-md"
             required
           />
-          <button onClick={handleGetOTP} disabled={isOtpDisabled} className="bg-blue-500 text-white px-4 py-2 rounded-md">
-            {isOtpDisabled ? `Resend OTP in ${Math.floor(otpTimer / 60)}:${(otpTimer % 60).toString().padStart(2, '0')}` : "Get OTP"}
-          </button>
-          {isOtpSent && ( // Tampilkan tombol hanya jika OTP berhasil dikirim
+
+          {!isOtpVerified && (
+            <button onClick={handleGetOTP} disabled={isOtpDisabled} className="bg-blue-500 text-white px-4 py-2 rounded-md">
+              {isOtpDisabled ? `Resend OTP in ${Math.floor(otpTimer / 60)}:${(otpTimer % 60).toString().padStart(2, '0')}` : "Get OTP"}
+            </button>
+          )}
+
+          {isOtpSent && !isOtpVerified && ( // Tampilkan tombol hanya jika OTP berhasil dikirim
             <button
               type="button"
               onClick={verifyOTP}
@@ -378,6 +383,9 @@ const FormKerjasama = ({ onBackClick }) => {
             >
               Verify OTP
             </button>
+          )}
+          {isOtpVerified && (
+            <p className="text-green-500 mt-2 text-sm">Verifikasi OTP berhasil</p>
           )}
         </div>
       </div>

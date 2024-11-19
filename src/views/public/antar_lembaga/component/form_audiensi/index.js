@@ -462,6 +462,9 @@ const AudienciForm = ({ onBackClick }) => {
                             Verify OTP
                         </button>
                     )}
+                    {isOtpVerified && (
+                        <p className="text-green-500 mt-2 text-sm">Verifikasi OTP berhasil</p>
+                    )}
                 </div>
             </div>
 
