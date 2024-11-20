@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import { Button, Input } from 'core/components'
 import { hooks, toastify } from 'utility'
 import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import { actions } from 'store'
 import { images } from 'constant'
 import AsyncSelect from 'react-select/async'
@@ -48,11 +49,13 @@ const FormKerjasama = ({ onBackClick }) => {
 
   const [showErrorInput, setShowErrorInput] = useState(false)
   const [selectedFile, setSelectedFile] = useState(null)
+  const [options, setOptions] = useState([])
+  const [loading, setLoading] = useState(true)
+
 
   useEffect(() => {
     getDataProvinces()
     getBentukKerjasama()
-    console.log('Data List Kerjasama:', listKerjasama)
   }, [])
 
   useEffect(() => {
@@ -63,9 +66,19 @@ const FormKerjasama = ({ onBackClick }) => {
   }, [formData.province_id.value])
 
   useEffect(() => {
-    getPengajuanKe((data) => {
-      setOptions(data)  // Menghentikan status loading
-    })
+    const fetchData = async () => {
+      try {
+        setLoading(true)  // Menandakan bahwa data sedang diambil
+        const data = await getPengajuanKe()  // Memanggil API atau fungsi asinkron
+        setOptions(data)  // Menyimpan data pada state
+      } catch (error) {
+        console.error("Error fetching data: ", error)
+      } finally {
+        setLoading(false)  // Menghentikan loading setelah data diterima atau error
+      }
+    }
+
+    fetchData()  // Panggil fungsi fetchData
   }, [getPengajuanKe])
 
   const startOtpTimer = () => {
@@ -219,8 +232,7 @@ const FormKerjasama = ({ onBackClick }) => {
       toast.error("Hanya file PDF dan Excel yang diperbolehkan.")
     }
 
-    setSelectedFile(filteredFiles) // Menyimpan hanya file yang sesuai ke state
-    console.log(filteredFiles) // Untuk debugging, pastikan hanya file yang sesuai yang terbaca
+    setSelectedFile(filteredFiles)
   }
 
   const renderInput = (inputProps) => {
@@ -253,9 +265,16 @@ const FormKerjasama = ({ onBackClick }) => {
             className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">Pilih Bentuk Kerjasama</option>
-            {listKerjasama.data.map((item) => (
-              <option key={item.id} value={item.id}>{item.nama_kerjasama}</option>
-            ))}
+            {listKerjasama?.data?.length > 0 ? (
+              listKerjasama.data.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.nama_kerjasama}
+                </option>
+              ))
+            ) : (
+              <option disabled>Data tidak tersedia</option>
+            )}
+
           </select>
         </div>
       )
