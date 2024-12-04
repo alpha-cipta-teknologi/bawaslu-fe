@@ -83,7 +83,7 @@ const FormUpdateProfile = ({
   })
 
   const fetchProfileData = () => {
-    getDataProfile(userdata.resource_id, data => {
+    getDataProfile(userdata.resource_uuid, data => {
       setFormProfile(prevData => ({
         ...prevData,
         full_name: data.full_name,
@@ -109,16 +109,16 @@ const FormUpdateProfile = ({
   }
 
   useEffect(() => {
-    if (userdata && userdata?.resource_id && selectedMenuId === 'profile') {
+    if (userdata && userdata?.resource_uuid && selectedMenuId === 'profile') {
       fetchProfileData()
       getAllDataCommunity()
       getAllDataTopic()
     }
-  }, [selectedMenuId, userdata?.resource_id])
+  }, [selectedMenuId, userdata?.resource_uuid])
 
   const onSaveUpdateProfile = () => {
     const requestBody = {
-      id: userdata?.resource_id,
+      id: userdata?.resource_uuid,
       full_name: formProfile.full_name,
       email: formProfile.email,
       telepon: formProfile.telepon,
